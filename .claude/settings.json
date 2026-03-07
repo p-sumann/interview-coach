@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__shadcn__view_items_in_registries",
+      "Bash(npx create-next-app@latest web --typescript --tailwind --eslint --app --turbopack --import-alias \"@/*\" --yes)"
+    ]
+  }
+}
