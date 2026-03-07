@@ -1,0 +1,81 @@
+# ============================================================
+# InterviewPilot Monorepo — .gitignore
+# ============================================================
+
+# ---- Environment & Secrets ----
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ---- IDE ----
+.idea/
+.vscode/
+*.code-workspace
+
+# ---- Claude Code ----
+.claude/settings.local.json
+
+# ---- Python (backend + agent) ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+*.cover
+
+# ---- Node / Next.js (web) ----
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+
+# ---- Package manager lockfiles (keep pnpm-lock, ignore others) ----
+package-lock.json
+yarn.lock
+
+# ---- Docker ----
+# Don't ignore Dockerfiles, but ignore temp volumes
+docker-compose.override.yml
+
+# ---- Build artifacts ----
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# ---- Media / large assets ----
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+*.mov
+!web/public/**/*.png
+!web/public/**/*.jpg
+!web/public/**/*.svg
+!docs/images/**
+
+# ---- Misc ----
+.vercel
+.netlify
+*.bak
+*.tmp
