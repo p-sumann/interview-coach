@@ -1,0 +1,133 @@
+# Production overrides — use with:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Key differences from dev:
+#   - No volume mounts (uses baked-in image code)
+#   - No --reload for backend/agent
+#   - Multiple uvicorn workers
+#   - Redis password required
+#   - Postgres/Redis ports not exposed to host
+#   - Log rotation enabled
+#   - Frontend included (no profile gate)
+
+services:
+  postgres:
+    ports: []
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "2.0"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  redis:
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --requirepass ${REDIS_PASSWORD}
+    ports: []
+    deploy:
+      resources:
+        limits:
+          memory: 600M
+          cpus: "1.0"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  backend:
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/0
+      - ENVIRONMENT=production
+      - DEBUG=false
+      - LOG_LEVEL=warning
+      - RUN_MIGRATIONS=true
+    volumes: []
+    command: >
+      gunicorn app.main:app
+      --bind 0.0.0.0:8000
+      --workers ${BACKEND_WORKERS:-4}
+      --worker-class uvicorn.workers.UvicornWorker
+      --timeout 120
+      --graceful-timeout 30
+      --max-requests 10000
+      --max-requests-jitter 1000
+      --access-logfile -
+      --log-level warning
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "4.0"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
+
+  agent:
+    profiles: []
+    environment:
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - BACKEND_URL=http://backend:8000
+      - ENVIRONMENT=production
+    volumes: []
+    command: python agent.py start --drain-timeout 300
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8081/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "2.0"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  frontend:
+    profiles: []
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      target: production
+      args:
+        NEXT_PUBLIC_LIVEKIT_URL: ${NEXT_PUBLIC_LIVEKIT_URL}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    environment:
+      - NODE_ENV=production
+    volumes: []
+    command: ["node", "server.js"]
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"

@@ -1,0 +1,169 @@
+name: interviewpilot
+
+services:
+  # ============================================================
+  # PostgreSQL 16
+  # ============================================================
+  postgres:
+    image: postgres:16-bookworm
+    container_name: ip-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-interviewpilot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-interviewpilot_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-interviewpilot}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-interviewpilot} -d ${POSTGRES_DB:-interviewpilot}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - interviewpilot-network
+
+  # ============================================================
+  # Redis 7
+  # ============================================================
+  redis:
+    image: redis:7-bookworm
+    container_name: ip-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - interviewpilot-network
+
+  # ============================================================
+  # FastAPI Backend
+  # ============================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: production
+    container_name: ip-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-interviewpilot}:${POSTGRES_PASSWORD:-interviewpilot_dev}@postgres:5432/${POSTGRES_DB:-interviewpilot}
+      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - LOG_LEVEL=debug
+      - RUN_MIGRATIONS=true
+    volumes:
+      - ./backend:/app
+      - /app/.venv
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    command: >
+      uvicorn app.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-dir /app/app
+      --log-level debug
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - interviewpilot-network
+
+  # ============================================================
+  # LiveKit AI Agent (Gemini Live)
+  # ============================================================
+  agent:
+    build:
+      context: ./agent
+      dockerfile: Dockerfile
+      target: production
+    container_name: ip-agent
+    restart: unless-stopped
+    profiles:
+      - agent
+    env_file:
+      - .env
+    environment:
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - BACKEND_URL=http://backend:8000
+    volumes:
+      - ./agent:/app
+      - /app/.venv
+    command: python agent.py dev
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - interviewpilot-network
+
+  # ============================================================
+  # Next.js Frontend
+  # ============================================================
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      target: deps
+    container_name: ip-frontend
+    restart: unless-stopped
+    profiles:
+      - frontend
+    env_file:
+      - .env
+    environment:
+      - NEXT_PUBLIC_LIVEKIT_URL=${NEXT_PUBLIC_LIVEKIT_URL}
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    command: pnpm dev --hostname 0.0.0.0
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - interviewpilot-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  interviewpilot-network:
+    driver: bridge
+    name: interviewpilot-network
