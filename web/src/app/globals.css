@@ -171,6 +171,43 @@
   }
 }
 
+/* Thin scrollbar for transcript and similar containers */
+.scrollbar-thin {
+  scrollbar-gutter: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.5 0 0 / 0.15) transparent;
+}
+.scrollbar-thin:hover {
+  scrollbar-color: oklch(0.5 0 0 / 0.3) transparent;
+}
+.dark .scrollbar-thin {
+  scrollbar-color: oklch(0.6 0 0 / 0.15) transparent;
+}
+.dark .scrollbar-thin:hover {
+  scrollbar-color: oklch(0.6 0 0 / 0.3) transparent;
+}
+/* WebKit custom scrollbar for finer control */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px 0;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: oklch(0.5 0 0 / 0.12);
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.5 0 0 / 0.25);
+}
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: oklch(0.6 0 0 / 0.12);
+}
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.6 0 0 / 0.25);
+}
+
 /* Animated gradient mesh background */
 @keyframes gradient-shift {
   0%, 100% {
