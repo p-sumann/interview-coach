@@ -42,9 +42,9 @@ export function HeroSection() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
         >
-          Practice with an AI interviewer that sees you, hears you, and coaches
+          Practice with an AI interviewer that hears you and coaches
           you in real-time. Get detailed feedback on your communication,
-          technical skills, and body language.
+          technical skills, and vocal delivery.
         </motion.p>
 
         {/* CTAs */}

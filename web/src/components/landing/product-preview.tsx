@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Bot, User, Gauge, Eye, MessageSquareText, Video } from "lucide-react";
+import { Bot, User, Gauge, MessageSquareText, Video } from "lucide-react";
 
 export function ProductPreview() {
   return (
@@ -77,7 +77,6 @@ export function ProductPreview() {
             <p className="text-xs font-semibold">Live Coaching</p>
 
             <MetricRow icon={Gauge} label="Confidence" value={85} color="text-green-400" />
-            <MetricRow icon={Eye} label="Eye Contact" value={72} color="text-amber-400" />
 
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground">Pace</span>

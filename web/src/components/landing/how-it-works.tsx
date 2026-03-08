@@ -16,7 +16,7 @@ const steps = [
     icon: Mic,
     title: "Practice",
     description:
-      "Join a live AI interview session. Speak naturally while receiving real-time coaching on your delivery, body language, and technical depth.",
+      "Join a live AI interview session. Speak naturally while receiving real-time coaching on your delivery, confidence, and technical depth.",
   },
   {
     number: 3,
@@ -54,7 +54,7 @@ export function HowItWorks() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.15 * i }}
-              className="text-center"
+              className="relative text-center"
             >
               {/* Number + icon */}
               <div className="relative inline-flex mb-6">

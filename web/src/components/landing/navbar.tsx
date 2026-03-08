@@ -30,6 +30,12 @@ export function Navbar() {
           >
             Interview Types
           </a>
+          <Link
+            href="/history"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            My Sessions
+          </Link>
         </div>
 
         <div className="flex items-center gap-2">

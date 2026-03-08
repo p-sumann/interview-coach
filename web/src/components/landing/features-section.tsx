@@ -1,14 +1,14 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Eye, BrainCircuit, BarChart3 } from "lucide-react";
+import { Headphones, BrainCircuit, BarChart3 } from "lucide-react";
 
 const features = [
   {
-    icon: Eye,
+    icon: Headphones,
     title: "Real-Time AI Coaching",
     description:
-      "Get instant feedback on eye contact, speaking pace, confidence, posture, and filler words as you practice. Your AI coach sees and hears everything.",
+      "Get instant feedback on speaking pace, confidence, and filler words as you practice. Your AI coach listens and adapts in real-time.",
   },
   {
     icon: BrainCircuit,

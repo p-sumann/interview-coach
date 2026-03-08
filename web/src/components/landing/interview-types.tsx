@@ -4,13 +4,12 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { INTERVIEW_TYPE_CONFIGS } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
-import { Handshake, Brain, Code, Target, Clock } from "lucide-react";
+import { Handshake, Brain, Code, Clock } from "lucide-react";
 
 const icons: Record<string, typeof Handshake> = {
   Handshake,
   Brain,
   Code,
-  Target,
 };
 
 export function InterviewTypes() {
@@ -28,12 +27,12 @@ export function InterviewTypes() {
             Choose your <span className="text-primary">interview mode</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Practice specific interview types or run a full mock round with
-            multiple interviewers.
+            Practice HR screening, behavioral, or technical interviews
+            with AI interviewers that adapt to your level.
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {INTERVIEW_TYPE_CONFIGS.map((config, i) => {
             const Icon = icons[config.icon] ?? Code;
             return (
