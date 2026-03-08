@@ -67,7 +67,7 @@ export function useAgentAudioVisualizerAura(
       case 'idle':
       case 'failed':
       case 'disconnected':
-        setSpeed(10);
+        queueMicrotask(() => setSpeed(10));
         animateScale(0.2, DEFAULT_TRANSITION);
         animateAmplitude(1.2, DEFAULT_TRANSITION);
         animateFrequency(0.4, DEFAULT_TRANSITION);
@@ -75,7 +75,7 @@ export function useAgentAudioVisualizerAura(
         return;
       case 'listening':
       case 'pre-connect-buffering':
-        setSpeed(20);
+        queueMicrotask(() => setSpeed(20));
         animateScale(0.3, { type: 'spring', duration: 1.0, bounce: 0.35 });
         animateAmplitude(1.0, DEFAULT_TRANSITION);
         animateFrequency(0.7, DEFAULT_TRANSITION);
@@ -84,14 +84,14 @@ export function useAgentAudioVisualizerAura(
       case 'thinking':
       case 'connecting':
       case 'initializing':
-        setSpeed(30);
+        queueMicrotask(() => setSpeed(30));
         animateScale(0.3, DEFAULT_TRANSITION);
         animateAmplitude(0.5, DEFAULT_TRANSITION);
         animateFrequency(1, DEFAULT_TRANSITION);
         animateBrightness([0.5, 2.5], DEFAULT_PULSE_TRANSITION);
         return;
       case 'speaking':
-        setSpeed(70);
+        queueMicrotask(() => setSpeed(70));
         animateScale(0.3, DEFAULT_TRANSITION);
         animateAmplitude(0.75, DEFAULT_TRANSITION);
         animateFrequency(1.25, DEFAULT_TRANSITION);

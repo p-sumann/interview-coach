@@ -151,16 +151,13 @@ export function useSimulatedInterview(
           confidence: clampScore(
             s.feedback.confidence + randomDelta(-3, 5)
           ),
-          eyeContact: clampScore(
-            s.feedback.eyeContact + randomDelta(-5, 4)
-          ),
           pace: shouldTrigger(0.8)
             ? "good"
             : pickRandom(["slow", "fast"] as const),
-          posture: shouldTrigger(0.9) ? "good" : "needs_work",
           fillerWords: shouldTrigger(0.3)
             ? s.feedback.fillerWords + 1
             : s.feedback.fillerWords,
+          fillerInstances: s.feedback.fillerInstances,
         },
       }));
     }, 2500);

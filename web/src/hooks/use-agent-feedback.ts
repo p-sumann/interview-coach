@@ -6,17 +6,15 @@ import type {
   FeedbackState,
   CoachingNote,
   PaceLevel,
-  PostureStatus,
   CoachingNoteType,
   CoachingCategory,
 } from "@/lib/types";
 
 const DEFAULT_FEEDBACK: FeedbackState = {
   confidence: 0,
-  eyeContact: 0,
   pace: "good",
-  posture: "good",
   fillerWords: 0,
+  fillerInstances: [],
 };
 
 interface AgentFeedbackMessage {
@@ -36,15 +34,10 @@ export function useAgentFeedback() {
 
         if (parsed.type === "feedback") {
           setFeedback((prev) => ({
+            ...prev,
             confidence:
               (parsed.data.confidence as number | undefined) ?? prev.confidence,
-            eyeContact:
-              (parsed.data.eye_contact as number | undefined) ??
-              prev.eyeContact,
             pace: (parsed.data.pace as PaceLevel | undefined) ?? prev.pace,
-            posture:
-              (parsed.data.posture as PostureStatus | undefined) ??
-              prev.posture,
             fillerWords:
               (parsed.data.filler_words as number | undefined) ??
               prev.fillerWords,

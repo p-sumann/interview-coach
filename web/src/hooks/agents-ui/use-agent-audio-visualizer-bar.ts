@@ -27,19 +27,19 @@ export function useAgentAudioVisualizerBarAnimator(
   const [sequence, setSequence] = useState<number[][]>([[]]);
 
   useEffect(() => {
+    let nextSequence: number[][];
     if (state === 'thinking') {
-      setSequence(generateListeningSequenceBar(columns));
+      nextSequence = generateListeningSequenceBar(columns);
     } else if (state === 'connecting' || state === 'initializing') {
-      const sequence = [...generateConnectingSequenceBar(columns)];
-      setSequence(sequence);
+      nextSequence = [...generateConnectingSequenceBar(columns)];
     } else if (state === 'listening') {
-      setSequence(generateListeningSequenceBar(columns));
+      nextSequence = generateListeningSequenceBar(columns);
     } else if (state === undefined || state === 'speaking') {
-      setSequence([new Array(columns).fill(0).map((_, idx) => idx)]);
+      nextSequence = [new Array(columns).fill(0).map((_, idx) => idx)];
     } else {
-      setSequence([[]]);
+      nextSequence = [[]];
     }
-    setIndex(0);
+    queueMicrotask(() => { setSequence(nextSequence); setIndex(0); });
   }, [state, columns]);
 
   const animationFrameId = useRef<number | null>(null);
