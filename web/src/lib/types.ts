@@ -1,26 +1,20 @@
 
 // ---- Setup / Config Types ----
 
-export type InterviewType = "hr" | "behavioral" | "technical" | "mock";
+export type InterviewType = "hr" | "behavioral" | "technical";
 export type ExperienceLevel = "junior" | "mid" | "senior" | "staff";
 export type RoleType =
   | "backend"
   | "frontend"
   | "fullstack"
-  | "data_ml"
-  | "devops"
-  | "mobile";
+  | "ai_ml"
+  | "data";
 export type PrimaryLanguage =
   | "python"
   | "java"
   | "javascript"
   | "typescript"
-  | "go"
-  | "rust"
-  | "cpp"
-  | "csharp"
-  | "kotlin"
-  | "swift";
+  | "go";
 
 export interface InterviewConfig {
   candidateName: string;
@@ -44,10 +38,9 @@ export type InterviewStatus =
 export type AgentState = "idle" | "listening" | "thinking" | "talking";
 
 export type PaceLevel = "slow" | "good" | "fast";
-export type PostureStatus = "good" | "needs_work";
 export type CoachingNoteType = "positive" | "suggestion" | "concern";
 export type CoachingCategory =
-  | "body_language"
+  | "delivery"
   | "content"
   | "communication"
   | "technical";
@@ -60,12 +53,19 @@ export interface TranscriptMessage {
   persona?: string;
 }
 
+export interface FillerWordInstance {
+  id: string;
+  word: string;
+  timestamp: number;
+  /** ID of the transcript message where this filler was detected */
+  messageId: string;
+}
+
 export interface FeedbackState {
   confidence: number;
-  eyeContact: number;
   pace: PaceLevel;
-  posture: PostureStatus;
   fillerWords: number;
+  fillerInstances: FillerWordInstance[];
 }
 
 export interface CoachingNote {
@@ -116,14 +116,21 @@ export interface KeyMoment {
   message: string;
 }
 
+export interface TimeSeriesPoint {
+  time: number; // seconds into interview
+  value: number;
+}
+
 export interface SessionAnalytics {
   speakingTimePct: number;
   avgConfidence: number;
-  avgEyeContact: number;
   fillerWordCount: number;
   fillerWordBreakdown: Record<string, number>;
   questionsAnswered: number;
   phasesCompleted: number;
+  confidenceOverTime?: TimeSeriesPoint[];
+  fluencyOverTime?: TimeSeriesPoint[];
+  avgPace?: number; // words per minute
 }
 
 export interface PhaseScore {
@@ -163,6 +170,19 @@ export interface SessionResponse {
   endedAt: string | null;
 }
 
+export interface SessionListItem {
+  id: string;
+  status: InterviewStatus | "created" | "failed";
+  interviewType: InterviewType;
+  targetRole: string;
+  experienceLevel: ExperienceLevel;
+  candidateName: string;
+  createdAt: string;
+  startedAt: string | null;
+  endedAt: string | null;
+  overallScore: number | null;
+}
+
 export interface TokenResponse {
   token: string;
   url: string;
@@ -173,6 +193,16 @@ export interface HealthResponse {
   database: string;
   redis: string;
   version: string;
+}
+
+// ---- Analyze Types ----
+
+export interface AnalyzeResponse {
+  fillerWords: string[];
+  fillerCount: number;
+  repeatedWords: string[];
+  relevanceNote: string;
+  coachingTip: string;
 }
 
 // ---- Simulation Types ----

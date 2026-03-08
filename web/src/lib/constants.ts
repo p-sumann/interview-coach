@@ -18,10 +18,10 @@ export interface InterviewTypeConfig {
 export const INTERVIEW_TYPE_CONFIGS: InterviewTypeConfig[] = [
   {
     type: "hr",
-    displayName: "HR Interview",
+    displayName: "HR Screening",
     icon: "Handshake",
     description: "Culture fit, motivation, career goals",
-    defaultDurationMinutes: 10,
+    defaultDurationMinutes: 5,
     phases: 1,
   },
   {
@@ -29,7 +29,7 @@ export const INTERVIEW_TYPE_CONFIGS: InterviewTypeConfig[] = [
     displayName: "Behavioral",
     icon: "Brain",
     description: "STAR-format, leadership, teamwork",
-    defaultDurationMinutes: 15,
+    defaultDurationMinutes: 10,
     phases: 1,
   },
   {
@@ -37,16 +37,8 @@ export const INTERVIEW_TYPE_CONFIGS: InterviewTypeConfig[] = [
     displayName: "Technical",
     icon: "Code",
     description: "System design, coding concepts",
-    defaultDurationMinutes: 20,
+    defaultDurationMinutes: 10,
     phases: 1,
-  },
-  {
-    type: "mock",
-    displayName: "Mock Interview",
-    icon: "Target",
-    description: "Full round: HR + Behavioral + Technical",
-    defaultDurationMinutes: 30,
-    phases: 3,
   },
 ];
 
@@ -69,9 +61,8 @@ export const ROLE_TYPES: Array<{
   { type: "backend", label: "Backend", icon: "Server" },
   { type: "frontend", label: "Frontend", icon: "Monitor" },
   { type: "fullstack", label: "Fullstack", icon: "Layers" },
-  { type: "data_ml", label: "Data/ML", icon: "BrainCircuit" },
-  { type: "devops", label: "DevOps", icon: "Container" },
-  { type: "mobile", label: "Mobile", icon: "Smartphone" },
+  { type: "ai_ml", label: "AI/ML", icon: "BrainCircuit" },
+  { type: "data", label: "Data", icon: "BarChart3" },
 ];
 
 export const PRIMARY_LANGUAGES: Array<{
@@ -83,45 +74,25 @@ export const PRIMARY_LANGUAGES: Array<{
   { value: "javascript", label: "JavaScript" },
   { value: "typescript", label: "TypeScript" },
   { value: "go", label: "Go" },
-  { value: "rust", label: "Rust" },
-  { value: "cpp", label: "C++" },
-  { value: "csharp", label: "C#" },
-  { value: "kotlin", label: "Kotlin" },
-  { value: "swift", label: "Swift" },
 ];
 
 export const TARGET_ROLES = [
   "Software Engineer",
-  "Senior Software Engineer",
-  "Staff Software Engineer",
-  "Engineering Manager",
   "Frontend Engineer",
   "Backend Engineer",
   "Fullstack Engineer",
-  "Data Engineer",
   "ML Engineer",
-  "DevOps Engineer",
-  "SRE",
-  "Mobile Engineer",
+  "AI Engineer",
+  "Data Engineer",
+  "Data Scientist",
 ];
 
-export const MOCK_INTERVIEW_PHASES = [
-  {
-    phaseNumber: 1,
-    phaseType: "hr" as const,
-    interviewerName: "Marcus Johnson",
-    role: "Director of People",
-  },
-  {
-    phaseNumber: 2,
-    phaseType: "behavioral" as const,
-    interviewerName: "Sarah Chen",
-    role: "Senior Engineering Manager",
-  },
-  {
-    phaseNumber: 3,
-    phaseType: "technical" as const,
-    interviewerName: "Alex Rivera",
-    role: "Staff Software Engineer",
-  },
-];
+/** Which roleType + experienceLevel combos have system_design question bank coverage. */
+export const SYSTEM_DESIGN_COVERAGE: Record<RoleType, ExperienceLevel[]> = {
+  backend: ["junior", "mid", "senior", "staff"],
+  frontend: ["junior", "mid", "senior", "staff"],
+  fullstack: ["junior", "mid", "senior", "staff"],
+  ai_ml: ["junior", "mid", "senior", "staff"],
+  data: ["junior", "mid", "senior", "staff"],
+};
+
