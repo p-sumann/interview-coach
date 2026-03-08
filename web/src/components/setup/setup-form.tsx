@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
+import { getUserId } from "@/lib/user-id";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { SelectableCard } from "./selectable-card";
 import { CameraPreview } from "./camera-preview";
-import type { InterviewConfig, InterviewType } from "@/lib/types";
+import type { InterviewConfig, InterviewType, RoleType } from "@/lib/types";
 import { api } from "@/lib/api";
 import {
   INTERVIEW_TYPE_CONFIGS,
@@ -23,6 +24,7 @@ import {
   ROLE_TYPES,
   PRIMARY_LANGUAGES,
   TARGET_ROLES,
+  SYSTEM_DESIGN_COVERAGE,
 } from "@/lib/constants";
 import {
   Mic,
@@ -30,17 +32,16 @@ import {
   Handshake,
   Brain,
   Code,
-  Target,
   Server,
   Monitor,
   Layers,
   BrainCircuit,
-  Container,
-  Smartphone,
+  BarChart3,
   User,
   Briefcase,
   Zap,
   Clock,
+  AlertTriangle,
 } from "lucide-react";
 
 const roleIcons: Record<string, typeof Server> = {
@@ -48,24 +49,41 @@ const roleIcons: Record<string, typeof Server> = {
   Monitor,
   Layers,
   BrainCircuit,
-  Container,
-  Smartphone,
+  BarChart3,
 };
 
 const interviewIcons: Record<string, typeof Handshake> = {
   Handshake,
   Brain,
   Code,
-  Target,
 };
 
 interface SetupFormProps {
   defaultInterviewType?: string | null;
 }
 
+const TARGET_ROLE_TO_ROLE_TYPE: Record<string, string> = {
+  "ML Engineer": "ai_ml",
+  "AI Engineer": "ai_ml",
+  "Data Engineer": "data",
+  "Data Scientist": "data",
+  "Frontend Engineer": "frontend",
+  "Backend Engineer": "backend",
+  "Fullstack Engineer": "fullstack",
+};
+
+const ROLE_TYPE_LABELS: Record<string, string> = {
+  backend: "backend",
+  frontend: "frontend",
+  fullstack: "fullstack",
+  ai_ml: "AI/ML",
+  data: "data",
+};
+
 export function SetupForm({ defaultInterviewType }: SetupFormProps) {
   const router = useRouter();
   const [isStarting, setIsStarting] = useState(false);
+  const [errors, setErrors] = useState<Partial<Record<keyof InterviewConfig, string>>>({});
   const [config, setConfig] = useState<InterviewConfig>({
     candidateName: "",
     targetRole: "",
@@ -73,13 +91,38 @@ export function SetupForm({ defaultInterviewType }: SetupFormProps) {
     roleType: "backend",
     primaryLanguage: "python",
     techStack: [],
-    interviewType: (defaultInterviewType as InterviewType) || "mock",
+    interviewType: (defaultInterviewType as InterviewType) || "technical",
   });
 
+  const validate = (): boolean => {
+    const newErrors: Partial<Record<keyof InterviewConfig, string>> = {};
+    if (!config.candidateName.trim()) {
+      newErrors.candidateName = "Name is required";
+    }
+    if (!config.targetRole) {
+      newErrors.targetRole = "Please select a target role";
+    }
+    setErrors(newErrors);
+
+    const firstErrorKey = Object.keys(newErrors)[0] as keyof InterviewConfig | undefined;
+    if (firstErrorKey) {
+      const fieldMap: Partial<Record<keyof InterviewConfig, string>> = {
+        candidateName: "name",
+        targetRole: "target-role",
+      };
+      const el = document.getElementById(fieldMap[firstErrorKey] ?? "");
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (el?.tagName === "INPUT") el.focus();
+    }
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleStart = async () => {
+    if (!validate()) return;
     setIsStarting(true);
     try {
-      const session = await api.createSession(config);
+      const session = await api.createSession(config, getUserId());
       router.push(`/interview/${session.id}`);
     } catch {
       const params = new URLSearchParams();
@@ -123,10 +166,15 @@ export function SetupForm({ defaultInterviewType }: SetupFormProps) {
             id="name"
             placeholder="Suman"
             value={config.candidateName}
-            onChange={(e) =>
-              setConfig((c) => ({ ...c, candidateName: e.target.value }))
-            }
+            onChange={(e) => {
+              setConfig((c) => ({ ...c, candidateName: e.target.value }));
+              if (errors.candidateName) setErrors((prev) => ({ ...prev, candidateName: undefined }));
+            }}
+            className={errors.candidateName ? "border-destructive" : ""}
           />
+          {errors.candidateName && (
+            <p className="text-xs text-destructive">{errors.candidateName}</p>
+          )}
         </div>
 
         {/* Target Role */}
@@ -134,11 +182,17 @@ export function SetupForm({ defaultInterviewType }: SetupFormProps) {
           <Label>Target Role</Label>
           <Select
             value={config.targetRole}
-            onValueChange={(v) =>
-              setConfig((c) => ({ ...c, targetRole: v }))
-            }
+            onValueChange={(v) => {
+              const suggestedRole = TARGET_ROLE_TO_ROLE_TYPE[v] as RoleType | undefined;
+              setConfig((c) => ({
+                ...c,
+                targetRole: v,
+                ...(suggestedRole ? { roleType: suggestedRole } : {}),
+              }));
+              if (errors.targetRole) setErrors((prev) => ({ ...prev, targetRole: undefined }));
+            }}
           >
-            <SelectTrigger>
+            <SelectTrigger id="target-role" className={errors.targetRole ? "border-destructive" : ""}>
               <SelectValue placeholder="Select a role..." />
             </SelectTrigger>
             <SelectContent>
@@ -149,6 +203,9 @@ export function SetupForm({ defaultInterviewType }: SetupFormProps) {
               ))}
             </SelectContent>
           </Select>
+          {errors.targetRole && (
+            <p className="text-xs text-destructive">{errors.targetRole}</p>
+          )}
         </div>
 
         {/* Experience Level */}
@@ -210,6 +267,15 @@ export function SetupForm({ defaultInterviewType }: SetupFormProps) {
               );
             })}
           </div>
+          {config.targetRole &&
+            TARGET_ROLE_TO_ROLE_TYPE[config.targetRole] &&
+            TARGET_ROLE_TO_ROLE_TYPE[config.targetRole] !== config.roleType && (
+              <p className="text-xs text-amber-400/80 mt-1.5">
+                Your background is {ROLE_TYPE_LABELS[config.roleType] ?? config.roleType} but
+                you&apos;re targeting {config.targetRole} — the interviewer will
+                tailor questions accordingly.
+              </p>
+            )}
         </div>
 
         {/* Language */}
@@ -321,6 +387,27 @@ export function SetupForm({ defaultInterviewType }: SetupFormProps) {
           <CameraPreview />
         </motion.section>
       </div>
+
+      {/* Coverage warning */}
+      {config.interviewType === "technical" &&
+        !SYSTEM_DESIGN_COVERAGE[config.roleType]?.includes(config.experienceLevel) && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-start gap-2.5 rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3"
+          >
+            <AlertTriangle className="h-4 w-4 text-amber-400 mt-0.5 shrink-0" />
+            <p className="text-xs text-amber-400/80 leading-relaxed">
+              System design questions for{" "}
+              <span className="font-medium text-amber-400">
+                {ROLE_TYPE_LABELS[config.roleType] ?? config.roleType}
+              </span>{" "}
+              at{" "}
+              <span className="font-medium text-amber-400">{config.experienceLevel}</span>{" "}
+              level will be generated by the AI interviewer in real-time.
+            </p>
+          </motion.div>
+        )}
 
       {/* Submit */}
       <motion.div
