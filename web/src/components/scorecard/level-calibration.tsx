@@ -1,19 +1,38 @@
 "use client";
 
 import { motion } from "motion/react";
+import { Line, LineChart, CartesianGrid, XAxis, YAxis, ReferenceLine } from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
 import type { LevelCalibration } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { EXPERIENCE_LEVELS } from "@/lib/constants";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, Zap } from "lucide-react";
 
 interface LevelCalibrationProps {
   calibration: LevelCalibration;
 }
 
+const thetaConfig = {
+  theta: {
+    label: "Difficulty (θ)",
+    color: "var(--chart-4)",
+  },
+} satisfies ChartConfig;
+
 export function LevelCalibrationCard({ calibration }: LevelCalibrationProps) {
   const calibratedIndex = EXPERIENCE_LEVELS.findIndex(
     (l) => l.level === calibration.calibratedLevel
   );
+
+  const thetaChartData = calibration.thetaPath.map((theta, i) => ({
+    question: `Q${i + 1}`,
+    theta: parseFloat(theta.toFixed(2)),
+  }));
 
   return (
     <motion.div
@@ -27,19 +46,17 @@ export function LevelCalibrationCard({ calibration }: LevelCalibrationProps) {
       <div className="space-y-6">
         {/* Selected vs Calibrated */}
         <div className="flex flex-col sm:flex-row gap-4 text-sm">
-          <div className="flex-1 rounded-lg bg-muted/50 p-3">
-            <span className="text-muted-foreground">You selected:</span>
-            <span className="ml-2 font-semibold capitalize">
+          <div className="flex-1 rounded-lg bg-muted/50 p-4">
+            <span className="text-muted-foreground text-xs">You selected</span>
+            <p className="font-semibold capitalize text-lg mt-0.5">
               {calibration.selectedLevel}
-            </span>
+            </p>
           </div>
-          <div className="flex-1 rounded-lg bg-muted/50 p-3">
-            <span className="text-muted-foreground">
-              Performance calibrates to:
-            </span>
-            <span className="ml-2 font-semibold capitalize text-primary">
+          <div className="flex-1 rounded-lg bg-primary/5 border border-primary/20 p-4">
+            <span className="text-muted-foreground text-xs">Performance calibrates to</span>
+            <p className="font-semibold capitalize text-lg text-primary mt-0.5">
               {calibration.calibratedLevel}
-            </span>
+            </p>
           </div>
         </div>
 
@@ -75,32 +92,52 @@ export function LevelCalibrationCard({ calibration }: LevelCalibrationProps) {
           <div className="absolute top-2 left-8 right-8 h-px bg-border -z-10" />
         </div>
 
-        {/* Theta path */}
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>Difficulty path:</span>
-          {calibration.thetaPath.map((theta, i) => (
-            <span key={i} className="font-mono">
-              {i > 0 && "→ "}Q{i + 1}: θ={theta.toFixed(1)}
-            </span>
-          ))}
-        </div>
+        {/* Theta path chart */}
+        {thetaChartData.length > 1 && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm">
+              <Zap className="h-4 w-4 text-chart-4" />
+              <span className="text-muted-foreground font-medium">Difficulty Progression</span>
+            </div>
+            <ChartContainer config={thetaConfig} className="aspect-3/1 w-full">
+              <LineChart data={thetaChartData} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
+                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <XAxis dataKey="question" tickLine={false} axisLine={false} tickMargin={8} />
+                <YAxis tickLine={false} axisLine={false} tickMargin={4} />
+                <ReferenceLine y={0} stroke="var(--border)" strokeDasharray="3 3" />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Line
+                  type="monotone"
+                  dataKey="theta"
+                  stroke="var(--chart-4)"
+                  strokeWidth={2.5}
+                  dot={{ fill: "var(--chart-4)", r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ChartContainer>
+            <p className="text-xs text-muted-foreground/60 text-center">
+              Higher θ = harder questions adapted to your performance
+            </p>
+          </div>
+        )}
 
         {/* Strongest/Growth areas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="flex items-start gap-3 rounded-lg bg-green-500/10 p-3 border border-green-500/20">
+          <div className="flex items-start gap-3 rounded-lg bg-green-500/10 p-4 border border-green-500/20">
             <TrendingUp className="h-5 w-5 text-green-400 mt-0.5" />
             <div>
               <p className="text-xs text-muted-foreground">Strongest area</p>
-              <p className="text-sm font-medium">
+              <p className="text-sm font-medium mt-0.5">
                 {calibration.strongestArea}
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-3 rounded-lg bg-amber-500/10 p-3 border border-amber-500/20">
+          <div className="flex items-start gap-3 rounded-lg bg-amber-500/10 p-4 border border-amber-500/20">
             <TrendingDown className="h-5 w-5 text-amber-400 mt-0.5" />
             <div>
               <p className="text-xs text-muted-foreground">Growth area</p>
-              <p className="text-sm font-medium">{calibration.growthArea}</p>
+              <p className="text-sm font-medium mt-0.5">{calibration.growthArea}</p>
             </div>
           </div>
         </div>

@@ -136,10 +136,9 @@ export const MOCK_TRANSCRIPT: TranscriptMessage[] = [
 
 export const MOCK_INITIAL_FEEDBACK: FeedbackState = {
   confidence: 72,
-  eyeContact: 65,
   pace: "good",
-  posture: "good",
   fillerWords: 3,
+  fillerInstances: [],
 };
 
 export const MOCK_COACHING_NOTES: CoachingNote[] = [
@@ -161,8 +160,8 @@ export const MOCK_COACHING_NOTES: CoachingNote[] = [
     id: "n3",
     timestamp: 60,
     type: "suggestion",
-    message: "Try to maintain eye contact when thinking through answers",
-    category: "body_language",
+    message: "Try to pause briefly before answering to gather your thoughts",
+    category: "communication",
   },
   {
     id: "n4",
@@ -237,7 +236,7 @@ export const MOCK_SCORECARD: Scorecard = {
   interviewType: "mock",
   overallScore: 78,
   overallSummary:
-    "Strong performance with room for improvement in body language confidence. Technical depth is solid at Senior level, with particularly impressive system design thinking.",
+    "Strong performance with room for improvement in delivery confidence. Technical depth is solid at Senior level, with particularly impressive system design thinking.",
   categories: [
     {
       name: "Communication",
@@ -250,9 +249,9 @@ export const MOCK_SCORECARD: Scorecard = {
       description: "Solid system design, could elaborate on trade-offs",
     },
     {
-      name: "Body Language",
+      name: "Vocal Delivery",
       score: 68,
-      description: "Eye contact inconsistent, posture generally good",
+      description: "Vocal delivery confident, occasional hesitation under pressure",
     },
     {
       name: "Overall Presence",
@@ -268,7 +267,7 @@ export const MOCK_SCORECARD: Scorecard = {
     "Professional and composed throughout the interview",
   ],
   improvements: [
-    "Broke eye contact frequently when thinking through answers",
+    "Hesitated and used filler words when thinking through answers",
     "Speaking pace increased noticeably under pressure (2:34-3:12)",
     "Could expand more on system design trade-offs and alternatives",
     "Filler words increased during technical questions",
@@ -314,7 +313,6 @@ export const MOCK_SCORECARD: Scorecard = {
   analytics: {
     speakingTimePct: 68,
     avgConfidence: 74,
-    avgEyeContact: 62,
     fillerWordCount: 12,
     fillerWordBreakdown: { um: 5, uh: 4, like: 3 },
     questionsAnswered: 8,
