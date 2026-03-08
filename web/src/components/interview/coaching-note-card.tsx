@@ -16,7 +16,7 @@ const borderColors: Record<CoachingNote["type"], string> = {
 };
 
 const categoryLabels: Record<CoachingNote["category"], string> = {
-  body_language: "Body Language",
+  delivery: "Delivery",
   content: "Content",
   communication: "Communication",
   technical: "Technical",

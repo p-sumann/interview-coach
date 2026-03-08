@@ -1,6 +1,6 @@
 'use client';
 
-import { type ComponentProps } from 'react';
+import { type ComponentProps, useEffect, useRef, useCallback } from 'react';
 import { type AgentState, type ReceivedMessage } from '@livekit/components-react';
 import {
   Conversation,
@@ -10,67 +10,139 @@ import {
 import { Message, MessageContent, MessageResponse } from '@/components/ai-elements/message';
 import { AgentChatIndicator } from '@/components/agents-ui/agent-chat-indicator';
 import { AnimatePresence } from 'motion/react';
+import { cn } from '@/lib/utils';
+import { Mic, User } from 'lucide-react';
 
 /**
  * Props for the AgentChatTranscript component.
  */
 export interface AgentChatTranscriptProps extends ComponentProps<'div'> {
-  /**
-   * The current state of the agent. When 'thinking', displays a loading indicator.
-   */
   agentState?: AgentState;
-  /**
-   * Array of messages to display in the transcript.
-   * @defaultValue []
-   */
   messages?: ReceivedMessage[];
-  /**
-   * Additional CSS class names to apply to the conversation container.
-   */
   className?: string;
+  /** When set, scrolls to and highlights the message with this ID */
+  highlightMessageId?: string | null;
+  /** Called after highlight scroll animation completes */
+  onHighlightComplete?: () => void;
 }
 
-/**
- * A chat transcript component that displays a conversation between the user and agent.
- * Shows messages with timestamps and origin indicators, plus a thinking indicator
- * when the agent is processing.
- *
- * @extends ComponentProps<'div'>
- *
- * @example
- * ```tsx
- * <AgentChatTranscript
- *   agentState={agentState}
- *   messages={chatMessages}
- * />
- * ```
- */
 export function AgentChatTranscript({
   agentState,
   messages = [],
   className,
+  highlightMessageId,
+  onHighlightComplete,
   ...props
 }: AgentChatTranscriptProps) {
+  const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  const setMessageRef = useCallback(
+    (id: string, el: HTMLDivElement | null) => {
+      if (el) {
+        messageRefs.current.set(id, el);
+      } else {
+        messageRefs.current.delete(id);
+      }
+    },
+    [],
+  );
+
+  // Scroll to and highlight the targeted message
+  useEffect(() => {
+    if (!highlightMessageId) return;
+
+    const el = messageRefs.current.get(highlightMessageId);
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.add('ring-2', 'ring-amber-400/60', 'rounded-lg');
+
+    const timer = setTimeout(() => {
+      el.classList.remove('ring-2', 'ring-amber-400/60', 'rounded-lg');
+      onHighlightComplete?.();
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+      el.classList.remove('ring-2', 'ring-amber-400/60', 'rounded-lg');
+    };
+  }, [highlightMessageId, onHighlightComplete]);
+
   return (
-    <Conversation className={className} {...props}>
-      <ConversationContent>
+    <Conversation
+      className={cn(
+        'rounded-xl border border-border/30 bg-muted/20',
+        className,
+      )}
+      {...props}
+    >
+      <ConversationContent className="gap-5 px-5 py-4">
+        {messages.length === 0 && (
+          <div className="flex flex-col items-center justify-center gap-2 py-16 text-center">
+            <Mic className="h-8 w-8 text-muted-foreground/30" />
+            <p className="text-sm text-muted-foreground/50">
+              Conversation will appear here...
+            </p>
+          </div>
+        )}
         {messages.map((receivedMessage) => {
           const { id, timestamp, from, message } = receivedMessage;
           const locale = navigator?.language ?? 'en-US';
           const messageOrigin = from?.isLocal ? 'user' : 'assistant';
           const time = new Date(timestamp);
           const title = time.toLocaleTimeString(locale, { timeStyle: 'full' });
+          const isUser = messageOrigin === 'user';
 
           return (
-            <Message key={id} title={title} from={messageOrigin}>
-              <MessageContent>
-                <MessageResponse>{message}</MessageResponse>
-              </MessageContent>
-            </Message>
+            <div
+              key={id}
+              ref={(el) => setMessageRef(id, el)}
+              className={cn(
+                'flex gap-3 transition-all duration-300',
+                isUser && 'flex-row-reverse',
+              )}
+            >
+              {/* Avatar */}
+              <div
+                className={cn(
+                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full mt-0.5',
+                  isUser
+                    ? 'bg-primary/10 text-primary'
+                    : 'bg-green-500/10 text-green-500',
+                )}
+              >
+                {isUser ? (
+                  <User className="h-3.5 w-3.5" />
+                ) : (
+                  <Mic className="h-3.5 w-3.5" />
+                )}
+              </div>
+              {/* Message */}
+              <Message title={title} from={messageOrigin} className="max-w-[85%]">
+                <span
+                  className={cn(
+                    'text-[10px] font-medium uppercase tracking-widest',
+                    isUser ? 'text-primary/60 text-right' : 'text-green-500/60',
+                  )}
+                >
+                  {isUser ? 'You' : 'Interviewer'}
+                </span>
+                <MessageContent>
+                  <MessageResponse>{message}</MessageResponse>
+                </MessageContent>
+              </Message>
+            </div>
           );
         })}
         <AnimatePresence>
-          {agentState === 'thinking' && <AgentChatIndicator size="sm" />}
+          {agentState === 'thinking' && (
+            <div className="flex gap-3">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-500/10 text-green-500 mt-0.5">
+                <Mic className="h-3.5 w-3.5" />
+              </div>
+              <AgentChatIndicator size="sm" />
+            </div>
+          )}
         </AnimatePresence>
       </ConversationContent>
       <ConversationScrollButton />

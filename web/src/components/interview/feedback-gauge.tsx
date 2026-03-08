@@ -25,16 +25,16 @@ export function FeedbackGauge({
   );
 
   const color =
-    value >= 80
+    value >= 60
       ? "text-green-400"
-      : value >= 60
+      : value >= 40
         ? "text-amber-400"
         : "text-red-400";
 
   const strokeColor =
-    value >= 80
+    value >= 60
       ? "stroke-green-400"
-      : value >= 60
+      : value >= 40
         ? "stroke-amber-400"
         : "stroke-red-400";
 

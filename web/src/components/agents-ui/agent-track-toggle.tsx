@@ -132,7 +132,7 @@ export function AgentTrackToggle({
     () => (isControlled ? pressed : uncontrolledPressed) ?? false,
     [isControlled, pressed, uncontrolledPressed],
   );
-  const IconComponent = getSourceIcon(source as Track.Source, resolvedPressed, pending);
+  const Icon = getSourceIcon(source as Track.Source, resolvedPressed, pending);
   const handlePressedChange = (nextPressed: boolean) => {
     if (!isControlled) {
       setUncontrolledPressed(nextPressed);
@@ -157,7 +157,8 @@ export function AgentTrackToggle({
       )}
       {...props}
     >
-      <IconComponent className={cn(pending && 'animate-spin')} />
+      {/* eslint-disable-next-line react-hooks/static-components -- Icon is a stable Lucide component selected by source prop */}
+      <Icon className={cn(pending && 'animate-spin')} />
       {props.children}
     </Toggle>
   );
