@@ -1,0 +1,304 @@
+{
+  "type": "hr",
+  "display_name": "HR Interview",
+  "persona": {
+    "name": "Marcus Johnson",
+    "role": "Director of People",
+    "voice": "Charon",
+    "focus": "Culture fit, motivation, career goals, communication, soft skills"
+  },
+  "levels": {
+    "junior": {
+      "theta_range": [1.0, 2.0],
+      "yoe": "0-2 years",
+      "questions": [
+        {
+          "id": "hr-jr-001",
+          "question": "I'd love to hear your story — what's your background and what drew you to engineering?",
+          "expected_answer": "Strong answer: authentic narrative connecting education/experience to genuine passion for engineering. Mentions specific moments or projects that sparked interest — not a resume recitation. Shows personality, curiosity, and self-awareness. Best answers weave together personal motivation with technical excitement. Red flags: overly rehearsed, no specific examples, purely transactional motivation ('I heard it pays well').",
+          "category": "motivation",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What was the moment you realized you wanted to do this professionally?",
+            "What kind of engineering problems get you most excited?",
+            "Where do you see yourself growing in the next couple of years?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Clear, structured, authentic",
+            "motivation": "Genuine interest in engineering",
+            "key_signals": ["authenticity", "specific examples", "enthusiasm", "self-awareness"]
+          }
+        },
+        {
+          "id": "hr-jr-002",
+          "question": "What caught your eye about this particular role, and what do you know about what we're building?",
+          "expected_answer": "Strong answer: demonstrates genuine research about the company — its products, users, mission, engineering challenges, or tech stack. Connects the company's work to their own interests and goals. Not generic flattery ('great company to learn at') but specific connections ('I noticed you're solving X problem, and I've been fascinated by that space since Y'). Shows they've read the job description carefully and thought about how they'd contribute.",
+          "category": "culture_fit",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What do you think our biggest engineering challenge is right now?",
+            "Which part of our product or tech excites you most?",
+            "How would you compare this opportunity to others you're exploring?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Thoughtful, researched response",
+            "motivation": "Genuine alignment with company",
+            "key_signals": ["research", "specific connections", "authentic interest", "alignment"]
+          }
+        },
+        {
+          "id": "hr-jr-003",
+          "question": "How would you describe your ideal working style? Do you gravitate toward heads-down solo work or collaborative team environments?",
+          "expected_answer": "Strong answer: shows self-awareness and nuance — describes when they thrive with each style and why. For juniors, should express eagerness to learn from others while valuing focused independent time. Not a trick question — looking for genuine self-knowledge and adaptability. Best answers include concrete examples ('When I'm debugging something tricky, I need quiet focus, but I love brainstorming sessions for new features').",
+          "category": "work_style",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "When you get stuck on something, what's your process?",
+            "Walk me through what a really productive day looks like for you.",
+            "How do you keep your team in the loop on your progress?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Self-aware and balanced",
+            "culture_fit": "Adaptable to team dynamics",
+            "key_signals": ["self-awareness", "flexibility", "communication", "collaboration"]
+          }
+        },
+        {
+          "id": "hr-jr-004",
+          "question": "What would you say you're strongest at, and what's an area where you're actively trying to level up?",
+          "expected_answer": "Strong answer: honest and specific about both — strengths connect to role requirements, weaknesses are genuine (not 'I work too hard') with concrete improvement steps. For juniors: strengths might include quick learning, curiosity, attention to detail, or strong fundamentals in a specific area. Growth areas should be real and accompanied by specific actions they're taking. Shows growth mindset and self-reflection.",
+          "category": "self_awareness",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "Can you give me a concrete example where that strength really came through?",
+            "What specific steps are you taking to improve in that area?",
+            "If I talked to your last manager or professor, how would they describe you?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Honest and reflective",
+            "self_awareness": "Genuine self-assessment",
+            "key_signals": ["honesty", "specific examples", "growth plan", "self-reflection"]
+          }
+        },
+        {
+          "id": "hr-jr-005",
+          "question": "What kind of environment brings out your best work? Think about teams, culture, pace — what really matters to you?",
+          "expected_answer": "Strong answer: specific and thoughtful about what they need to thrive — whether that's mentorship, autonomy, fast-paced iteration, structured processes, or something else. Explains why these things matter based on past experience. Not just 'I'm flexible' but genuine self-knowledge. For juniors, valuing mentorship and learning opportunities is expected and healthy.",
+          "category": "culture_fit",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "How do you handle interruptions or context-switching?",
+            "How important is feedback to your growth, and how do you like to receive it?",
+            "If you joined tomorrow, what would your ideal first 90 days look like?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Thoughtful and specific",
+            "culture_fit": "Self-aware about needs",
+            "key_signals": ["self-knowledge", "specificity", "adaptability", "growth-oriented"]
+          }
+        },
+        {
+          "id": "hr-jr-006",
+          "question": "That's all my questions — what would you like to know about us, the team, or the role?",
+          "expected_answer": "Strong candidates ask thoughtful, researched questions that reveal genuine curiosity: about team dynamics, engineering culture, growth opportunities, product roadmap, how success is measured, onboarding. Best questions: 'What does a successful first year look like?', 'How does the team handle disagreements?', 'What's the biggest challenge the team is facing right now?', 'What's something you wish you'd known before joining?' Red flag: no questions at all, or only questions about PTO/compensation at this stage.",
+          "category": "engagement",
+          "difficulty": 1.0,
+          "follow_ups": [],
+          "evaluation_criteria": {
+            "communication": "Asks insightful, prepared questions",
+            "engagement": "Demonstrates genuine curiosity",
+            "key_signals": ["thoughtful questions", "curiosity", "culture interest", "growth focus"]
+          }
+        }
+      ]
+    },
+    "mid": {
+      "theta_range": [2.0, 3.0],
+      "yoe": "2-5 years",
+      "questions": [
+        {
+          "id": "hr-mid-001",
+          "question": "Walk me through the arc of your career so far. What's been intentional, and what was unexpected?",
+          "expected_answer": "Strong answer: coherent narrative with honest reflection on both planned moves and surprises. Shows intentional career development — growing responsibilities, increasing complexity, deliberate skill building. Not just a timeline but a story that reveals decision-making values. For mid-level: should demonstrate they've moved beyond 'just shipping code' to thinking about impact and growth trajectory.",
+          "category": "career_goals",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "What's the toughest career decision you've had to make?",
+            "Knowing what you know now, what would you do differently?",
+            "What pulled you specifically toward engineering vs other paths?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Coherent narrative with intentionality",
+            "self_awareness": "Understands their own growth trajectory",
+            "key_signals": ["intentional decisions", "growth narrative", "self-reflection", "values"]
+          }
+        },
+        {
+          "id": "hr-mid-002",
+          "question": "When do you feel most energized at work? What kinds of problems or projects get you in a flow state?",
+          "expected_answer": "Strong answer: specific about what drives them — whether it's solving hard technical puzzles, shipping products users love, mentoring others, or working at scale. Connects these motivators to past experiences with concrete examples. Reveals intrinsic vs extrinsic motivation balance. For mid-level: often energized by growing ownership, seeing real user impact, or tackling increasingly complex challenges.",
+          "category": "motivation",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "Tell me about a project that really lit you up — what made it special?",
+            "What's the opposite — what drains your energy at work?",
+            "How does this role connect to what motivates you?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Specific and authentic",
+            "motivation": "Intrinsic motivation aligned with role",
+            "key_signals": ["specific motivators", "intrinsic drive", "alignment", "self-knowledge"]
+          }
+        },
+        {
+          "id": "hr-mid-003",
+          "question": "Tell me about a time things got really stressful at work — a crunch, a fire, a tough deadline. How did you handle it?",
+          "expected_answer": "Strong answer: describes a real high-pressure situation with specific coping strategies — prioritization, clear communication with stakeholders, breaking the problem down, knowing when to ask for help. For mid-level: should show they can manage their own stress AND communicate proactively to the team. Not 'I thrive under pressure' bravado, but concrete, healthy strategies. Bonus: mentions what they learned about preventing similar situations.",
+          "category": "soft_skills",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "What was the most stressful work situation you've been through?",
+            "How do you decide when to push through versus when to raise the flag?",
+            "What do you do to prevent burnout?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Honest about challenges with concrete strategies",
+            "resilience": "Healthy approach to stress",
+            "key_signals": ["strategies", "self-care", "communication", "prioritization"]
+          }
+        },
+        {
+          "id": "hr-mid-004",
+          "question": "What do you look for in a manager and a team? What makes a working relationship really click for you?",
+          "expected_answer": "Strong answer: specific qualities backed by experience — maybe they value trust and autonomy, clear and direct feedback, growth support, or psychological safety. Connects to both positive and negative past experiences. For mid-level: often value autonomy with available guidance, clear expectations, and meaningful growth opportunities. Shows they've reflected on what helps versus hinders their best work.",
+          "category": "culture_fit",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "Tell me about the best manager you've worked with — what set them apart?",
+            "How do you prefer to get feedback — in the moment, in 1:1s, written?",
+            "What management style makes you check out?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Specific preferences with self-awareness",
+            "culture_fit": "Knows what environment suits them",
+            "key_signals": ["specific qualities", "past experience", "self-awareness", "growth"]
+          }
+        },
+        {
+          "id": "hr-mid-005",
+          "question": "Thinking 3-5 years out, where are you heading? What does the next chapter of your career look like?",
+          "expected_answer": "Strong answer: has a direction without being rigid — describes whether they lean toward deep IC work, tech leadership, or management, and what skills they want to build. For mid-level: often exploring the senior engineer path, thinking about specialization vs breadth, or starting to consider tech lead responsibilities. Should connect their goals to how this role fits. Shows ambition balanced with realism.",
+          "category": "career_goals",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "What skills or experiences do you need to get there?",
+            "Have you given thought to IC versus management track?",
+            "How does this role specifically help you get to where you want to be?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Has direction with flexibility",
+            "career_goals": "Intentional about growth",
+            "key_signals": ["direction", "skill development", "realistic", "role alignment"]
+          }
+        }
+      ]
+    },
+    "senior": {
+      "theta_range": [3.0, 4.0],
+      "yoe": "5-10 years",
+      "questions": [
+        {
+          "id": "hr-sr-001",
+          "question": "At this point in your career, what are you actually optimizing for? What would make this the right next move?",
+          "expected_answer": "Strong answer: articulate about career values and trade-offs — maybe they want technical depth in a specific domain, broader organizational impact, team building, or a particular problem space. For seniors: should go beyond 'interesting problems' to specifics about the kind of impact they want, the organizational context they thrive in, and their definition of success. Shows they've done the introspection to know what they actually want.",
+          "category": "career_goals",
+          "difficulty": 3.0,
+          "follow_ups": [
+            "What would make you stay somewhere for 5+ years?",
+            "What matters more to you right now — the role, the team, or the company mission?",
+            "What's an absolute deal-breaker for you?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Articulate and self-aware",
+            "career_goals": "Strategic career thinking",
+            "key_signals": ["specific values", "strategic thinking", "self-knowledge", "intentionality"]
+          }
+        },
+        {
+          "id": "hr-sr-002",
+          "question": "How do you see your impact extending beyond just your immediate team? What's your role in the broader engineering org?",
+          "expected_answer": "Strong answer: thinks about impact at the organizational level — raising engineering standards, contributing to hiring, mentoring across teams, driving technical initiatives, improving processes. For seniors: should demonstrate they've already done this, not just aspire to it. Shows leadership mindset beyond individual contribution. Best answers include concrete examples of cross-team or org-level impact they've driven.",
+          "category": "culture_fit",
+          "difficulty": 3.0,
+          "follow_ups": [
+            "Give me a specific example of how you've influenced beyond your team.",
+            "How do you balance your team's delivery goals with broader organizational contributions?",
+            "What engineering culture initiatives have you started or championed?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Organizational thinking",
+            "leadership": "Broader impact mindset",
+            "key_signals": ["organizational awareness", "broader contribution", "mentoring", "culture"]
+          }
+        },
+        {
+          "id": "hr-sr-003",
+          "question": "How do you work with people outside of engineering — product, design, business stakeholders? What's your approach to building those relationships?",
+          "expected_answer": "Strong answer: describes genuine cross-functional partnership — translating technical concepts for non-technical audiences, building trust through reliability and transparency, aligning on priorities, and influencing product/business decisions through technical expertise. For seniors: should have concrete stories of cross-functional wins and navigating disagreements constructively.",
+          "category": "soft_skills",
+          "difficulty": 3.0,
+          "follow_ups": [
+            "Tell me about a time you and product management really disagreed. How'd you work through it?",
+            "When has your technical insight changed a business decision?",
+            "How do you explain complex technical trade-offs to non-technical people?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Cross-functional fluency",
+            "influence": "Technical credibility with non-engineers",
+            "key_signals": ["translation skills", "trust building", "cross-functional", "influence"]
+          }
+        }
+      ]
+    },
+    "staff": {
+      "theta_range": [4.0, 5.0],
+      "yoe": "10+ years",
+      "questions": [
+        {
+          "id": "hr-staff-001",
+          "question": "At the Staff+ level, how do you think about your impact? What does success look like for you in this kind of role?",
+          "expected_answer": "Strong answer: articulates that Staff+ impact is organizational, not personal output. Success means setting technical direction, enabling other engineers to be more effective, identifying the most important problems, building things that outlast them. Shows multiplier mindset — making 10 engineers more effective rather than being 10x productive alone. Comfortable with ambiguity, able to influence without formal authority, and thinks in terms of systems and leverage.",
+          "category": "career_goals",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you actually measure whether you're being effective as a Staff engineer?",
+            "How do you decide where to invest your time when everything seems important?",
+            "What's the most common mistake you see senior engineers make when they step into Staff roles?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Articulates Staff-level impact model",
+            "leadership": "Multiplier mindset",
+            "key_signals": ["organizational impact", "multiplier", "direction-setting", "enabling others"]
+          }
+        },
+        {
+          "id": "hr-staff-002",
+          "question": "Tell me about a time you had to navigate organizational politics to get something important done technically. How did you approach it?",
+          "expected_answer": "Strong answer: acknowledges that organizational dynamics are a reality and part of the job. Describes navigating competing interests, building coalitions, and achieving outcomes through awareness and relationship-building. Not cynical about politics — understands it as how organizations function. Demonstrates stakeholder mapping, finding shared interests, building credibility over time, and patience for consensus-building. Shows they can get things done in complex organizational environments.",
+          "category": "soft_skills",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you build credibility and trust with people outside your direct sphere?",
+            "What do you do when the technically right answer isn't politically viable?",
+            "How do you build alignment across teams with conflicting priorities?"
+          ],
+          "evaluation_criteria": {
+            "communication": "Organizational sophistication",
+            "influence": "Navigates complexity constructively",
+            "key_signals": ["political awareness", "coalition building", "patience", "credibility"]
+          }
+        }
+      ]
+    }
+  }
+}

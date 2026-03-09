@@ -1,0 +1,566 @@
+{
+  "type": "system_design",
+  "display_name": "System Design / Technical Architecture",
+  "persona": {
+    "name": "Alex Rivera",
+    "role": "Staff Software Engineer",
+    "voice": "Puck",
+    "focus": "System design, algorithms, architecture, problem-solving, technical depth"
+  },
+  "roles": {
+    "backend": {
+      "display_name": "Backend Engineer",
+      "focus_areas": ["API design", "database architecture", "caching", "message queues", "scalability", "distributed systems"],
+      "levels": {
+        "junior": {
+          "questions": [
+            {
+              "id": "sd-be-jr-001",
+              "question": "Let's start with something straightforward — design a REST API for a todo list app. Walk me through the endpoints, data model, and architecture.",
+              "expected_answer": "Endpoints: GET /todos (list), POST /todos (create), GET /todos/:id (read), PUT /todos/:id (update), DELETE /todos/:id (delete). Data model: id, title, description, completed (boolean), created_at, updated_at. Architecture: web server → API handler → database. Use proper HTTP status codes (200, 201, 204, 400, 404). Input validation on create/update. Pagination for list endpoint. Consider: authentication (who owns each todo), error response format, filtering/sorting.",
+              "category": "api_design",
+              "difficulty": 1.5,
+              "follow_ups": [
+                "How would you add user authentication?",
+                "How would you handle pagination?",
+                "What database would you choose and why?"
+              ]
+            },
+            {
+              "id": "sd-be-jr-002",
+              "question": "Tell me about SQL versus NoSQL databases — when would you reach for one over the other?",
+              "expected_answer": "SQL databases (PostgreSQL, MySQL): structured data, tables with relationships, ACID transactions, SQL query language, schema enforcement. NoSQL (MongoDB, DynamoDB, Redis): flexible schema, horizontal scaling, various data models (document, key-value, graph, column-family). Choose SQL when: data is relational, need ACID transactions, complex queries with joins. Choose NoSQL when: schema varies, need horizontal scale, simple access patterns, high throughput with eventual consistency. Most applications start with SQL. Consider: PostgreSQL can handle JSON documents too, bridging the gap.",
+              "category": "databases",
+              "difficulty": 1.0,
+              "follow_ups": [
+                "What is ACID and why does it matter?",
+                "What is an index and how does it speed up queries?",
+                "When would you use Redis?"
+              ]
+            }
+          ]
+        },
+        "mid": {
+          "questions": [
+            {
+              "id": "sd-be-mid-001",
+              "question": "Classic one — design a URL shortener like bit.ly. Walk me through the core architecture, data model, and how you'd think about scaling it.",
+              "expected_answer": "Core: convert long URLs to short codes, redirect on access. Generation: base62 encoding of auto-increment ID or random string with collision check. Data model: short_code (indexed), original_url, created_at, user_id, click_count. Architecture: load balancer → web servers → cache (Redis for hot URLs) → database. Read-heavy workload: cache aggressively, CDN for redirects. Scaling: read replicas for database, consistent hashing for cache, analytics via async event stream (Kafka). Edge cases: custom URLs, expiration, abuse prevention (rate limiting, blocklist), analytics (clicks by geography/time).",
+              "category": "system_design",
+              "difficulty": 2.5,
+              "follow_ups": [
+                "How would you handle billions of URLs?",
+                "How do you ensure short codes are unique in a distributed system?",
+                "How would you implement real-time click analytics?"
+              ]
+            },
+            {
+              "id": "sd-be-mid-002",
+              "question": "So you're building caching for an e-commerce product catalog. What's your strategy, and what are the main things you'd need to think about?",
+              "expected_answer": "Multi-layer caching: CDN for product images and static assets, application cache (Redis) for product data, database query cache. Cache strategy: cache-aside (read from cache, on miss read from DB and populate cache). Invalidation: TTL-based for simplicity, event-driven invalidation (product updated → invalidate cache entry) for freshness. Key design: cache key schema (product:id, category:slug:page), cache size limits with LRU eviction, cache warming for popular products. Considerations: cache stampede prevention (distributed locks or probabilistic early expiration), eventual consistency (stale data acceptable for catalog, not for pricing/inventory), cache serialization format (MessagePack > JSON for performance).",
+              "category": "caching",
+              "difficulty": 2.5,
+              "follow_ups": [
+                "How do you prevent cache stampede?",
+                "What's the difference between cache-aside and write-through?",
+                "How do you handle cache invalidation across multiple servers?"
+              ]
+            },
+            {
+              "id": "sd-be-mid-003",
+              "question": "Design a notification system that can push millions of messages — we're talking push notifications, emails, SMS, the whole thing. How would you architect this?",
+              "expected_answer": "Architecture: API receives notification request → message queue (Kafka/SQS) for decoupling → worker pools per channel (email, push, SMS). Each channel has its own queue and workers to handle different throughput/latency requirements. Data model: notification template, user preferences (channels, frequency), delivery status tracking. Key components: preference service (user opted-in channels), rate limiting (per user, per channel), deduplication (idempotency key), retry with exponential backoff, priority levels (urgent vs batch). Scaling: partition queues by priority, horizontal worker scaling, batch processing for non-urgent notifications. Monitoring: delivery rate, bounce rate, latency per channel.",
+              "category": "system_design",
+              "difficulty": 2.5,
+              "follow_ups": [
+                "How do you handle user notification preferences at scale?",
+                "How do you ensure exactly-once delivery?",
+                "How would you implement notification batching/digesting?"
+              ]
+            }
+          ]
+        },
+        "senior": {
+          "questions": [
+            {
+              "id": "sd-be-sr-001",
+              "question": "Let's design a real-time chat system like Slack — channels, direct messages, file sharing, the whole thing. We're talking 100K+ employees. How would you build this?",
+              "expected_answer": "Architecture: WebSocket connection layer (stateful, needs sticky sessions or connection registry), message routing service, persistence layer. Connection management: WebSocket servers with connection registry (Redis) mapping user → server. Message flow: client → WS server → message service → persist + fan-out to recipients' WS servers. Data model: channels, messages (partitioned by channel), membership, read positions. Scaling: shard channels across message service instances, separate read/write paths, hot channels get dedicated resources. File sharing: upload to object storage (S3), generate thumbnails asynchronously, store metadata in message DB. Search: index messages in Elasticsearch. Presence: heartbeat-based online status with distributed presence service. Delivery guarantees: message IDs for deduplication, client-side acknowledgment, offline queue for mobile push.",
+              "category": "system_design",
+              "difficulty": 3.5,
+              "follow_ups": [
+                "How do you handle message ordering guarantees?",
+                "How would you implement @mentions and notifications?",
+                "How do you handle the 'thundering herd' problem when a company-wide channel gets a message?"
+              ]
+            },
+            {
+              "id": "sd-be-sr-002",
+              "question": "You need to build rate limiting across multiple service instances and data centers. Walk me through how you'd design that — what are the tricky parts?",
+              "expected_answer": "Algorithms: token bucket (smooth traffic), sliding window (precise counting), leaky bucket (constant output rate). Distributed: centralized counter in Redis with Lua scripts for atomicity (INCR + EXPIRE). Multi-datacenter: either global Redis with latency trade-off, or local rate limiters with eventual synchronization (accept slight over-limit). Implementation: token bucket in Redis — key per (user, endpoint), Lua script atomically checks and decrements tokens, TTL for automatic refill. Fallback: local in-memory rate limiter when Redis is unavailable (degrade gracefully, over-allow rather than block). Configuration: rate limits as configuration (not code), per-tier limits (free vs paid), per-endpoint limits. Monitoring: track rate limit hits, false positives, Redis latency. Edge cases: distributed clock skew, burst handling, graceful degradation.",
+              "category": "distributed_systems",
+              "difficulty": 3.5,
+              "follow_ups": [
+                "How do you handle rate limiting across multiple data centers?",
+                "What happens when your Redis rate limiter goes down?",
+                "How do you test rate limiting behavior?"
+              ]
+            }
+          ]
+        },
+        "staff": {
+          "questions": [
+            {
+              "id": "sd-be-staff-001",
+              "question": "Design the architecture for a multi-tenant SaaS platform — you need to support everything from tiny tenants with 10 users to enterprise ones with 100K. How do you handle the data isolation and everything else?",
+              "expected_answer": "Tenancy models: shared database with tenant_id column (cheapest, least isolation), schema-per-tenant (moderate isolation), database-per-tenant (strongest isolation, most expensive). Decision: tier-based — small tenants share infrastructure, enterprise tenants get dedicated resources. Architecture: API gateway with tenant resolution (subdomain or header), tenant-aware middleware injects tenant context, query filters enforce data isolation. Scaling: control plane (tenant management, billing, provisioning) separate from data plane (application workloads). Noisy neighbor prevention: resource quotas per tenant, separate compute for large tenants, queue partitioning. Data migration: tools for moving tenants between tiers as they grow. Compliance: data residency (geo-aware routing), tenant data export/deletion, audit logging. Key challenge: the 'cell architecture' — group tenants into cells (independent stacks), route at the edge, scale cells independently. This limits blast radius and enables independent deployment.",
+              "category": "architecture",
+              "difficulty": 4.5,
+              "follow_ups": [
+                "How do you handle schema migrations across hundreds of tenant databases?",
+                "What's your approach to tenant-level monitoring and alerting?",
+                "How do you handle cross-tenant features (like shared marketplaces)?"
+              ]
+            },
+            {
+              "id": "sd-be-staff-002",
+              "question": "Here's a real one — you need to handle 10 million financial transactions a day, with exactly-once semantics and a complete audit trail. How do you design that system?",
+              "expected_answer": "Architecture: event-driven with immutable event log. Ingestion: API gateway → validation service → Kafka (partitioned by account, ordered within partition). Processing: Kafka consumer groups with manual offset management for exactly-once. Pattern: idempotent processing with transaction IDs, transactional outbox for state changes + events atomically. State: event sourcing — store events, derive current state. Database: PostgreSQL with partitioned tables (by date), write-ahead for durability. Reconciliation: batch job compares expected vs actual state, flags discrepancies. Auditability: immutable event log, every state change traceable to a source event, regulatory-compliant retention (7+ years). Disaster recovery: multi-AZ replication, RPO < 1 second. Monitoring: real-time alerting on anomalies (unusual transaction volumes, processing latency spikes). Security: encryption at rest and in transit, field-level encryption for PII, access logging.",
+              "category": "architecture",
+              "difficulty": 5.0,
+              "follow_ups": [
+                "How do you handle reconciliation when events are processed out of order?",
+                "What's your approach to data retention and archival for compliance?",
+                "How do you ensure the system continues operating during a partial outage?"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "frontend": {
+      "display_name": "Frontend Engineer",
+      "focus_areas": ["component architecture", "state management", "performance", "accessibility", "responsive design"],
+      "levels": {
+        "junior": {
+          "questions": [
+            {
+              "id": "sd-fe-jr-001",
+              "question": "Let's talk about a responsive navigation component — something that works great on both mobile and desktop. Walk me through how you'd approach that.",
+              "expected_answer": "Desktop: horizontal nav bar with links, dropdowns for sub-navigation. Mobile: hamburger menu icon that opens a sidebar/drawer. Implementation: CSS media queries for breakpoint-based layout changes, or container queries for component-level responsiveness. Use semantic HTML (nav, ul, li, a). Accessibility: keyboard navigation, ARIA labels for hamburger button, focus management when drawer opens/closes, escape to close. Performance: use CSS transitions for animations (not JS), lazy-load dropdown content. Consider: touch targets (44x44px minimum for mobile), progressive enhancement, skip-to-content link.",
+              "category": "component_design",
+              "difficulty": 1.5,
+              "follow_ups": [
+                "How would you handle accessibility for the mobile menu?",
+                "How do you decide breakpoint values?",
+                "How would you test this across different devices?"
+              ]
+            }
+          ]
+        },
+        "mid": {
+          "questions": [
+            {
+              "id": "sd-fe-mid-001",
+              "question": "Picture a data-heavy dashboard — lots of real-time updates, complex filtering options, interactive charts. How would you architect something like that on the frontend?",
+              "expected_answer": "Data layer: React Query/TanStack Query for server state (polling or WebSocket for real-time), normalized cache to avoid duplicate data. State management: URL params for filter state (shareable, bookmarkable), local state for UI interactions. Component architecture: container/presenter pattern — data fetching in containers, pure rendering in presenters. Charts: Recharts or D3 for visualization, virtualized rendering for large datasets. Performance: memoize expensive calculations (useMemo), virtualize long lists (react-window), debounce filter inputs, code-split chart libraries, skeleton loading states. Real-time: WebSocket connection with reconnection logic, optimistic UI updates, conflict resolution for concurrent edits. Responsive: condensed chart views on mobile, collapsible filter panels.",
+              "category": "architecture",
+              "difficulty": 2.5,
+              "follow_ups": [
+                "How do you handle WebSocket reconnection and state synchronization?",
+                "How would you optimize rendering performance with thousands of data points?",
+                "How do you handle cross-filter interactions?"
+              ]
+            }
+          ]
+        },
+        "senior": {
+          "questions": [
+            {
+              "id": "sd-fe-sr-001",
+              "question": "You're building a design system and component library for a company with multiple product teams. How do you balance consistency with giving teams the flexibility they need?",
+              "expected_answer": "Architecture: core design tokens (colors, spacing, typography) as CSS custom properties or JS constants, primitive components (Button, Input, Card) with flexible APIs, composite components (DataTable, Form) built from primitives. Distribution: published as NPM package(s), versioned with semantic versioning, changesets for changelogs. Documentation: Storybook with interactive examples, usage guidelines, accessibility notes, do/don't examples. Flexibility: composition over configuration, render props or slots for customization, theme variants for product-specific branding. Governance: RFC process for new components, design review with design team, deprecation policy with migration guides. Testing: visual regression with Chromatic, unit tests for behavior, accessibility audits (axe). Adoption: track usage metrics, measure consistency scores, provide codemods for breaking changes.",
+              "category": "architecture",
+              "difficulty": 3.5,
+              "follow_ups": [
+                "How do you handle breaking changes without disrupting product teams?",
+                "How do you ensure accessibility across all components?",
+                "How do you decide what belongs in the design system vs. a product-specific component?"
+              ]
+            }
+          ]
+        },
+        "staff": {
+          "questions": [
+            {
+              "id": "sd-fe-staff-001",
+              "question": "You're designing the frontend for a platform with multiple products that need independent deployment, shared auth, the whole micro-frontend thing. How do you structure that?",
+              "expected_answer": "Architecture options: Module Federation (webpack), import maps with native ESM, or single-spa as runtime orchestrator. Decision depends on team autonomy needs. Shell application: handles routing, authentication, shared layout (header/sidebar), and loading micro-frontends. Shared dependencies: React, design system loaded once by shell, shared via Module Federation. Communication: custom events for cross-MFE communication, shared state via URL params or event bus (minimal). Deployment: each MFE has independent CI/CD, deploys to CDN, shell discovers latest version via manifest. Challenges: consistent styling (shared design tokens), performance (avoid bundle duplication), testing (contract tests between shell and MFEs), SEO (SSR at shell level). Progressive approach: start monolith, extract MFEs only when team boundaries or deployment independence demand it.",
+              "category": "architecture",
+              "difficulty": 4.5,
+              "follow_ups": [
+                "How do you handle shared state (like user authentication) across micro-frontends?",
+                "What's the testing strategy for a micro-frontend architecture?",
+                "How do you prevent the architecture from becoming more complex than the problems it solves?"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "ai_ml": {
+      "display_name": "AI/ML Engineer",
+      "focus_areas": ["ML model training/serving", "feature engineering", "ML pipelines", "experiment platforms", "model monitoring", "MLOps"],
+      "levels": {
+        "junior": {
+          "questions": [
+            {
+              "id": "sd-ml-jr-001",
+              "question": "Let's talk about ML pipelines — walk me through how you'd set up training for a text classification model, from raw data all the way to a trained model.",
+              "expected_answer": "Steps: 1) Data collection — gather labeled text data, store in structured format (CSV/Parquet). 2) Data preprocessing — clean text (lowercase, remove punctuation, handle special chars), tokenization, split into train/validation/test sets (80/10/10). 3) Feature extraction — TF-IDF for simple models, or tokenizer + embeddings for deep learning (BERT, sentence-transformers). 4) Model selection — start simple (logistic regression, random forest on TF-IDF), then try fine-tuned transformer if needed. 5) Training — use scikit-learn or PyTorch/HuggingFace Transformers, track metrics (accuracy, precision, recall, F1). 6) Evaluation — confusion matrix, per-class metrics, evaluate on held-out test set. 7) Versioning — save model artifacts with metadata (hyperparameters, training data hash, metrics). Tools: Jupyter for exploration, then move to scripts. Consider: class imbalance (oversampling, class weights), reproducibility (random seeds, pinned dependencies).",
+              "category": "ml_training",
+              "difficulty": 1.5,
+              "follow_ups": [
+                "How would you handle class imbalance in your dataset?",
+                "What metrics would you use to evaluate the model and why?",
+                "How do you decide between a simple model and a deep learning approach?"
+              ]
+            },
+            {
+              "id": "sd-ml-jr-002",
+              "question": "Tell me about feature stores — why would ML teams use one, and what problems are you actually solving there?",
+              "expected_answer": "A feature store is a centralized repository for storing, managing, and serving ML features. Problems solved: 1) Training-serving skew — ensures the same feature computation logic is used in training and inference. 2) Feature reuse — teams share features instead of recomputing the same transformations. 3) Point-in-time correctness — for training data, you need features as they were at the time of each example, not the current value (avoids data leakage). 4) Online/offline serving — batch features for training (offline store, e.g., Parquet in S3) and low-latency features for inference (online store, e.g., Redis/DynamoDB). Examples: Feast (open source), Tecton, Amazon SageMaker Feature Store. A feature store typically has: feature definitions (schema + transformation logic), materialization jobs (compute and store features), and a serving API (get features by entity key). Consider: who owns features, versioning, data quality monitoring.",
+              "category": "ml_infrastructure",
+              "difficulty": 1.0,
+              "follow_ups": [
+                "What's the difference between an online and offline feature store?",
+                "What is training-serving skew and why is it dangerous?",
+                "How would you organize features across multiple ML teams?"
+              ]
+            }
+          ]
+        },
+        "mid": {
+          "questions": [
+            {
+              "id": "sd-ml-mid-001",
+              "question": "Let's design an end-to-end ML system for recommendations. You're handling data ingestion, training, and serving predictions in real time to users. Walk me through it.",
+              "expected_answer": "Data: user interaction events (clicks, purchases, ratings) collected via event stream (Kafka), user and item metadata from application DB. Feature engineering: user features (purchase history, browsing patterns, demographics), item features (category, price, popularity), interaction features (recency, frequency). Offline pipeline: Airflow-orchestrated — extract events → compute features (Spark) → store in feature store → train model (collaborative filtering like ALS, or neural like two-tower model) → evaluate (precision@k, recall@k, NDCG) → register in model registry (MLflow). Online serving: user request → fetch user + candidate item features from feature store → model inference (candidate generation → ranking) → apply business rules (diversity, freshness, already-seen filter) → return top-N. Architecture: candidate generation (fast, approximate — ANN index like FAISS) → ranking model (precise, score top-100 candidates). Training cadence: daily retrain with latest interactions, weekly full retrain. Monitoring: recommendation quality metrics, click-through rate, coverage, novelty.",
+              "category": "ml_systems",
+              "difficulty": 2.5,
+              "follow_ups": [
+                "How do you handle the cold-start problem for new users or new items?",
+                "How would you set up A/B testing for different recommendation models?",
+                "How do you balance relevance vs diversity in recommendations?"
+              ]
+            },
+            {
+              "id": "sd-ml-mid-002",
+              "question": "You need to train and evaluate tons of ML models in parallel, track experiments, keep everything reproducible. How would you design that system?",
+              "expected_answer": "Experiment tracking: MLflow or Weights & Biases — log hyperparameters, metrics, artifacts, code version for every run. Reproducibility: pin all dependencies (requirements.txt or conda env), set random seeds, version training data (DVC or Delta Lake), store git commit hash with each run. Parallel training: orchestrate with Airflow or Kubernetes Jobs — each experiment is a container with defined resources (GPU type/count, memory). Hyperparameter tuning: Optuna or Ray Tune for automated search (Bayesian optimization, early stopping of bad trials). Evaluation: standardized evaluation suite — same test set, same metrics, statistical significance tests (bootstrap CI) before declaring a winner. Model registry: MLflow Model Registry — staging → production promotion flow with approval. Compute: spot/preemptible instances for training (with checkpointing for interruption), dedicated instances for serving. Storage: model artifacts in S3/GCS, feature data in feature store, experiment metadata in tracking server.",
+              "category": "ml_infrastructure",
+              "difficulty": 2.5,
+              "follow_ups": [
+                "How do you version your training data alongside model versions?",
+                "How do you decide when a new model is good enough to deploy?",
+                "What's your strategy for managing GPU resources across teams?"
+              ]
+            }
+          ]
+        },
+        "senior": {
+          "questions": [
+            {
+              "id": "sd-ml-sr-001",
+              "question": "Design a real-time ML serving platform that can handle 10,000+ requests per second. You're doing feature engineering, inference, A/B testing — all at scale. Walk me through your architecture.",
+              "expected_answer": "Architecture: online feature store (Redis/DynamoDB for pre-computed features, Flink for real-time feature computation), model serving (TensorFlow Serving, Triton, or custom gRPC service), experiment platform for A/B testing. Feature pipeline: batch features computed daily (Spark → feature store), real-time features from event stream (Kafka → Flink → feature store). Serving: feature retrieval → model inference → response. Low latency: pre-warm model containers, batch inference requests (dynamic batching in Triton), cache popular predictions, quantize models (FP16/INT8). A/B testing: experiment assignment at request time (hash-based bucketing for consistency), metrics collection via event stream, statistical analysis pipeline. Model lifecycle: shadow mode (run new model in parallel without serving), canary deployment (gradual traffic shift), automatic rollback on metric degradation. Monitoring: prediction distribution drift, feature drift, latency percentiles (p50/p95/p99), model accuracy decay. Infrastructure: autoscaling GPU pods in K8s, model warm-up on deployment, graceful draining on shutdown.",
+              "category": "ml_systems",
+              "difficulty": 3.5,
+              "follow_ups": [
+                "How do you detect and handle model drift in production?",
+                "What's your approach to feature store design for both batch and real-time?",
+                "How do you ensure reproducibility of training vs serving features?"
+              ]
+            },
+            {
+              "id": "sd-ml-sr-002",
+              "question": "You have dozens of ML models in production and need to monitor them closely — catching data drift, model degradation, pipeline failures. How do you build that system?",
+              "expected_answer": "Data drift detection: monitor input feature distributions (KL divergence, PSI, KS test) comparing production data to training data, alert when drift exceeds threshold. Prediction drift: monitor output distribution shifts even without ground truth labels. Model performance: when labels are available (delayed ground truth), compute accuracy/AUC trends, detect degradation with statistical process control. Pipeline monitoring: Airflow/Prefect health checks, data freshness (feature store staleness), training pipeline success/failure, serving latency and error rates. Architecture: production inference logs → event stream (Kafka) → drift computation service (batch + streaming) → metrics store (Prometheus/InfluxDB) → alerting (PagerDuty) + dashboards (Grafana). Per-model dashboards: feature distributions, prediction distributions, latency, throughput, error rate, data quality. Automated remediation: trigger model retrain when drift exceeds threshold, rollback to previous model if performance drops, circuit-breaker for serving failures (fallback to rule-based). Governance: model cards documenting expected data distributions, SLOs per model (latency, accuracy), regular model review cadence.",
+              "category": "ml_monitoring",
+              "difficulty": 3.5,
+              "follow_ups": [
+                "How do you handle monitoring when ground truth labels are delayed by weeks?",
+                "What's the difference between data drift and concept drift?",
+                "How do you prioritize alerts across 50+ models in production?"
+              ]
+            }
+          ]
+        },
+        "staff": {
+          "questions": [
+            {
+              "id": "sd-ml-staff-001",
+              "question": "You're designing an ML platform for a big company with 20+ ML teams. You need to cover the full lifecycle from experimentation to production. How do you standardize without slowing down the teams?",
+              "expected_answer": "Platform layers: 1) Data layer — centralized feature store with self-service feature registration, data catalog (Amundsen/DataHub) for discoverability, data quality framework. 2) Training layer — managed training infrastructure (Kubeflow/SageMaker), notebook environments with GPU access, experiment tracking (MLflow), hyperparameter tuning service. 3) Serving layer — unified model serving (Seldon/KServe on K8s) with autoscaling, A/B testing framework, shadow deployment capability. 4) Monitoring layer — standardized model monitoring (drift detection, performance tracking), alerting, automated retraining triggers. Self-service: teams define models via declarative configs (model.yaml with serving requirements, feature dependencies, SLOs), platform handles infrastructure. Standardization: golden paths (opinionated templates) for common patterns (batch prediction, real-time serving, LLM fine-tuning), but escape hatches for custom needs. Governance: model registry with approval workflow, model cards, lineage tracking (data → features → model → predictions), cost attribution per team. Organizational: platform team owns shared infrastructure, ML teams own models and features, SRE owns production reliability. Key metrics: time from experiment to production, platform adoption rate, infrastructure cost per prediction.",
+              "category": "ml_platform",
+              "difficulty": 4.5,
+              "follow_ups": [
+                "How do you handle the tension between standardization and team autonomy?",
+                "What's your approach to cost management when teams have unlimited GPU access?",
+                "How do you design the platform to support both traditional ML and LLM workloads?"
+              ]
+            },
+            {
+              "id": "sd-ml-staff-002",
+              "question": "Build a massive A/B testing platform for ML models that can handle thousands of concurrent experiments across multiple systems. How do you maintain statistical rigor at that scale?",
+              "expected_answer": "Architecture: experiment assignment service (hash-based user bucketing for consistency, supports mutual exclusion and layered experiments), metrics collection pipeline (event stream → aggregation → statistical analysis), experiment management UI. Assignment: deterministic hashing (user_id + experiment_id → bucket), layered experiments (Google's overlapping experiment infrastructure — each layer is independent), mutual exclusion groups for conflicting experiments. Statistical engine: sequential testing (always-valid p-values) for faster decisions, CUPED variance reduction, multiple comparison correction (Bonferroni or FDR), Bayesian approach for business-friendly probability statements. Metrics: guardrail metrics (must not degrade), primary metrics (optimization target), secondary metrics (observational). Pipeline: raw events → Kafka → Flink (real-time metric aggregation) → daily batch computation → statistical tests → dashboard. Scale considerations: pre-compute metric aggregates per experiment-variant, approximate algorithms for high-cardinality metrics, sample ratio mismatch detection (data quality). Governance: experiment review before launch (sample size calculation, metric selection), automated experiment duration recommendation, mandatory guardrail metrics, post-experiment reports stored for institutional learning.",
+              "category": "ml_platform",
+              "difficulty": 5.0,
+              "follow_ups": [
+                "How do you handle interactions between overlapping experiments?",
+                "What's your approach to long-running experiments where user behavior changes over time?",
+                "How do you ensure experiment results are trustworthy when dealing with network effects?"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "fullstack": {
+      "display_name": "Fullstack Engineer",
+      "focus_areas": ["end-to-end architecture", "API design", "frontend-backend integration", "database design", "deployment", "performance"],
+      "levels": {
+        "junior": {
+          "questions": [
+            {
+              "id": "sd-fs-jr-001",
+              "question": "Let's build a simple blog app — you need user authentication, frontend, backend, the whole thing. Walk me through how you'd approach it.",
+              "expected_answer": "Backend: REST API with endpoints for auth (register, login, logout), posts (CRUD), and comments. Use JWT or session-based auth. Database: PostgreSQL with users, posts, comments tables. Relationships: user has many posts, post has many comments. Frontend: React/Next.js app with pages for login, post list, single post, create/edit post. State management: store auth token in httpOnly cookie (secure) or localStorage (simpler). API calls: fetch/axios with auth header. Component structure: Layout → pages → components (PostCard, CommentList, AuthForm). Styling: Tailwind CSS or CSS modules. Key considerations: input validation on both frontend and backend, XSS prevention (sanitize HTML in posts), CSRF protection, password hashing (bcrypt), proper error handling and loading states.",
+              "category": "fullstack_architecture",
+              "difficulty": 1.5,
+              "follow_ups": [
+                "How would you handle image uploads for blog posts?",
+                "How do you decide what validation to put on the frontend vs backend?",
+                "How would you implement pagination for the post list?"
+              ]
+            },
+            {
+              "id": "sd-fs-jr-002",
+              "question": "Take me through the request lifecycle in a full-stack app — what happens from the moment someone clicks a button to when they see the updated data?",
+              "expected_answer": "1) User clicks button → React event handler fires. 2) Frontend: set loading state, make HTTP request (fetch/axios) to API endpoint. 3) Network: DNS resolution, TCP connection (reused if keep-alive), TLS handshake if HTTPS, send HTTP request with headers (auth token, content-type). 4) Backend: web server receives request → middleware (auth check, CORS, rate limiting) → route handler → validate input → service/business logic → database query (ORM or raw SQL) → format response → send HTTP response. 5) Network: response travels back. 6) Frontend: receive response → update state → React re-renders affected components → user sees updated UI. Error path: network failure → catch error → show error toast/message → optionally retry. Optimistic updates: update UI immediately, roll back on error. Caching: browser cache, CDN, application cache (Redis), database query cache.",
+              "category": "fundamentals",
+              "difficulty": 1.0,
+              "follow_ups": [
+                "What's the difference between optimistic and pessimistic UI updates?",
+                "How does CORS work and why is it important?",
+                "Where would you add caching in this lifecycle?"
+              ]
+            }
+          ]
+        },
+        "mid": {
+          "questions": [
+            {
+              "id": "sd-fs-mid-001",
+              "question": "Design a real-time collaborative task app like Trello — multiple people editing at the same time. Walk me through the full-stack architecture including how you'd handle real-time updates.",
+              "expected_answer": "Backend: Node.js/Python API server + WebSocket server (Socket.io or native WS). Database: PostgreSQL for persistent data (boards, lists, cards, users, memberships), Redis for real-time state and pub/sub. API: REST for CRUD operations, WebSocket for real-time events (card moved, comment added, user typing). Data model: boards → lists → cards (ordered by position field), card has assignees, labels, comments, attachments. Real-time: when user moves a card, broadcast position update to all board members via WebSocket. Conflict resolution: last-write-wins for most fields, operational transform for simultaneous card moves. Frontend: React with optimistic updates — move card immediately in UI, send update to server, roll back on error. State: local state synced via WebSocket events, React Query for server state. Drag-and-drop: react-beautiful-dnd or dnd-kit. Auth: JWT with refresh tokens, board-level permissions (owner, member, viewer).",
+              "category": "fullstack_architecture",
+              "difficulty": 2.5,
+              "follow_ups": [
+                "How do you handle conflicts when two users move the same card simultaneously?",
+                "How would you implement undo/redo for card operations?",
+                "How do you optimize WebSocket connections for users with many boards?"
+              ]
+            },
+            {
+              "id": "sd-fs-mid-002",
+              "question": "Let's design a file upload system that handles big files — up to 1GB. You need progress tracking, background processing, the whole thing. How do you build it?",
+              "expected_answer": "Upload: chunked upload from frontend (split file into 5MB chunks, upload sequentially or in parallel with concurrency limit). Backend: receive chunks, store temporarily, reassemble on completion. Progress: track chunks received / total chunks, send progress via SSE or WebSocket. Storage: upload to object storage (S3) using presigned URLs (bypass server for large files) or multipart upload API. Processing: after upload complete, push job to message queue (SQS/Redis), background worker processes file (resize images, transcode video, parse CSV). Status: poll or WebSocket for processing status updates. Frontend: drag-and-drop zone, progress bar per file, cancel/retry support, file type validation before upload. Error handling: resume interrupted uploads (track uploaded chunks), retry failed chunks, timeout handling. Security: file type validation (server-side, not just extension), virus scanning, size limits, signed URLs with expiration.",
+              "category": "system_design",
+              "difficulty": 2.5,
+              "follow_ups": [
+                "How would you implement resumable uploads after a network failure?",
+                "How do you handle virus scanning for uploaded files?",
+                "What's your approach to generating thumbnails for different file types?"
+              ]
+            }
+          ]
+        },
+        "senior": {
+          "questions": [
+            {
+              "id": "sd-fs-sr-001",
+              "question": "Design a multi-tenant SaaS dashboard — role-based access, real-time data, white-labeling support. Walk me through how you'd architect the whole thing.",
+              "expected_answer": "Architecture: Next.js frontend (SSR for SEO, client-side for dashboard interactivity), Node.js/Python API, PostgreSQL with row-level security. Multi-tenancy: shared database with tenant_id on every table, middleware extracts tenant from subdomain or JWT. RBAC: roles table (admin, editor, viewer), permissions table, role_permissions junction. Check permissions in API middleware and conditionally render UI elements. Real-time dashboards: WebSocket connection per user, server pushes data updates, charts re-render with new data. Data layer: time-series data in TimescaleDB or aggregated in PostgreSQL, Redis for caching computed metrics. White-labeling: tenant config stores logo, colors, custom domain; CSS custom properties for theming, dynamic favicon/title. Frontend: chart library (Recharts/Chart.js), dashboard builder with drag-and-drop widgets, saved layouts per user. Performance: pre-compute aggregations, cache dashboard data with short TTL, lazy-load chart libraries. Security: tenant isolation enforced at database level (RLS policies), API rate limiting per tenant, audit logging.",
+              "category": "fullstack_architecture",
+              "difficulty": 3.5,
+              "follow_ups": [
+                "How do you handle custom domains for white-labeled tenants?",
+                "How do you ensure one tenant's heavy queries don't affect others?",
+                "How would you implement a dashboard builder with drag-and-drop widgets?"
+              ]
+            },
+            {
+              "id": "sd-fs-sr-002",
+              "question": "Design a marketplace platform like Airbnb — search, booking, payments, buyer-seller messaging. How would you structure that entire system?",
+              "expected_answer": "Services: API gateway → user service, listing service, search service, booking service, payment service, messaging service. Search: Elasticsearch for full-text + geo search, faceted filtering, relevance scoring. Sync listing data from PostgreSQL to ES via CDC or event stream. Booking: state machine (available → pending → confirmed → completed/cancelled), pessimistic locking on availability to prevent double-booking, calendar management. Payments: Stripe Connect for marketplace (hold payment → release on completion), escrow pattern, refund handling. Messaging: WebSocket for real-time, persist messages in database, push notifications for offline users. Frontend: Next.js with SSR for listing pages (SEO), client-side for dashboard/messaging. Map integration (Mapbox/Google Maps) for geo-based search. Image handling: S3 + CloudFront CDN, multiple sizes generated on upload. Trust & Safety: review system, identity verification, content moderation. Mobile: responsive web + potentially React Native for native app.",
+              "category": "system_design",
+              "difficulty": 3.5,
+              "follow_ups": [
+                "How do you prevent double-booking for popular listings?",
+                "How do you handle payment disputes and refunds?",
+                "How would you implement smart pricing suggestions for sellers?"
+              ]
+            }
+          ]
+        },
+        "staff": {
+          "questions": [
+            {
+              "id": "sd-fs-staff-001",
+              "question": "You're building a platform with both a web app and a public API — rate limiting, versioning, webhooks, developer docs. How do you share a codebase and handle all this?",
+              "expected_answer": "Architecture: shared core business logic layer, with separate presentation layers for web app and public API. API gateway handles routing, auth (session-based for web, API key + OAuth for public API), rate limiting (tiered by plan). API versioning: URL-based (/v1/, /v2/) with version-specific request/response transformers wrapping shared core logic. Webhook system: event-driven — business events published to message queue → webhook dispatcher service → HTTP POST to registered URLs with retry (exponential backoff, 3 attempts), signature verification (HMAC), delivery logs. Rate limiting: token bucket per API key, different limits per endpoint and plan tier, Redis-backed distributed counter. Developer portal: auto-generated API docs from OpenAPI spec, interactive API explorer (like Swagger UI), SDK generation (openapi-generator for Python/JS/Go), webhook testing tool. Monitoring: per-customer usage dashboards, API latency percentiles, error rate by endpoint/version, webhook delivery success rate. Migration strategy: deprecation timeline, sunset headers, usage analytics to identify migration targets.",
+              "category": "architecture",
+              "difficulty": 4.5,
+              "follow_ups": [
+                "How do you handle breaking changes in the public API without disrupting existing integrations?",
+                "How do you design the webhook system to handle unreliable consumer endpoints?",
+                "What's your approach to API key management and rotation?"
+              ]
+            },
+            {
+              "id": "sd-fs-staff-002",
+              "question": "You have a monolithic app serving 10M monthly active users and need to break it into services. How would you approach that migration?",
+              "expected_answer": "Phase 1 — Understand: map the monolith's domain boundaries (user management, billing, content, notifications, analytics), identify the highest-pain coupling points and the most independently-deployable domains. Phase 2 — Strangler fig pattern: don't rewrite, incrementally extract. Start with the least coupled, highest-churn domain. Put an API gateway in front of the monolith, route specific paths to new services. Phase 3 — Data decomposition: the hardest part. Each service owns its data. Extract tables into separate databases, replace direct joins with API calls or event-driven synchronization. Use CDC (Debezium) during migration to keep data in sync. Phase 4 — Shared infrastructure: event bus (Kafka) for async communication, distributed tracing (OpenTelemetry), centralized logging, shared auth service (JWT validation). Phase 5 — Frontend: initially, one frontend talks to gateway. Over time, consider micro-frontends if teams need independent deployment. Key risks: distributed transactions (use saga pattern), increased operational complexity, network latency between services. Success metrics: deployment frequency per service, mean time to recovery, team autonomy (can deploy without coordinating).",
+              "category": "architecture",
+              "difficulty": 5.0,
+              "follow_ups": [
+                "How do you handle distributed transactions across services?",
+                "What's your approach to testing in a service-oriented architecture?",
+                "How do you decide the right granularity for service boundaries?"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "data": {
+      "display_name": "Data Engineer / Data Scientist",
+      "focus_areas": ["data pipelines", "ETL/ELT", "data warehousing", "analytics infrastructure", "statistical modeling", "data governance"],
+      "levels": {
+        "junior": {
+          "questions": [
+            {
+              "id": "sd-data-jr-001",
+              "question": "ETL versus ELT — what's the difference, and when would you pick one over the other?",
+              "expected_answer": "ETL (Extract, Transform, Load): data is extracted from sources, transformed in a staging area (clean, join, aggregate), then loaded into the target system. Good when: target system has limited compute (traditional data warehouse), transformations are complex and need dedicated processing, data quality must be enforced before loading. ELT (Extract, Load, Transform): data is extracted and loaded raw into the target system, then transformed in place using the target's compute. Good when: target is a modern cloud data warehouse (BigQuery, Snowflake, Redshift) with massive compute, you want to preserve raw data for flexibility, transformations can be expressed in SQL. Modern trend: ELT is preferred because cloud warehouses are cheap and powerful, raw data preservation enables re-processing, and dbt makes SQL transformations manageable. Consider: data sensitivity (PII should be transformed before loading in some cases), cost (cloud warehouse compute costs for ELT), complexity of transformations.",
+              "category": "data_engineering",
+              "difficulty": 1.0,
+              "follow_ups": [
+                "What tools would you use for each approach?",
+                "How does dbt fit into the ELT pattern?",
+                "When would you still prefer ETL in a modern stack?"
+              ]
+            },
+            {
+              "id": "sd-data-jr-002",
+              "question": "Design a data pipeline for user behavior events — collecting them from a web app, storing them, analyzing them. Walk me through it.",
+              "expected_answer": "Collection: JavaScript SDK on frontend captures events (page views, clicks, form submissions) with metadata (timestamp, user_id, session_id, page URL, device info). Send events to backend endpoint via HTTP POST, batch events to reduce requests. Ingestion: backend API receives events → validates schema → publishes to message queue (Kafka or SQS). Storage: raw events land in data lake (S3 as Parquet files, partitioned by date). Processing: daily batch job (Spark or SQL in warehouse) aggregates events into analytics tables — daily active users, funnel conversion rates, feature usage counts. Warehouse: load aggregated data into Snowflake/BigQuery. Analytics: connect BI tool (Metabase, Looker) to warehouse for dashboards and ad-hoc queries. Data quality: validate event schema on ingestion, monitor event volume for anomalies, check for duplicate events (dedup by event_id). Consider: user consent/privacy (GDPR), event schema versioning, handling late-arriving events.",
+              "category": "data_pipelines",
+              "difficulty": 1.5,
+              "follow_ups": [
+                "How do you handle schema evolution as new event types are added?",
+                "How do you ensure events aren't lost during ingestion?",
+                "How would you build a real-time dashboard from this data?"
+              ]
+            }
+          ]
+        },
+        "mid": {
+          "questions": [
+            {
+              "id": "sd-data-mid-001",
+              "question": "Design a data warehouse for a company pulling data from everywhere — product database, CRM, payments, marketing tools. You need to make it all available for analytics. How do you do it?",
+              "expected_answer": "Architecture: medallion architecture (bronze → silver → gold). Bronze: raw data ingested from sources, stored as-is in data lake (S3 Parquet). Sources: PostgreSQL via CDC (Debezium), Salesforce CRM via API sync, Stripe webhooks, Google Analytics/marketing APIs. Silver: cleaned, deduplicated, standardized data — resolve schema differences, handle nulls, normalize timestamps to UTC, apply business rules. Gold: analytics-ready tables — star schema with fact tables (orders, events, interactions) and dimension tables (users, products, campaigns). Tools: ingestion (Fivetran/Airbyte for managed connectors, custom for complex sources), transformation (dbt for SQL-based transforms with testing and documentation), orchestration (Airflow for scheduling and dependency management). Warehouse: Snowflake or BigQuery. Key patterns: slowly changing dimensions (SCD Type 2 for historical tracking), incremental processing (process only new/changed data), data quality tests at each layer. Governance: data catalog (dbt docs or DataHub), column-level lineage, access controls per dataset, PII classification and masking.",
+              "category": "data_warehousing",
+              "difficulty": 2.5,
+              "follow_ups": [
+                "How do you handle slowly changing dimensions?",
+                "What's your approach to data quality testing across layers?",
+                "How do you manage access control to sensitive data?"
+              ]
+            },
+            {
+              "id": "sd-data-mid-002",
+              "question": "Design the analytics system for an A/B testing platform — tracking results, computing significance, giving product teams self-service reports. How do you build that?",
+              "expected_answer": "Data collection: events tagged with experiment_id and variant (control/treatment), collected via event pipeline into warehouse. Metrics computation: daily batch job calculates per-user metrics for each experiment (conversion rate, revenue, engagement). Pre-compute metric aggregates per variant per day. Statistical analysis: for each experiment, compute test statistic (z-test for proportions, t-test for continuous metrics), p-value, confidence interval, effect size. Sequential testing (always-valid p-values) for teams that want to peek early. Sample size calculator: input expected effect size, baseline rate, significance level → output required sample per variant. Reporting: self-service dashboard per experiment showing variant comparison, metric trends over time, statistical significance indicator, guardrail metrics. Architecture: event pipeline → warehouse → dbt models for metric computation → statistical analysis service (Python/R) → dashboard (Metabase/Looker). Governance: minimum experiment duration before significance check, multiple comparison correction when testing multiple metrics, sample ratio mismatch detection as data quality check.",
+              "category": "analytics",
+              "difficulty": 2.5,
+              "follow_ups": [
+                "How do you handle the multiple comparison problem when testing many metrics?",
+                "What's sample ratio mismatch and why is it important?",
+                "How would you handle long-running experiments where novelty effects are a concern?"
+              ]
+            }
+          ]
+        },
+        "senior": {
+          "questions": [
+            {
+              "id": "sd-data-sr-001",
+              "question": "You're building data processing for a fintech company — you need real-time fraud detection and batch regulatory reporting. How do you design that dual architecture?",
+              "expected_answer": "Dual architecture: Lambda or Kappa pattern. Real-time path: transaction events → Kafka → Flink/Spark Streaming for fraud detection (rule engine + ML model scoring), sub-second latency requirement. Enrichment: join with user profile and transaction history from feature store. Decisions: approve/flag/block in real-time, push results to API and alert system. Batch path: same raw events from Kafka → S3 (data lake) → daily Spark jobs for regulatory reports (transaction summaries, suspicious activity reports, compliance metrics). Reconciliation: compare real-time decisions with batch re-processing to catch discrepancies. Data quality: schema registry (Avro/Protobuf) for event contracts, data validation at ingestion, automated data quality checks (Great Expectations). Governance: full audit trail (every decision traceable to input data), data retention policies per regulation, encryption at rest and in transit, access logging. Infrastructure: Kafka for event backbone, Flink for stream processing, Spark for batch, S3 for storage, Snowflake for analytics. Monitoring: processing lag, event throughput, error rates, fraud detection precision/recall.",
+              "category": "data_architecture",
+              "difficulty": 3.5,
+              "follow_ups": [
+                "How do you ensure consistency between real-time and batch results?",
+                "How do you handle late-arriving events in regulatory reports?",
+                "What's your approach to data lineage for audit compliance?"
+              ]
+            },
+            {
+              "id": "sd-data-sr-002",
+              "question": "Design a data platform that serves both data engineering and data science teams — shared assets, governance, self-service access. How would you structure it?",
+              "expected_answer": "Platform layers: 1) Ingestion — managed connectors (Fivetran/Airbyte) for SaaS sources, CDC for databases, custom pipelines for APIs. 2) Storage — data lake (S3) organized by medallion layers, cloud warehouse (Snowflake) for analytics. 3) Processing — dbt for SQL transforms, Spark for heavy processing, Airflow for orchestration. 4) Data science — notebook environments (JupyterHub/SageMaker), access to warehouse and lake data, compute isolation (separate warehouse for DS queries). 5) Governance — data catalog (DataHub/Atlan) with automated metadata, column-level lineage, PII classification with automated tagging, access requests and approval workflow. Self-service: curated gold-layer datasets with documentation, SQL query interface, business metrics definitions in semantic layer (dbt metrics or Cube). Quality: automated tests in dbt, anomaly detection on key metrics, data freshness SLAs per dataset. Cost management: query cost attribution per team, storage tiering (hot/cold), idle resource monitoring. Security: role-based access at dataset level, dynamic data masking for PII, audit logging for compliance.",
+              "category": "data_platform",
+              "difficulty": 3.5,
+              "follow_ups": [
+                "How do you balance data democratization with governance and security?",
+                "How do you handle schema evolution without breaking downstream consumers?",
+                "What's your approach to data quality SLAs?"
+              ]
+            }
+          ]
+        },
+        "staff": {
+          "questions": [
+            {
+              "id": "sd-data-staff-001",
+              "question": "You're scaling a data infrastructure from 10GB to 10TB daily, with 50+ consumers across analytics, ML, and product teams. How do you architect that?",
+              "expected_answer": "Architecture evolution: move from single-warehouse to data mesh-inspired architecture. Domain teams own their data products (well-defined datasets with SLAs, documentation, quality guarantees). Central platform provides self-service infrastructure. Infrastructure: event backbone (Kafka with schema registry for cross-domain events), data lake (S3 with Iceberg/Delta Lake for ACID transactions and time-travel), cloud warehouse (Snowflake with multi-cluster scaling). Processing: real-time (Flink for streaming enrichment), batch (Spark/dbt for transformations), micro-batch for near-real-time analytics. Data products: each domain publishes curated datasets with: schema contract, freshness SLA, quality score, documentation, owner. Consumers discover via data catalog. Cost management: chargeback model — compute and storage costs attributed to producing and consuming teams. Storage tiering: hot (warehouse), warm (lake), cold (glacier). Query optimization: materialized views for common patterns, query governor for expensive scans. Governance: federated — central policies (PII handling, retention, access framework), domain-level implementation. Lineage: end-to-end from source to dashboard, automated impact analysis for schema changes. Reliability: pipeline SLOs, automated alerting, incident response playbook for data outages.",
+              "category": "data_architecture",
+              "difficulty": 4.5,
+              "follow_ups": [
+                "How do you implement a data mesh without creating data silos?",
+                "What's your approach to cost optimization when data volume grows 10x?",
+                "How do you handle cross-domain data quality when each domain owns their data?"
+              ]
+            },
+            {
+              "id": "sd-data-staff-002",
+              "question": "You're building data governance and compliance across multiple regions with strict privacy reqs like GDPR and CCPA. How do you design that framework?",
+              "expected_answer": "Framework layers: 1) Classification — automated PII detection and tagging (names, emails, IPs, etc.), data sensitivity levels (public, internal, confidential, restricted), classification stored in data catalog metadata. 2) Access control — attribute-based access control (ABAC) considering role, data sensitivity, purpose, and geography. Dynamic data masking for PII (analysts see masked data, specific roles see raw). 3) Residency — geo-aware data routing, EU personal data stays in EU region, cross-region analytics via aggregated/anonymized datasets. 4) Consent management — consent database tracking per-user permissions, data processing filtered by consent status, right-to-be-forgotten implementation (soft delete + hard delete pipeline). 5) Retention — automated retention policies per data category, deletion workflows with verification, legal hold capability for litigation. 6) Audit — comprehensive access logging, query logging, data lineage for impact analysis, regular compliance reports. Technical implementation: policy engine evaluates access requests against rules, row-level security in warehouse, encryption (at rest with KMS, in transit with TLS, field-level for sensitive columns). Organizational: Data Protection Officer, privacy engineering team, privacy impact assessments for new data use cases, regular training for data practitioners.",
+              "category": "data_governance",
+              "difficulty": 5.0,
+              "follow_ups": [
+                "How do you implement right-to-be-forgotten across a distributed data ecosystem?",
+                "How do you enable cross-region analytics while complying with data residency requirements?",
+                "What's your approach to automated PII detection in unstructured data?"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

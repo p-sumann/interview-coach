@@ -1,0 +1,285 @@
+{
+  "language": "go",
+  "display_name": "Go",
+  "levels": {
+    "junior": {
+      "theta_range": [1.0, 2.0],
+      "yoe": "0-2 years",
+      "questions": [
+        {
+          "id": "go-jr-001",
+          "question": "Walk me through goroutines — what are they, how do they differ from OS threads, and how do you actually create one?",
+          "expected_answer": "Goroutines are lightweight concurrent functions managed by the Go runtime, not the OS. They start with just ~2KB of stack (which grows as needed) versus ~1MB for OS threads. You create one by prefixing a function call with 'go': go myFunction(). The Go runtime multiplexes thousands of goroutines onto a small number of OS threads (M:N scheduling). This makes it practical to run millions of goroutines. However, goroutines are cooperatively scheduled — they yield at specific points (function calls, channel operations, I/O). Unlike threads, you don't manage goroutine lifecycle directly — they exit when their function returns.",
+          "category": "concurrency",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "How does the Go scheduler work at a high level?",
+            "What happens if a goroutine panics?",
+            "How do you wait for multiple goroutines to complete?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands goroutine vs thread distinction",
+            "communication": "Explains lightweight nature clearly",
+            "key_signals": ["lightweight", "M:N scheduling", "go keyword", "stack growth"]
+          }
+        },
+        {
+          "id": "go-jr-002",
+          "question": "Tell me about channels in Go — how do they work, and what's the practical difference between buffered and unbuffered ones?",
+          "expected_answer": "Channels are Go's primary mechanism for goroutine communication — they allow goroutines to send and receive values safely. Created with make(chan Type). Unbuffered channels: the sender blocks until a receiver is ready, and vice versa — this creates a synchronization point. Buffered channels: make(chan Type, capacity) — sender only blocks when the buffer is full, receiver blocks when empty. This decouples timing but doesn't eliminate coordination. Send with ch <- value, receive with value := <-ch. Channels can be directional: chan<- (send-only), <-chan (receive-only) for function parameter safety. Close a channel with close(ch) to signal no more values — receivers can detect this with the comma-ok idiom or range loop.",
+          "category": "concurrency",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What happens if you send to a closed channel?",
+            "How would you use select with multiple channels?",
+            "When would you choose a buffered channel over unbuffered?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands blocking semantics",
+            "communication": "Explains synchronization clearly",
+            "key_signals": ["blocking", "buffered vs unbuffered", "close", "directional"]
+          }
+        },
+        {
+          "id": "go-jr-003",
+          "question": "Let's talk about how you handle errors in Go and why the language doesn't use exceptions like most other languages.",
+          "expected_answer": "Go uses explicit error returns instead of exceptions. Functions return an error as the last return value: func doSomething() (Result, error). Callers check with if err != nil. This design philosophy makes error handling visible and explicit — you can't accidentally ignore errors (though you can with _). Common patterns: return fmt.Errorf('failed to X: %w', err) to wrap errors with context, errors.Is/As for checking error types in a chain. For truly exceptional conditions (programmer bugs), Go has panic/recover, but these are rarely used in normal flow. Custom errors implement the error interface (just needs an Error() string method). The errors package provides Unwrap for error chains. The verbose explicit style is intentional — Go values clarity over brevity.",
+          "category": "error_handling",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What is error wrapping with %w and when would you use it?",
+            "When is it appropriate to use panic?",
+            "How do errors.Is and errors.As work?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands Go error philosophy",
+            "communication": "Explains the design rationale",
+            "key_signals": ["explicit returns", "error wrapping", "errors.Is", "no exceptions by design"]
+          }
+        },
+        {
+          "id": "go-jr-004",
+          "question": "Can you explain interfaces in Go and how they're different from what you'd do in Java or similar languages?",
+          "expected_answer": "Go interfaces are implicitly satisfied — a type implements an interface just by having the required methods, with no 'implements' keyword. This is structural typing (duck typing with safety). Example: type Writer interface { Write([]byte) (int, error) }. Any type with a Write method with that signature automatically implements Writer. This enables loose coupling — you can define interfaces where they're used (consumer side), not where they're implemented. Common pattern: accept interfaces, return structs. The empty interface (interface{} or 'any' since Go 1.18) accepts any type. Keep interfaces small — one or two methods is ideal (io.Reader, io.Writer). This differs from Java where interfaces require explicit declaration and are typically larger.",
+          "category": "language_features",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What does 'accept interfaces, return structs' mean and why?",
+            "What is the empty interface and when should you use it?",
+            "How do type assertions work with interfaces?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands implicit satisfaction",
+            "communication": "Explains design philosophy",
+            "key_signals": ["implicit", "structural typing", "small interfaces", "consumer-side"]
+          }
+        },
+        {
+          "id": "go-jr-005",
+          "question": "Walk me through how you'd organize a Go project — what does the standard layout look like and how do modules work?",
+          "expected_answer": "Go modules (go.mod) manage dependencies and define the module path. Initialize with 'go mod init module/path'. The go.mod file lists direct dependencies, go.sum has checksums. Project layout: cmd/ for main packages (entry points), internal/ for private packages (can't be imported by other modules), pkg/ for public library packages (optional, some projects skip this). Each directory is a package — package name matches directory name. The main package in cmd/ is the entry point. Tests go in the same package with _test.go suffix. No circular imports allowed. Use 'go mod tidy' to clean unused dependencies, 'go mod vendor' for vendoring. Standard tools: go build, go test, go vet, go fmt (formatting is built-in and non-negotiable).",
+          "category": "tooling",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What is the internal/ directory convention?",
+            "How do you handle dependency versions in go.mod?",
+            "What does 'go mod tidy' do?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows module system and conventions",
+            "communication": "Practical project setup knowledge",
+            "key_signals": ["go.mod", "cmd/internal/pkg", "go mod tidy", "go fmt"]
+          }
+        }
+      ]
+    },
+    "mid": {
+      "theta_range": [2.0, 3.0],
+      "yoe": "2-5 years",
+      "questions": [
+        {
+          "id": "go-mid-001",
+          "question": "Let's say you're building a Go HTTP server in production — walk me through how you'd implement graceful shutdown and what you'd need to think about.",
+          "expected_answer": "Use context and OS signal handling. Listen for SIGTERM/SIGINT with signal.NotifyContext or signal.Notify. When signal received: 1) Stop accepting new connections, 2) Wait for in-flight requests to complete (http.Server.Shutdown(ctx) does this), 3) Clean up resources (close database connections, flush caches, close channels). Set a timeout context so shutdown doesn't hang forever. Key pattern: create a context with cancel, pass it to server.Shutdown(ctx). For background workers: use context cancellation to signal goroutines to stop, WaitGroup to wait for completion. Also handle health check endpoints — return 503 during shutdown so load balancer stops routing traffic. In Kubernetes: handle SIGTERM, keep accepting traffic during the grace period, then shut down.",
+          "category": "production",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How does Kubernetes send shutdown signals and what's the timing?",
+            "How do you handle long-running connections like WebSockets during shutdown?",
+            "What happens if a goroutine doesn't respond to context cancellation?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands signal handling and resource cleanup",
+            "communication": "Systematic shutdown sequence",
+            "key_signals": ["signal.Notify", "Server.Shutdown", "context", "WaitGroup"]
+          }
+        },
+        {
+          "id": "go-mid-002",
+          "question": "Tell me about Go's garbage collector — how does it actually work under the hood, and what are the main tuning options you have?",
+          "expected_answer": "Go uses a concurrent, tri-color mark-and-sweep garbage collector. It runs concurrently with the application (low pause times, typically <1ms). The collector uses a write barrier to track mutations during marking. Key tuning: GOGC environment variable (default 100) — controls GC frequency as a percentage of heap growth. GOGC=100 means GC triggers when heap doubles. Lower values = more frequent GC (less memory, more CPU). Higher = less frequent (more memory, less CPU). Go 1.19 added GOMEMLIMIT (soft memory limit) — GC works harder to stay under the limit. Common issues: high allocation rate increases GC pressure — reduce by: reusing objects (sync.Pool), avoiding unnecessary heap allocations (pass by pointer vs value carefully), using arrays/slices instead of maps for small collections. Profile with go tool pprof to analyze heap allocations.",
+          "category": "performance",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How does sync.Pool help with GC pressure and what are its limitations?",
+            "When would you use GOMEMLIMIT vs GOGC?",
+            "How do you identify excessive allocations with pprof?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows GC mechanics and tuning levers",
+            "communication": "Connects GC behavior to application performance",
+            "key_signals": ["concurrent mark-sweep", "GOGC", "GOMEMLIMIT", "sync.Pool", "pprof"]
+          }
+        },
+        {
+          "id": "go-mid-003",
+          "question": "When you're designing interfaces in Go with testing in mind, what patterns do you typically follow?",
+          "expected_answer": "Key principle: define interfaces at the consumer, not the provider. Instead of a package exporting an interface, the calling code defines the interface it needs. This keeps interfaces small and focused. For testing: define interfaces for external dependencies (databases, HTTP clients, third-party APIs). Implementation receives the interface, tests inject mocks. Example: type UserStore interface { GetUser(ctx context.Context, id string) (User, error) }. The real implementation uses PostgreSQL, the test uses an in-memory map. Table-driven tests: define test cases as a slice of structs with input/expected output. Use testing.T.Run for subtests. For HTTP: httptest.NewServer for integration tests. Avoid: mocking everything (test behavior, not implementation), interfaces with too many methods, testing private functions. Libraries: testify for assertions, gomock or mockgen for generated mocks.",
+          "category": "testing",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "What's the 'accept interfaces, return structs' principle?",
+            "How do you test concurrent code in Go?",
+            "When would you use a fake implementation vs a mock?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows Go testing patterns and conventions",
+            "communication": "Explains testable design principles",
+            "key_signals": ["consumer-side interfaces", "table-driven tests", "httptest", "dependency injection"]
+          }
+        },
+        {
+          "id": "go-mid-004",
+          "question": "When you need to handle concurrent access to shared state, what synchronization primitives do you reach for and why?",
+          "expected_answer": "Go's philosophy: share memory by communicating (channels), don't communicate by sharing memory. But sometimes shared state is simpler. Primitives: sync.Mutex for mutual exclusion (Lock/Unlock, use defer for safety), sync.RWMutex for read-heavy workloads (multiple concurrent readers, exclusive writer), sync.WaitGroup for waiting on goroutine completion, sync.Once for one-time initialization, sync/atomic for lock-free atomic operations on simple values. Channel-based patterns: single goroutine owns the state, others communicate via channels (actor pattern). When to use what: channels for data flow and coordination, mutexes for protecting shared data structures, atomics for simple counters/flags. Avoid: sharing mutable state between many goroutines, holding locks during I/O, nested locks (deadlock risk). Race detector: go test -race catches data races.",
+          "category": "concurrency",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "What is the race detector and how do you use it?",
+            "When would you choose a mutex over a channel?",
+            "What is sync.Map and when is it appropriate?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows multiple synchronization approaches",
+            "communication": "Explains Go's concurrency philosophy",
+            "key_signals": ["channels vs mutexes", "sync.RWMutex", "race detector", "actor pattern"]
+          }
+        },
+        {
+          "id": "go-mid-005",
+          "question": "Tell me about how you'd structure a Go web service with clean architecture — what layers and patterns do you use?",
+          "expected_answer": "Layered approach: 1) Transport layer (HTTP handlers) — parse requests, validate input, call service layer, format responses. 2) Service/business layer — core logic, depends on interfaces for data access. 3) Repository/data layer — database operations, implements interfaces defined by service layer. Dependency injection: wire dependencies in main() or use a DI framework (wire). Configuration: environment variables with a config struct, validated at startup. Middleware: logging, auth, request ID, panic recovery as HTTP middleware chain. Error handling: domain errors in service layer, transport layer maps to HTTP status codes. Contexts: pass context.Context through all layers for cancellation and tracing. Testing: mock at interface boundaries, integration tests with testcontainers. Project structure: domain models in internal/domain, handlers in internal/transport/http, services in internal/service.",
+          "category": "architecture",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How do you handle database transactions across service methods?",
+            "What's your approach to input validation in Go?",
+            "How do you handle API versioning?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Clean architecture principles in Go",
+            "communication": "Practical and idiomatic approach",
+            "key_signals": ["layered architecture", "dependency injection", "interfaces", "context propagation"]
+          }
+        }
+      ]
+    },
+    "senior": {
+      "theta_range": [3.0, 4.0],
+      "yoe": "5-10 years",
+      "questions": [
+        {
+          "id": "go-sr-001",
+          "question": "Imagine you're building a high-concurrency Go service that needs to handle 100K+ connections at the same time. Walk me through your architecture and the key Go-specific optimizations you'd use.",
+          "expected_answer": "Go excels here due to goroutine-per-connection model being practical. Architecture: net/http or custom TCP server with goroutine per connection. Connection management: connection pooling for downstream services, keep-alive with timeouts, limit max concurrent connections with semaphore (buffered channel). Memory optimization: sync.Pool for reusable buffers, avoid per-request allocations, use io.Reader/Writer interfaces for streaming (avoid loading full bodies into memory). CPU optimization: profile with pprof, minimize reflection, use binary protocols (protobuf) over JSON. GC tuning: GOGC + GOMEMLIMIT, reduce allocation rate. Observability: expose /debug/pprof endpoint, runtime metrics (goroutine count, heap size), distributed tracing with OpenTelemetry. Network: tune OS-level settings (file descriptors, TCP parameters), use epoll awareness. Load shedding: reject requests when overloaded rather than degrading.",
+          "category": "performance",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you detect and handle goroutine leaks?",
+            "What's your approach to connection pooling for database connections at this scale?",
+            "How do you implement load shedding and circuit breaking in Go?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Production experience with high-scale Go services",
+            "communication": "Covers application and infrastructure layers",
+            "key_signals": ["goroutine-per-connection", "sync.Pool", "pprof", "load shedding"]
+          }
+        },
+        {
+          "id": "go-sr-002",
+          "question": "When you're building resilient distributed systems in Go, what patterns do you reach for and what libraries have you found useful?",
+          "expected_answer": "Resilience patterns: 1) Circuit breaker — track failure rates, trip circuit when threshold exceeded, half-open state for recovery testing. Use gobreaker or custom implementation. 2) Retries with exponential backoff and jitter — avoid thundering herd. Use context for timeout. 3) Bulkhead — isolate resources per downstream (separate connection pools, goroutine pools per dependency). 4) Timeout propagation — context.WithTimeout through the entire call chain, deadlines propagated in gRPC metadata. 5) Health checks — liveness (is process running) vs readiness (can accept traffic). 6) Idempotency — design APIs to be safely retried. Implementation: structured error types with metadata, middleware chains for cross-cutting concerns. Service mesh (Istio/Linkerd) provides some patterns at infrastructure level, but application-level handling is still needed for domain-specific resilience. Chaos testing: introduce failures in staging with toxiproxy or custom fault injection.",
+          "category": "distributed_systems",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you implement distributed tracing across Go microservices?",
+            "What's your approach to handling partial failures?",
+            "How do you design for eventual consistency in Go services?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Deep distributed systems knowledge",
+            "communication": "Pattern-oriented thinking",
+            "key_signals": ["circuit breaker", "bulkhead", "timeout propagation", "idempotency"]
+          }
+        },
+        {
+          "id": "go-sr-003",
+          "question": "Tell me about your experience with Go's generics since 1.18 — where have you found them useful, what are the key limitations, and when do you steer clear of them?",
+          "expected_answer": "Generics enable type-safe reusable code without interface{}/reflection. Good use cases: data structure implementations (generic tree, sorted set), utility functions (Map, Filter, Reduce over slices), type-safe result/option types, generic repository patterns. Syntax: func Map[T, U any](s []T, f func(T) U) []U. Constraints: comparable for map keys, custom constraint interfaces (type Number interface { int | float64 }), ~int for underlying types. Limitations: no method type parameters (only function and type), no specialization, no variadic type parameters, constraint inference can be limited. When to avoid: when interfaces work fine (one method is enough), when it makes code harder to read, when you're abstracting prematurely. The Go community values simplicity — use generics when they eliminate significant duplication, not for elegance. Real impact: slices, maps, sync.Map improvements in standard library.",
+          "category": "language_features",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "What constraint interface patterns have you found most useful?",
+            "How do generics interact with interfaces?",
+            "What's the performance impact of generics (monomorphization vs boxing)?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Practical generics experience",
+            "communication": "Knows when NOT to use generics",
+            "key_signals": ["constraints", "type parameters", "limitations", "simplicity principle"]
+          }
+        }
+      ]
+    },
+    "staff": {
+      "theta_range": [4.0, 5.0],
+      "yoe": "10+ years",
+      "questions": [
+        {
+          "id": "go-staff-001",
+          "question": "Tell me about situations where Go would actually be the wrong choice for a system. How do you think through language selection when you're evaluating Go against other options?",
+          "expected_answer": "Go is wrong for: 1) Complex domain modeling — lack of sum types/enums (before Go 1.22 range-over-func), no inheritance makes rich domain models verbose. Consider Rust or Kotlin. 2) Data science/ML — ecosystem is weak compared to Python. 3) Systems requiring minimal latency jitter — GC pauses (even <1ms) matter. Consider Rust or C++. 4) Rapid prototyping with complex business logic — verbose error handling and lack of generics expressiveness slow iteration. Consider Python or TypeScript. Go excels at: network services, CLI tools, infrastructure software, anything with high concurrency needs and moderate complexity. Framework: evaluate on dimensions — performance requirements (GC tolerance?), domain complexity (how rich are the types?), team expertise, ecosystem needs (ML? web framework maturity?), hiring market, operational simplicity (single binary is compelling). Decision: map these dimensions to candidates, prototype the hardest part in top 2 contenders, evaluate developer experience difference.",
+          "category": "architecture",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you handle the organizational complexity of running services in multiple languages?",
+            "What's the cost of Go's simplicity when building complex business logic?",
+            "How do you make the case for Go to leadership who default to Java or Python?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Honest assessment of Go's limitations",
+            "communication": "Structured decision framework",
+            "key_signals": ["domain complexity", "GC concerns", "ecosystem", "honest trade-offs"]
+          }
+        },
+        {
+          "id": "go-staff-002",
+          "question": "Picture this: you're building the Go platform and developer experience for a 100-engineer organization writing microservices. How would you design it?",
+          "expected_answer": "Platform components: 1) Service template — cookiecutter-style scaffold with standard project layout, health checks, metrics, tracing, graceful shutdown, Dockerfile, CI config. New service in 5 minutes. 2) Shared libraries — internal Go module with: HTTP/gRPC middleware (auth, logging, tracing), configuration loading, database helpers, error types, testing utilities. Versioned with minimal API surface. 3) Build and CI — consistent Makefile targets (build, test, lint), golangci-lint with org config, pre-commit hooks, automated dependency updates. 4) Observability — standardized structured logging (slog or zerolog), OpenTelemetry integration in shared middleware, Grafana dashboards per service. 5) Development — devcontainers for consistent environments, docker-compose for local dependencies, integration test framework with testcontainers. 6) Governance — Go version upgrade schedule (stay within 2 of latest), approved dependency list, RFC process for shared library changes. Measure: time to first PR for new engineers, service startup time, incident frequency.",
+          "category": "platform",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you handle the tension between platform standardization and team autonomy?",
+            "What metrics indicate your platform strategy is working?",
+            "How do you evolve the shared libraries without breaking existing services?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "End-to-end platform thinking",
+            "communication": "Developer experience focus",
+            "key_signals": ["service template", "shared libraries", "developer experience metrics", "governance"]
+          }
+        }
+      ]
+    }
+  }
+}
