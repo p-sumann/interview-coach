@@ -141,17 +141,14 @@ The core interview experience. This is where the magic happens.
 │  │              │  │   a time you led a   │  │  ████████░░  │  │
 │  │  ┌────────┐  │  │   technical project" │  │  78%         │  │
 │  │  │ Audio  │  │  │                      │  │              │  │
-│  │  │ Viz    │  │  │  👤: "At my previous │  │  Eye Contact │  │
-│  │  │ Bar    │  │  │   role at Leapfrog,  │  │  ██████░░░░  │  │
-│  │  └────────┘  │  │   I led the voice AI │  │  62%         │  │
+│  │  │ Viz    │  │  │  👤: "At my previous │  │  Filler Words│  │
+│  │  │ Bar    │  │  │   role at Leapfrog,  │  │  um: 3 uh: 2 │  │
+│  │  └────────┘  │  │   I led the voice AI │  │              │  │
 │  │              │  │   infrastructure..." │  │              │  │
 │  │  Question    │  │                      │  │  Pace        │  │
 │  │  3 of ~10    │  │  🤖: "Interesting,   │  │  ━━━●━━━━━━  │  │
 │  │              │  │   can you tell me    │  │  Good ✓      │  │
 │  │              │  │   about the scale?"  │  │              │  │
-│  │              │  │                      │  │  Posture     │  │
-│  │              │  │                      │  │  ████████░░  │  │
-│  │              │  │                      │  │  Good ✓      │  │
 │  │              │  │                      │  │              │  │
 │  │              │  │                      │  │  ┌─────────┐ │  │
 │  │              │  │                      │  │  │ COACHING│ │  │
@@ -195,9 +192,7 @@ The core interview experience. This is where the magic happens.
 **Right Column (30% width) — "Your Coach"** ← THIS IS THE DIFFERENTIATOR
 - **Real-time Feedback Metrics** (updated via LiveKit DataChannel)
   - Confidence Score: animated radial gauge (0-100%)
-  - Eye Contact: horizontal progress bar with color coding
   - Speaking Pace: slider indicator (Too Slow ← Good → Too Fast)
-  - Posture: simple status indicator (Good/Needs Work)
   - Filler Words Counter: "um" / "uh" / "like" count
 - **Coaching Notes Feed** (scrollable)
   - Timestamped observations from the AI coach
@@ -255,9 +250,7 @@ interface InterviewState {
 // Real-time feedback state (updated via DataChannel)
 interface FeedbackState {
   confidence: number;        // 0-100
-  eyeContact: number;        // 0-100
   pace: 'slow' | 'good' | 'fast';
-  posture: 'good' | 'needs_work';
   fillerWords: number;
   coachingNotes: CoachingNote[];
 }
@@ -267,7 +260,7 @@ interface CoachingNote {
   timestamp: number;
   type: 'positive' | 'suggestion' | 'concern';
   message: string;
-  category: 'body_language' | 'content' | 'communication' | 'technical';
+  category: 'delivery' | 'content' | 'communication' | 'technical';
 }
 ```
 
@@ -308,7 +301,7 @@ Post-interview comprehensive analysis. The "money shot" for the demo video.
 │  │  ╔═══════════════════╗                               │    │
 │  │  ║       78/100      ║  "Strong performance with     │    │
 │  │  ║    ████████░░     ║   room for improvement in     │    │
-│  │  ║                   ║   body language confidence"    │    │
+│  │  ║                   ║   delivery confidence"         │    │
 │  │  ╚═══════════════════╝                               │    │
 │  └──────────────────────────────────────────────────────┘    │
 │                                                              │
@@ -327,7 +320,7 @@ Post-interview comprehensive analysis. The "money shot" for the demo video.
 │  │  • Good use of specific metrics and numbers          │    │
 │  │                                                      │    │
 │  │ 🔧 Areas for Improvement                             │    │
-│  │  • Broke eye contact frequently when thinking        │    │
+│  │  • Hesitated and used filler words when thinking      │    │
 │  │  • Speaking pace increased when nervous (2:34-3:12)  │    │
 │  │  • Could expand more on system design trade-offs     │    │
 │  │                                                      │    │
@@ -343,7 +336,6 @@ Post-interview comprehensive analysis. The "money shot" for the demo video.
 │  │  Speaking Time: You 68% | Interviewer 32%            │    │
 │  │  Avg Confidence: 74%                                 │    │
 │  │  Filler Words: 12 (um: 5, uh: 4, like: 3)           │    │
-│  │  Eye Contact Avg: 62%                                │    │
 │  │  Questions Answered: 8/8                             │    │
 │  └──────────────────────────────────────────────────────┘    │
 │                                                              │
@@ -460,13 +452,13 @@ Between setup and interview, a quick "ready room" that:
 ### 2. Interview Ending Transition
 When interview ends, smooth transition state:
 - "Generating your scorecard..." with animated loading
-- Progress steps: Analyzing responses → Evaluating body language → Generating report
+- Progress steps: Analyzing responses → Evaluating delivery → Generating report
 - Redirect to scorecard page when ready
 
 ### 3. Real-time Coaching Toasts
 Subtle, non-intrusive toast notifications that slide in from the coaching dashboard:
 - "💡 Try using the STAR format for this question"
-- "👀 Great eye contact — keep it up!"
+- "👏 Great answer structure — keep it up!"
 - "🎯 You're at your best pace right now"
 - Auto-dismiss after 4 seconds, stackable
 
@@ -628,8 +620,8 @@ Agent calls send_feedback()    │
                                                     FeedbackState updated
                                                           │
   { type: "coaching_note", ──→  LiveKit DataChannel ──→   ▼
-    category: "body_language",                      CoachingDashboard.tsx
-    message: "Maintain eye                          re-renders with new
+    category: "delivery",                            CoachingDashboard.tsx
+    message: "Try to slow                           re-renders with new
     contact when answering",                        metric values + notes
     severity: "suggestion" }                              │
                                                           ▼
