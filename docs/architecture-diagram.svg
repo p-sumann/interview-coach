@@ -1,0 +1,186 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" font-family="Inter, system-ui, -apple-system, sans-serif">
+  <defs>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+    <linearGradient id="geminiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4285F4"/>
+      <stop offset="50%" style="stop-color:#9B72CB"/>
+      <stop offset="100%" style="stop-color:#D96570"/>
+    </linearGradient>
+    <linearGradient id="gcpGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4285F4"/>
+      <stop offset="100%" style="stop-color:#34A853"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="750" fill="#fafafa" rx="12"/>
+
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#1a1a1a">InterviewPilot — System Architecture</text>
+  <text x="600" y="62" text-anchor="middle" font-size="13" fill="#666">Real-time AI Interview Coach powered by Gemini Live API</text>
+
+  <!-- Google Cloud boundary -->
+  <rect x="350" y="85" width="830" height="650" rx="12" fill="none" stroke="url(#gcpGrad)" stroke-width="2" stroke-dasharray="8,4" opacity="0.6"/>
+  <text x="370" y="107" font-size="13" font-weight="600" fill="#4285F4">Google Cloud (Compute Engine)</text>
+
+  <!-- User / Browser -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="250" width="220" height="150" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1.5"/>
+    <rect x="30" y="250" width="220" height="36" rx="10" fill="#1a1a1a"/>
+    <rect x="218" y="264" width="0" height="0" rx="0"/>
+    <text x="140" y="273" text-anchor="middle" font-size="13" font-weight="600" fill="white">User Browser</text>
+    <text x="140" y="308" text-anchor="middle" font-size="11" fill="#666">Camera + Microphone</text>
+    <text x="140" y="328" text-anchor="middle" font-size="11" fill="#666">WebRTC Audio/Video</text>
+    <text x="140" y="355" text-anchor="middle" font-size="10" fill="#999">Real-time voice conversation</text>
+    <text x="140" y="372" text-anchor="middle" font-size="10" fill="#999">Live coaching dashboard</text>
+  </g>
+
+  <!-- Frontend -->
+  <g filter="url(#shadow)">
+    <rect x="380" y="115" width="240" height="140" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1.5"/>
+    <rect x="380" y="115" width="240" height="36" rx="10" fill="#000000"/>
+    <text x="500" y="138" text-anchor="middle" font-size="13" font-weight="600" fill="white">Next.js 16 Frontend</text>
+    <text x="500" y="173" text-anchor="middle" font-size="11" fill="#666">React 19 + TypeScript</text>
+    <text x="500" y="193" text-anchor="middle" font-size="11" fill="#666">Tailwind 4 + shadcn/ui</text>
+    <text x="500" y="213" text-anchor="middle" font-size="11" fill="#666">LiveKit React SDK</text>
+    <text x="500" y="240" text-anchor="middle" font-size="10" fill="#999">Interview room + Coaching dashboard</text>
+  </g>
+
+  <!-- Backend -->
+  <g filter="url(#shadow)">
+    <rect x="380" y="300" width="240" height="160" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1.5"/>
+    <rect x="380" y="300" width="240" height="36" rx="10" fill="#009688"/>
+    <text x="500" y="323" text-anchor="middle" font-size="13" font-weight="600" fill="white">FastAPI Backend</text>
+    <text x="500" y="358" text-anchor="middle" font-size="11" fill="#666">Python 3.13 (async)</text>
+    <text x="500" y="378" text-anchor="middle" font-size="11" fill="#666">SQLAlchemy 2.0 + Pydantic v2</text>
+    <text x="500" y="398" text-anchor="middle" font-size="11" fill="#666">LiveKit Server SDK</text>
+    <text x="500" y="425" text-anchor="middle" font-size="10" fill="#999">Sessions, Tokens, Feedback, Scorecards</text>
+    <text x="500" y="445" text-anchor="middle" font-size="10" fill="#999">Agent dispatch with metadata</text>
+  </g>
+
+  <!-- Database -->
+  <g filter="url(#shadow)">
+    <rect x="380" y="510" width="240" height="120" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1.5"/>
+    <rect x="380" y="510" width="240" height="36" rx="10" fill="#336791"/>
+    <text x="500" y="533" text-anchor="middle" font-size="13" font-weight="600" fill="white">PostgreSQL 16 + Redis 7</text>
+    <text x="500" y="568" text-anchor="middle" font-size="11" fill="#666">Sessions, Feedback, Scorecards</text>
+    <text x="500" y="588" text-anchor="middle" font-size="11" fill="#666">Token caching (Redis)</text>
+    <text x="500" y="615" text-anchor="middle" font-size="10" fill="#999">Async connection pooling</text>
+  </g>
+
+  <!-- LiveKit Cloud -->
+  <g filter="url(#shadow)">
+    <rect x="700" y="115" width="220" height="140" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1.5"/>
+    <rect x="700" y="115" width="220" height="36" rx="10" fill="#6C47FF"/>
+    <text x="810" y="138" text-anchor="middle" font-size="13" font-weight="600" fill="white">LiveKit Cloud</text>
+    <text x="810" y="173" text-anchor="middle" font-size="11" fill="#666">WebRTC SFU</text>
+    <text x="810" y="193" text-anchor="middle" font-size="11" fill="#666">Audio/Video routing</text>
+    <text x="810" y="213" text-anchor="middle" font-size="11" fill="#666">Data channels (feedback)</text>
+    <text x="810" y="240" text-anchor="middle" font-size="10" fill="#999">Sub-100ms latency transport</text>
+  </g>
+
+  <!-- AI Agent -->
+  <g filter="url(#shadow)">
+    <rect x="700" y="300" width="440" height="330" rx="10" fill="white" stroke="#e0e0e0" stroke-width="1.5"/>
+    <rect x="700" y="300" width="440" height="36" rx="10" fill="url(#geminiGrad)"/>
+    <text x="920" y="323" text-anchor="middle" font-size="13" font-weight="600" fill="white">LiveKit AI Agent (Python)</text>
+
+    <!-- Gemini Live sub-box -->
+    <rect x="720" y="355" width="200" height="120" rx="8" fill="#F0F4FF" stroke="#4285F4" stroke-width="1"/>
+    <text x="820" y="375" text-anchor="middle" font-size="12" font-weight="600" fill="#4285F4">Gemini 2.5 Flash</text>
+    <text x="820" y="393" text-anchor="middle" font-size="11" fill="#666">Native Audio (Live API)</text>
+    <text x="820" y="413" text-anchor="middle" font-size="10" fill="#888">Real-time voice I/O</text>
+    <text x="820" y="430" text-anchor="middle" font-size="10" fill="#888">Context compression</text>
+    <text x="820" y="447" text-anchor="middle" font-size="10" fill="#888">Session resumption</text>
+    <text x="820" y="464" text-anchor="middle" font-size="10" fill="#888">Interruptible dialogue</text>
+
+    <!-- Background Evaluator sub-box -->
+    <rect x="940" y="355" width="180" height="120" rx="8" fill="#FFF3E0" stroke="#F4B400" stroke-width="1"/>
+    <text x="1030" y="375" text-anchor="middle" font-size="12" font-weight="600" fill="#E37400">Background Evaluator</text>
+    <text x="1030" y="393" text-anchor="middle" font-size="11" fill="#666">Gemini Flash Lite</text>
+    <text x="1030" y="413" text-anchor="middle" font-size="10" fill="#888">Async scoring</text>
+    <text x="1030" y="430" text-anchor="middle" font-size="10" fill="#888">Non-blocking</text>
+    <text x="1030" y="447" text-anchor="middle" font-size="10" fill="#888">Confidence/Pace/Filler</text>
+    <text x="1030" y="464" text-anchor="middle" font-size="10" fill="#888">Coaching notes</text>
+
+    <!-- Adaptive Engine sub-box -->
+    <rect x="720" y="490" width="200" height="80" rx="8" fill="#E8F5E9" stroke="#34A853" stroke-width="1"/>
+    <text x="820" y="510" text-anchor="middle" font-size="12" font-weight="600" fill="#34A853">Adaptive Engine</text>
+    <text x="820" y="530" text-anchor="middle" font-size="10" fill="#888">IRT theta parameter</text>
+    <text x="820" y="547" text-anchor="middle" font-size="10" fill="#888">4 seniority levels</text>
+    <text x="820" y="564" text-anchor="middle" font-size="10" fill="#888">9 question bank domains</text>
+
+    <!-- Scorecard Generator sub-box -->
+    <rect x="940" y="490" width="180" height="80" rx="8" fill="#FCE4EC" stroke="#D96570" stroke-width="1"/>
+    <text x="1030" y="510" text-anchor="middle" font-size="12" font-weight="600" fill="#D96570">Scorecard Generator</text>
+    <text x="1030" y="530" text-anchor="middle" font-size="10" fill="#888">Gemini structured output</text>
+    <text x="1030" y="547" text-anchor="middle" font-size="10" fill="#888">Level calibration</text>
+    <text x="1030" y="564" text-anchor="middle" font-size="10" fill="#888">Timestamped feedback</text>
+
+    <!-- Persona labels -->
+    <text x="920" y="610" text-anchor="middle" font-size="10" fill="#999">Personas: Marcus (HR) · Sarah (Behavioral) · Alex (Technical)</text>
+  </g>
+
+  <!-- Arrows -->
+  <!-- User → Frontend -->
+  <line x1="250" y1="300" x2="375" y2="185" stroke="#888" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="305" y="230" font-size="9" fill="#888" transform="rotate(-25 305 230)">HTTPS</text>
+
+  <!-- User → LiveKit -->
+  <line x1="250" y1="320" x2="695" y2="185" stroke="#6C47FF" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="460" y="235" font-size="9" fill="#6C47FF">WebRTC (Audio + Video)</text>
+
+  <!-- Frontend → Backend -->
+  <line x1="500" y1="255" x2="500" y2="295" stroke="#888" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="510" y="280" font-size="9" fill="#888">REST API</text>
+
+  <!-- Backend → Database -->
+  <line x1="500" y1="460" x2="500" y2="505" stroke="#888" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="510" y="488" font-size="9" fill="#888">async SQL</text>
+
+  <!-- LiveKit → Agent -->
+  <line x1="810" y1="255" x2="810" y2="295" stroke="#6C47FF" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="825" y="280" font-size="9" fill="#6C47FF">Audio stream</text>
+
+  <!-- Agent → Backend (internal) -->
+  <line x1="700" y1="420" x2="620" y2="380" stroke="#888" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowhead)"/>
+  <text x="640" y="390" font-size="9" fill="#888">HTTP</text>
+
+  <!-- Agent → LiveKit (data channels) -->
+  <path d="M 940 300 Q 940 270 870 260" fill="none" stroke="#34A853" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowhead)"/>
+  <text x="920" y="268" font-size="9" fill="#34A853">Data channels</text>
+
+  <!-- Arrowhead marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#888"/>
+    </marker>
+  </defs>
+
+  <!-- Legend -->
+  <g transform="translate(30, 480)">
+    <text x="0" y="0" font-size="12" font-weight="600" fill="#1a1a1a">Legend</text>
+    <line x1="0" y1="20" x2="30" y2="20" stroke="#888" stroke-width="1.5"/>
+    <text x="40" y="24" font-size="10" fill="#666">REST / HTTP</text>
+    <line x1="0" y1="40" x2="30" y2="40" stroke="#6C47FF" stroke-width="2"/>
+    <text x="40" y="44" font-size="10" fill="#666">WebRTC (Audio/Video)</text>
+    <line x1="0" y1="60" x2="30" y2="60" stroke="#34A853" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="40" y="64" font-size="10" fill="#666">LiveKit Data Channel</text>
+    <line x1="0" y1="80" x2="30" y2="80" stroke="#888" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="40" y="84" font-size="10" fill="#666">Internal HTTP</text>
+    <rect x="0" y="100" width="14" height="14" rx="3" fill="none" stroke="url(#gcpGrad)" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="24" y="112" font-size="10" fill="#666">Google Cloud boundary</text>
+  </g>
+
+  <!-- Google Cloud + Gemini badges -->
+  <g transform="translate(30, 660)">
+    <rect x="0" y="0" width="120" height="28" rx="14" fill="#4285F4"/>
+    <text x="60" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="white">Google Cloud</text>
+    <rect x="130" y="0" width="100" height="28" rx="14" fill="url(#geminiGrad)"/>
+    <text x="180" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="white">Gemini AI</text>
+    <rect x="240" y="0" width="80" height="28" rx="14" fill="#6C47FF"/>
+    <text x="280" y="18" text-anchor="middle" font-size="11" font-weight="600" fill="white">LiveKit</text>
+  </g>
+</svg>
