@@ -1,0 +1,29 @@
+[project]
+name = "interview-pilot-agent"
+version = "0.1.0"
+description = "InterviewPilot - LiveKit AI Agent with Gemini Live"
+requires-python = ">=3.13"
+dependencies = [
+    "livekit-agents[silero,google,images]~=1.4",
+    "python-dotenv",
+    "httpx>=0.28.0",
+    "google-genai>=1.0.0",
+    "pyyaml>=6.0.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.8.0",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
