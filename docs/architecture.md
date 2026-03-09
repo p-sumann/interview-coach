@@ -2,15 +2,14 @@
 ## Gemini Live Agent Challenge Submission
 
 ### The Problem
-Interview preparation is broken. People practice alone in front of a mirror, watch generic YouTube videos, or pay $150+/hr for human coaches. None of these provide real-time, multimodal feedback — the kind that catches you fidgeting, breaking eye contact, or speaking too fast *as it happens*.
+Interview preparation is broken. People practice alone in front of a mirror, watch generic YouTube videos, or pay $150+/hr for human coaches. None of these provide real-time, multimodal feedback — the kind that catches filler words, speaking too fast, or lacking confidence *as it happens*.
 
 ### The Solution
 **InterviewPilot** is a real-time AI interview coach that **sees you, hears you, and coaches you** through realistic mock interviews. Powered by Gemini Live API's native audio+vision and delivered over LiveKit's WebRTC infrastructure, it provides the world's most natural AI interview experience with:
 
-- 🎥 **Vision-based body language analysis** — posture, eye contact, hand gestures, facial expressions
 - 🎙️ **Vocal intelligence** — pace, filler words, confidence level, tone analysis
 - 🧠 **Multi-persona panel interviews** — HR, Technical, Behavioral interviewers with distinct voices
-- 📊 **Real-time coaching dashboard** — live confidence meter, eye contact tracker, pace indicator
+- 📊 **Real-time coaching dashboard** — live confidence meter, filler word tracker, pace indicator
 - 📋 **Post-interview scorecard** — comprehensive PDF report with timestamped feedback
 
 ---
@@ -27,9 +26,8 @@ Interview preparation is broken. People practice alone in front of a mirror, wat
 │  │  Preview  │  │  Feedback    │  │   + Coaching Notes    │  │
 │  │  (User    │  │  Dashboard   │  │                       │  │
 │  │  Camera)  │  │  - Confidence│  │                       │  │
-│  │          │  │  - Eye Contact│  │                       │  │
 │  │          │  │  - Pace       │  │                       │  │
-│  │          │  │  - Posture    │  │                       │  │
+│  │          │  │  - Fillers    │  │                       │  │
 │  └──────────┘  └──────────────┘  └───────────────────────┘  │
 │                                                             │
 │  ┌──────────────────────────────────────────────────────┐   │
@@ -130,15 +128,15 @@ Google Cloud Services Used:
 - [x] LiveKit room created, user joins with camera + mic
 - [x] Gemini Live agent joins as interviewer with vision enabled
 - [x] Natural conversational interview with interruption handling
-- [x] Agent sees user via camera — comments on body language contextually
+- [x] Agent hears user via mic — provides coaching on delivery contextually
 - [x] Affective dialog — adapts tone based on user's emotional state
 - [x] Full transcript displayed in real-time
 
 ### Phase 2: Real-time Coaching Dashboard
 - [ ] Agent uses tool calling to send structured feedback via DataChannel
-- [ ] Frontend renders live metrics: confidence score, eye contact %, speaking pace
+- [ ] Frontend renders live metrics: confidence score, filler word count, speaking pace
 - [ ] Visual indicators update in real-time as user speaks
-- [ ] Proactive coaching: "I notice you're looking away — try maintaining eye contact"
+- [ ] Proactive coaching: "Try to slow down — your pace increased under pressure"
 
 ### Phase 3: Multi-persona Panel Interview
 - [ ] Multiple interviewer personas (HR warmup → Technical deep dive → Behavioral)
@@ -149,7 +147,7 @@ Google Cloud Services Used:
 ### Phase 4: Post-Interview Scorecard
 - [ ] End-of-interview comprehensive analysis
 - [ ] Gemini 2.5 Flash analyzes full transcript + observation logs
-- [ ] Generates structured scorecard: communication, technical depth, confidence, body language
+- [ ] Generates structured scorecard: communication, technical depth, confidence, vocal delivery
 - [ ] Timestamped highlights: "At 2:34, excellent STAR format answer"
 - [ ] PDF download + shareable link
 - [ ] Stored in Cloud Storage with Firestore metadata
@@ -227,17 +225,17 @@ interview-pilot/
           Google. Shall we begin?"
 
    → Natural conversation with follow-up questions
-   → Agent sees user's body language via camera
+   → Agent analyzes candidate's vocal delivery in real-time
    → Real-time feedback dashboard updates
    → Affective responses: adjusts difficulty if user struggles
    → Proactive coaching: "Try to use the STAR format here"
 
 4. COACHING MOMENTS (via tool calling)
    Agent internally calls send_feedback({
-     type: "body_language",
-     metric: "eye_contact",
+     type: "communication",
+     metric: "confidence",
      score: 0.6,
-     note: "Looking down frequently"
+     note: "Increased filler words under pressure"
    })
    → Frontend dashboard updates in real-time
 
@@ -270,14 +268,13 @@ ROLE 1 — INTERVIEWER:
 - Use affective dialog to match the candidate's emotional state
 
 ROLE 2 — COACH (use tools, don't say these observations aloud):
-- Continuously observe the candidate via video
-- Track: eye contact, posture, facial expressions, hand gestures, fidgeting
+- Continuously observe the candidate via audio
 - Track: speaking pace, filler words (um, uh, like), confidence in voice
 - Use the send_feedback tool to send real-time metrics to the dashboard
 - Use log_observation tool to record notable moments for the scorecard
 - Only give verbal coaching when:
   a) The candidate seems very nervous (offer encouragement)
-  b) A major body language issue persists for 30+ seconds
+  b) A major delivery issue persists for 30+ seconds
   c) The candidate asks for feedback
 
 IMPORTANT RULES:
@@ -297,7 +294,7 @@ IMPORTANT RULES:
 | What | Why It Matters |
 |------|---------------|
 | **LiveKit WebRTC** | Real video call experience, not a browser-only gimmick. Sub-200ms latency. |
-| **Gemini Vision** | Actually sees the user — body language, eye contact, posture. Not simulated. |
+| **Gemini Live Audio** | Hears the user in real-time — pace, filler words, confidence. Not simulated. |
 | **Affective Dialog** | Adapts emotional tone — encouraging when nervous, serious when appropriate. |
 | **Tool Calling** | Structured feedback loop — agent sends metrics to frontend in real-time. |
 | **Proactive Audio** | Agent can interrupt to coach: "Hold that thought — great point, expand on it." |
@@ -308,11 +305,11 @@ IMPORTANT RULES:
 
 ## What Makes This UNIQUE vs. Other Interview Coach Submissions
 
-1. **Vision is the hero feature** — Most interview coaches are audio-only. We analyze body language in real-time through actual video. Judges will immediately see the difference.
+1. **Real-time audio intelligence is the hero feature** — We analyze vocal delivery, filler words, confidence, and speaking pace in real-time. The live coaching dashboard makes this tangible.
 
 2. **Dual-role architecture** — The agent simultaneously interviews AND coaches through tool calling without breaking character. The coaching happens through the visual dashboard, not by interrupting the conversation.
 
-3. **Real-time feedback dashboard** — A live, animated dashboard showing confidence, eye contact, and pace creates a visually compelling demo. Judges see data moving in real-time.
+3. **Real-time feedback dashboard** — A live, animated dashboard showing confidence, filler words, and pace creates a visually compelling demo. Judges see data moving in real-time.
 
 4. **Built by a Voice AI Engineer** — Your production LiveKit experience means this won't be a janky demo. It'll be polished, low-latency, and actually work.
 
@@ -344,7 +341,7 @@ IMPORTANT RULES:
 1. Implement send_feedback tool in agent
 2. Set up LiveKit DataChannel for real-time metrics
 3. Build frontend FeedbackDashboard component
-4. Wire up live confidence/eye-contact/pace indicators
+4. Wire up live confidence/filler-words/pace indicators
 5. Test: dashboard updates as user answers questions
 
 ### Day 3: Scorecard + Polish

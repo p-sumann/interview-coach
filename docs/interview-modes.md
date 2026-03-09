@@ -500,7 +500,6 @@ class SessionAnalytics(BaseModel):
     total_duration_seconds: float
     speaking_time_pct: float         # candidate's share
     avg_confidence: float
-    avg_eye_contact: float
     filler_word_count: int
     filler_word_breakdown: dict      # {"um": 5, "uh": 3, "like": 4}
     questions_answered: int

@@ -759,6 +759,6 @@ The most powerful output of the adaptive system is the **Level Calibration** —
 | Feedback timing | After interview only | Real-time during + comprehensive after |
 | Level calibration | None | "You perform at X level" insight |
 | Follow-ups | Scripted or none | Adaptive — harder if you're doing well, supportive if struggling |
-| Body language | Not assessed | Vision-based real-time coaching |
+| Vocal delivery | Not assessed | Real-time coaching on pace, filler words, confidence |
 
 This creates an interview coach that genuinely **knows** who it's talking to and adjusts accordingly — just like the best human interviewers do.
