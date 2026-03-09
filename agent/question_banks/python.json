@@ -1,0 +1,472 @@
+{
+  "language": "python",
+  "display_name": "Python",
+  "levels": {
+    "junior": {
+      "theta_range": [1.0, 2.0],
+      "yoe": "0-2 years",
+      "questions": [
+        {
+          "id": "py-jr-001",
+          "question": "What's the difference between a list and a tuple in Python, and when would you reach for one over the other?",
+          "expected_answer": "Lists are mutable (can be changed after creation) while tuples are immutable (cannot be modified). Lists use square brackets [], tuples use parentheses (). You'd choose a tuple when you have a fixed collection of items that shouldn't change, like coordinates (x, y) or database connection parameters. Tuples are also slightly faster and can be used as dictionary keys since they're hashable. Lists are better when you need to add, remove, or modify elements.",
+          "category": "fundamentals",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What happens if you try to modify a tuple after creation?",
+            "Can a list contain different data types?",
+            "What is a named tuple and when might you use one?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands mutability vs immutability",
+            "communication": "Can explain clearly with examples",
+            "key_signals": ["mutable", "immutable", "hashable", "performance"]
+          }
+        },
+        {
+          "id": "py-jr-002",
+          "question": "Tell me about how you'd use classes and inheritance in Python. What does a class actually do, and how does inheritance fit in?",
+          "expected_answer": "A class is a blueprint for creating objects. It defines attributes (data) and methods (behavior). You create a class with the 'class' keyword. Inheritance allows a child class to inherit attributes and methods from a parent class using parentheses: class Child(Parent). The child can override parent methods and add new ones. Python supports multiple inheritance. The __init__ method is the constructor that runs when you create an instance.",
+          "category": "oop",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What is the purpose of 'self' in Python methods?",
+            "What's the difference between a class variable and an instance variable?",
+            "How does Python's MRO (Method Resolution Order) work?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands class, instance, inheritance basics",
+            "communication": "Uses correct terminology",
+            "key_signals": ["class", "inheritance", "__init__", "self", "override"]
+          }
+        },
+        {
+          "id": "py-jr-003",
+          "question": "Walk me through virtual environments. Why do they matter and how do you actually use them in your projects?",
+          "expected_answer": "Virtual environments are isolated Python environments that allow you to have different versions of packages for different projects. Without them, all projects share the same global packages, which can cause version conflicts. You create one with 'python -m venv myenv' and activate it. Each virtualenv has its own pip and installed packages. This ensures reproducibility — your project works the same way on any machine with the same requirements.txt.",
+          "category": "tooling",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "How do you freeze your dependencies into a requirements file?",
+            "Have you heard of poetry or pipenv? How do they differ from venv?",
+            "What happens if two projects need different versions of the same package?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands isolation and dependency management",
+            "communication": "Can articulate the 'why' not just the 'how'",
+            "key_signals": ["isolation", "dependencies", "requirements.txt", "reproducibility"]
+          }
+        },
+        {
+          "id": "py-jr-004",
+          "question": "So you're working on a project and need to write unit tests with pytest. Walk me through how you'd approach that.",
+          "expected_answer": "With pytest, you create a file prefixed with 'test_' and write functions also prefixed with 'test_'. Each function uses assert statements to verify expected behavior. For example: def test_add(): assert add(2, 3) == 5. You run tests with 'pytest' command. Pytest auto-discovers test files and functions. You can use fixtures for setup/teardown, parametrize for multiple test cases, and markers to categorize tests.",
+          "category": "testing",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What's the difference between a unit test and an integration test?",
+            "How would you test a function that makes an API call?",
+            "What is test coverage and why does it matter?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows basic test structure and assertions",
+            "communication": "Can describe testing workflow",
+            "key_signals": ["assert", "test_", "fixtures", "pytest"]
+          }
+        },
+        {
+          "id": "py-jr-005",
+          "question": "Tell me about dictionaries in Python. How are they different from lists, and when would you use one versus the other?",
+          "expected_answer": "A dictionary is a key-value store where you access values by their keys rather than by position. Lists are ordered sequences accessed by index. Dictionaries use curly braces {} with key:value pairs. Keys must be unique and hashable (strings, numbers, tuples). Dictionaries provide O(1) average lookup time by key, while searching a list for a value is O(n). Since Python 3.7, dictionaries maintain insertion order.",
+          "category": "data_structures",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "How would you iterate over both keys and values of a dictionary?",
+            "What is a defaultdict and when would you use it?",
+            "What happens if you try to access a key that doesn't exist?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands key-value concept and basic complexity",
+            "communication": "Can compare and contrast clearly",
+            "key_signals": ["key-value", "hashable", "O(1)", "unique keys"]
+          }
+        },
+        {
+          "id": "py-jr-006",
+          "question": "Talk me through how you handle errors in Python. What's your approach to exception handling?",
+          "expected_answer": "Python uses try-except blocks for error handling. You put risky code in the 'try' block and handle specific exceptions in 'except' blocks. You can catch specific exceptions like ValueError, TypeError, or use a bare 'except' (not recommended). There's also 'else' (runs if no exception) and 'finally' (always runs, for cleanup). You can raise your own exceptions with 'raise'. It's best practice to catch specific exceptions rather than catching everything.",
+          "category": "error_handling",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What's the difference between an exception and a syntax error?",
+            "When would you create a custom exception class?",
+            "Why is catching all exceptions with bare 'except' considered bad practice?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands exception hierarchy and flow",
+            "communication": "Explains best practices",
+            "key_signals": ["try", "except", "finally", "specific exceptions", "raise"]
+          }
+        },
+        {
+          "id": "py-jr-007",
+          "question": "I see you using list comprehensions in your code. Tell me what they are and why you reach for them.",
+          "expected_answer": "List comprehensions are a concise way to create lists in a single line. The syntax is [expression for item in iterable if condition]. For example, [x**2 for x in range(10) if x % 2 == 0] creates a list of even squares. They're more readable and often faster than equivalent for loops. You can also create dict comprehensions {k:v for k,v in pairs} and set comprehensions {x for x in items}. However, for complex logic, regular loops are more readable.",
+          "category": "pythonic",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What is a generator expression and how does it differ from a list comprehension?",
+            "When would a list comprehension be less readable than a for loop?",
+            "Can you nest list comprehensions? Give an example."
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands syntax and performance benefits",
+            "communication": "Can provide practical examples",
+            "key_signals": ["concise", "readable", "generator", "dict comprehension"]
+          }
+        },
+        {
+          "id": "py-jr-008",
+          "question": "How do you manage dependencies in your Python projects? Walk me through your typical workflow with pip and packages.",
+          "expected_answer": "pip is Python's package installer. You install packages with 'pip install package_name'. You can specify versions with 'pip install package==1.2.3'. pip reads from PyPI (Python Package Index). For projects, you save dependencies to requirements.txt with 'pip freeze > requirements.txt' and install them with 'pip install -r requirements.txt'. It's important to use virtual environments so packages don't conflict across projects.",
+          "category": "tooling",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What is PyPI?",
+            "How do you upgrade an already installed package?",
+            "What is the difference between pip install and pip install -e?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows basic package management workflow",
+            "communication": "Can describe practical workflow",
+            "key_signals": ["PyPI", "requirements.txt", "virtual environment", "version pinning"]
+          }
+        }
+      ]
+    },
+    "mid": {
+      "theta_range": [2.0, 3.0],
+      "yoe": "2-5 years",
+      "questions": [
+        {
+          "id": "py-mid-001",
+          "question": "Let's talk about the Global Interpreter Lock. What is it, how does it impact your ability to write concurrent code, and what strategies do you use to work around it?",
+          "expected_answer": "The GIL is a mutex that allows only one thread to execute Python bytecode at a time, even on multi-core systems. This means CPU-bound multithreaded Python code doesn't achieve true parallelism. However, the GIL is released during I/O operations, so threading works well for I/O-bound tasks (network calls, file reads). For CPU-bound parallelism, you can use multiprocessing (separate processes each with their own GIL), concurrent.futures.ProcessPoolExecutor, or C extensions that release the GIL. asyncio is another option for I/O-bound concurrency using a single thread with cooperative multitasking.",
+          "category": "concurrency",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "When would you choose asyncio over threading?",
+            "How does multiprocessing handle shared state between processes?",
+            "What is the performance overhead of multiprocessing vs threading?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands GIL implications and workarounds",
+            "communication": "Distinguishes CPU-bound vs I/O-bound clearly",
+            "key_signals": ["mutex", "I/O-bound", "CPU-bound", "multiprocessing", "asyncio"]
+          }
+        },
+        {
+          "id": "py-mid-002",
+          "question": "Tell me about asyncio. How does it actually work under the hood? When would you choose to use it, and what are the key concepts I need to understand?",
+          "expected_answer": "asyncio provides single-threaded concurrency using an event loop. Coroutines are functions defined with 'async def' that can be paused with 'await'. The event loop manages scheduling of coroutines — when one awaits an I/O operation, the loop switches to another ready coroutine. This is efficient for I/O-bound workloads (HTTP requests, database queries, file I/O) because you avoid thread overhead. Key concepts: await pauses execution, asyncio.gather() runs coroutines concurrently, asyncio.create_task() schedules a coroutine. It's not suitable for CPU-bound work since everything runs on one thread.",
+          "category": "concurrency",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How would you run a blocking function inside an async context?",
+            "What's the difference between asyncio.gather and asyncio.wait?",
+            "How do you handle exceptions in concurrent async tasks?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands event loop mechanics",
+            "communication": "Can explain cooperative multitasking",
+            "key_signals": ["event loop", "coroutine", "await", "non-blocking", "gather"]
+          }
+        },
+        {
+          "id": "py-mid-003",
+          "question": "Walk me through decorators. How do they actually work, and can you show me how you'd write a custom decorator from scratch?",
+          "expected_answer": "A decorator is a function that takes another function as input and returns a modified version. It leverages Python's first-class functions. Under the hood, @decorator is syntactic sugar for func = decorator(func). A basic decorator wraps the original function: you define an inner wrapper function that adds behavior before/after calling the original. Use functools.wraps to preserve the original function's metadata. Common uses: logging, timing, authentication, caching, retry logic. You can also create decorators with arguments by adding another layer of nesting, or use classes as decorators with __call__.",
+          "category": "language_features",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "How would you write a decorator that accepts arguments?",
+            "What does functools.wraps do and why is it important?",
+            "Can you stack multiple decorators? In what order do they execute?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands closures and first-class functions",
+            "communication": "Can walk through execution flow",
+            "key_signals": ["first-class functions", "wrapper", "functools.wraps", "closure"]
+          }
+        },
+        {
+          "id": "py-mid-004",
+          "question": "I want to understand context managers and the with statement. How do they work, and can you walk me through building a custom context manager?",
+          "expected_answer": "Context managers handle resource setup and teardown automatically. The 'with' statement calls __enter__ when entering the block and __exit__ when leaving (even if an exception occurs). This ensures resources like files, database connections, or locks are properly cleaned up. You can create custom context managers by implementing __enter__ and __exit__ methods on a class, or more simply using the @contextmanager decorator from contextlib with a generator function that yields. The yield point is where the 'with' block body executes.",
+          "category": "language_features",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "How does __exit__ handle exceptions?",
+            "Can you use multiple context managers in a single 'with' statement?",
+            "What is contextlib.suppress and when would you use it?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands resource management pattern",
+            "communication": "Explains the why behind context managers",
+            "key_signals": ["__enter__", "__exit__", "contextlib", "resource cleanup", "yield"]
+          }
+        },
+        {
+          "id": "py-mid-005",
+          "question": "How do you approach type hints in Python? What are the real benefits, and which tools do you use to make the most of them?",
+          "expected_answer": "Type hints (PEP 484) let you annotate function parameters and return types: def greet(name: str) -> str. They don't enforce types at runtime but enable static analysis with tools like mypy, pyright, or IDE type checking. Benefits include better documentation, earlier bug detection, and improved autocomplete. You can use typing module for complex types: List[int], Dict[str, Any], Optional[str], Union[int, str], Tuple, Callable. Python 3.10+ supports X | Y syntax instead of Union. Generics, TypeVar, and Protocol support more advanced patterns.",
+          "category": "language_features",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "What's the difference between Optional[str] and str | None?",
+            "How do you type hint a function that accepts a callback?",
+            "What is Protocol in Python typing and how does it differ from ABC?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows typing module and static analysis tools",
+            "communication": "Articulates benefits for team productivity",
+            "key_signals": ["mypy", "Optional", "Union", "Generic", "Protocol"]
+          }
+        },
+        {
+          "id": "py-mid-006",
+          "question": "Let's talk about Python's data model and those special dunder methods. How do you use them to make a custom class feel like a built-in type?",
+          "expected_answer": "Python's data model uses special 'dunder' (double underscore) methods to let custom objects integrate with language features. __init__ for construction, __repr__/__str__ for display, __eq__/__hash__ for comparison, __len__/__getitem__ for container protocol, __iter__/__next__ for iteration, __add__/__mul__ for operators, __enter__/__exit__ for context managers. For example, implementing __getitem__ lets you use [] indexing, __len__ enables len(), and __iter__ makes your object work in for loops. This is what makes Python so extensible — any class can feel like a built-in.",
+          "category": "language_features",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "What's the difference between __repr__ and __str__?",
+            "How do __eq__ and __hash__ interact? What can go wrong?",
+            "What is __slots__ and when would you use it?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows multiple dunder methods and their protocols",
+            "communication": "Connects to practical use cases",
+            "key_signals": ["dunder", "protocol", "__getitem__", "__iter__", "__repr__"]
+          }
+        },
+        {
+          "id": "py-mid-007",
+          "question": "Walk me through how you'd structure a medium-sized Python project from the ground up. What tools do you reach for to keep the code quality high?",
+          "expected_answer": "I'd organize with a src/ layout or flat package structure with clear module boundaries. Use pyproject.toml for project metadata and dependencies. For code quality: black or ruff for formatting, ruff or flake8 for linting, mypy for type checking, pytest for testing with coverage reports. Pre-commit hooks enforce standards automatically. CI/CD runs the full quality pipeline. I'd use dependency injection for testability, separate business logic from I/O, and follow the repository pattern for data access. Logging with structlog or standard logging module. Configuration via environment variables with pydantic-settings.",
+          "category": "architecture",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How do you manage configuration across different environments?",
+            "What's your approach to handling database migrations?",
+            "How do you structure tests — unit vs integration vs e2e?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows modern Python tooling ecosystem",
+            "communication": "Explains rationale for choices",
+            "key_signals": ["pyproject.toml", "ruff", "mypy", "pre-commit", "dependency injection"]
+          }
+        }
+      ]
+    },
+    "senior": {
+      "theta_range": [3.0, 4.0],
+      "yoe": "5-10 years",
+      "questions": [
+        {
+          "id": "py-sr-001",
+          "question": "Picture this: you're building a Python service that needs to handle 10,000+ requests per second. How would you approach optimization, and what would you prioritize?",
+          "expected_answer": "First, I'd choose an async framework like FastAPI with uvicorn and multiple workers. Profile with py-spy or cProfile to find bottlenecks. Key optimizations: async database access (asyncpg for Postgres), connection pooling, Redis for caching hot paths, batch database operations. Consider: pre-computed responses for common queries, response compression, CDN for static content. For CPU-bound work, offload to worker processes via Celery or use multiprocessing. Monitor with structured logging and metrics (Prometheus). Load test with locust. If Python becomes the bottleneck, consider C extensions (Cython) for hot paths or moving critical paths to Go/Rust services.",
+          "category": "performance",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How would you identify memory leaks in a long-running Python service?",
+            "What's your approach to database query optimization at this scale?",
+            "How do you decide between caching at the application level vs CDN vs database level?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Systematic approach covering multiple optimization layers",
+            "communication": "Prioritizes high-impact changes first",
+            "key_signals": ["profiling", "async", "connection pooling", "caching", "monitoring"]
+          }
+        },
+        {
+          "id": "py-sr-002",
+          "question": "You've got a Python app that's eating way too much memory in production. How would you debug it, and what's your strategy for optimization?",
+          "expected_answer": "Start with tracemalloc to track memory allocations and identify top consumers. Use objgraph to visualize object reference graphs and find memory leaks (circular references the GC can't collect, or references held by global state). Common culprits: unbounded caches, large dataframes held in memory, string interning issues, or accumulating log buffers. Solutions: use generators instead of lists for large datasets, implement LRU caches with size limits, use __slots__ to reduce per-instance memory, consider memory-mapped files for large datasets, or streaming processing with itertools. For production monitoring, use memory_profiler or pympler. Consider gc.collect() tuning and weak references for caches.",
+          "category": "performance",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "What's the difference between RSS and heap memory in Python?",
+            "How does Python's garbage collector handle circular references?",
+            "When would you consider using numpy arrays vs Python lists for memory efficiency?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows profiling tools and common memory patterns",
+            "communication": "Systematic debugging approach",
+            "key_signals": ["tracemalloc", "objgraph", "generators", "__slots__", "gc"]
+          }
+        },
+        {
+          "id": "py-sr-003",
+          "question": "Let's say you're leading a team maintaining a Python monorepo with 50+ services. How do you tackle shared libraries, dependency conflicts, and keeping the developer experience smooth?",
+          "expected_answer": "Use a monorepo tool like pants or bazel for build management with fine-grained caching. Shared libraries as internal packages with semantic versioning. Dependency management: pin all transitive deps with lock files, use dependabot/renovate for updates, maintain a shared constraints file. CI/CD: only test affected targets on each PR using build graph analysis. Dev experience: pre-commit hooks, standardized project templates (cookiecutter), shared CI configs, internal package registry. Code quality: centralized linting rules (ruff config), shared mypy config, mandatory type annotations for public APIs. Documentation: auto-generated API docs, architecture decision records (ADRs).",
+          "category": "architecture",
+          "difficulty": 4.0,
+          "follow_ups": [
+            "How do you handle breaking changes in shared libraries?",
+            "What's your strategy for managing Python version upgrades across 50 services?",
+            "How do you prevent 'dependency hell' with conflicting transitive dependencies?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Experience with large-scale Python infrastructure",
+            "communication": "Balances technical and organizational concerns",
+            "key_signals": ["monorepo tooling", "build graph", "semantic versioning", "developer experience"]
+          }
+        },
+        {
+          "id": "py-sr-004",
+          "question": "When do you reach for C extensions or Cython? Walk me through your decision process and how you'd actually implement it.",
+          "expected_answer": "C extensions are worthwhile when profiling shows a specific hot path is CPU-bound and Python overhead is the bottleneck — typically tight numerical loops, serialization/deserialization, or custom data structures. Decision process: 1) Profile first (never optimize blindly), 2) Try algorithmic improvements and built-in optimizations, 3) Try numpy/pandas for numerical work, 4) Consider Cython as middle ground (Python-like syntax compiling to C), 5) Write pure C extension only if Cython isn't sufficient. Cython approach: add type annotations to .pyx files, compile with setup.py or meson. For pure C: use Python C API, handle reference counting carefully, release GIL for parallel execution. Alternatives: cffi for calling C libraries, pybind11 for C++ interop, or rewrite the service in Go/Rust if the entire service is CPU-bound.",
+          "category": "performance",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "What are the risks of C extensions in terms of maintenance and debugging?",
+            "How does Cython compare to writing pure C extensions?",
+            "When would you recommend rewriting in another language instead of optimizing Python?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows the optimization hierarchy and trade-offs",
+            "communication": "Pragmatic approach to optimization decisions",
+            "key_signals": ["profiling first", "Cython", "GIL release", "pybind11", "trade-offs"]
+          }
+        },
+        {
+          "id": "py-sr-005",
+          "question": "Walk me through how you'd design a Python service for production. How do you bake in reliability and observability from the start?",
+          "expected_answer": "Reliability: structured error handling with custom exception hierarchies, circuit breakers for external dependencies (tenacity for retries), graceful degradation with fallbacks, health check endpoints, graceful shutdown handling (signal handlers). Observability: structured logging with correlation IDs (structlog), distributed tracing (OpenTelemetry), metrics (Prometheus client), dashboards (Grafana). For async services: proper task cancellation handling, bounded concurrency with semaphores, timeout on all external calls. Testing: chaos engineering with fault injection, load testing with production-like data. Deployment: blue-green or canary deployments, feature flags, rollback automation.",
+          "category": "production",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you implement distributed tracing across Python microservices?",
+            "What's your approach to handling partial failures in a service mesh?",
+            "How do you set up alerting that minimizes false positives?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Production-hardened thinking",
+            "communication": "Covers reliability, observability, and operability",
+            "key_signals": ["structured logging", "OpenTelemetry", "circuit breaker", "graceful shutdown"]
+          }
+        },
+        {
+          "id": "py-sr-006",
+          "question": "Tell me about a data pipeline you've designed. How would you architect one that processes millions of records daily with exactly-once semantics?",
+          "expected_answer": "Architecture depends on latency requirements. For batch: Apache Airflow for orchestration, pandas/polars for transformation, writing to partitioned storage (S3/GCS). For streaming: Kafka consumer groups with manual offset management for exactly-once. Key patterns: idempotent operations (use natural keys), transactional outbox pattern for DB + message queue consistency, checkpointing for restart safety. Implementation: use dataclasses for schema validation, pydantic for config, SQLAlchemy for database operations with explicit transactions. Dead letter queues for failed records. Monitoring: record counts at each stage, latency percentiles, data quality checks. Testing: use pytest with fixtures that spin up test databases, property-based testing with Hypothesis for edge cases.",
+          "category": "data_engineering",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you handle schema evolution in a pipeline that processes diverse data?",
+            "What's your approach to backfilling when a pipeline bug is discovered?",
+            "How do you ensure data quality and detect drift over time?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands distributed systems challenges",
+            "communication": "Addresses reliability and operational concerns",
+            "key_signals": ["exactly-once", "idempotent", "checkpointing", "dead letter queue"]
+          }
+        }
+      ]
+    },
+    "staff": {
+      "theta_range": [4.0, 5.0],
+      "yoe": "10+ years",
+      "questions": [
+        {
+          "id": "py-staff-001",
+          "question": "Let's talk about when Python might not be the right choice. What's your framework for making language decisions at the organizational level, and when would you push back on using Python?",
+          "expected_answer": "Python's limitations become clear in: 1) Latency-sensitive systems where GIL and interpreter overhead matter (sub-millisecond p99), 2) Memory-constrained environments (Python's per-object overhead is significant), 3) CPU-intensive workloads that can't be pushed to C extensions. My framework: evaluate against dimensions — team expertise, ecosystem maturity, performance requirements, hiring market, operational complexity, and migration cost. For a Go migration: strong when you need simple concurrency and fast cold starts (serverless). Rust: when you need zero-cost abstractions and memory safety without GC. Java/Kotlin: enterprise ecosystems with strong typing. Key principle: don't migrate whole systems — identify specific services where Python's overhead is the bottleneck and migrate surgically. The organizational cost of polyglot tooling (CI, monitoring, debugging) must be weighed against performance gains.",
+          "category": "architecture",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you handle the organizational resistance to introducing a new language?",
+            "What's the hidden cost of maintaining services in multiple languages?",
+            "How do you evaluate the maturity of a language ecosystem for production use?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Nuanced understanding of language trade-offs at scale",
+            "communication": "Balances technical and organizational dimensions",
+            "key_signals": ["framework", "trade-offs", "migration cost", "polyglot tooling"]
+          }
+        },
+        {
+          "id": "py-staff-002",
+          "question": "Imagine you're tasked with defining the Python platform strategy for a 200-engineer organization. What would you put in place, and how would you approach it?",
+          "expected_answer": "Platform strategy covers: 1) Standardization — golden path templates for new services (FastAPI + SQLAlchemy + alembic + pytest), shared libraries for cross-cutting concerns (auth, logging, config, metrics), centralized dependency management with allowed/blocked lists. 2) Developer experience — CLI tools for scaffolding, local dev environments with docker-compose, hot reload, standardized Makefile targets. 3) Quality gates — CI pipeline with linting, type checking, test coverage thresholds, security scanning (bandit, safety). 4) Observability — mandated structured logging format, distributed tracing, standard dashboards per service. 5) Governance — Python version upgrade roadmap, RFC process for shared library changes, deprecation policy. 6) Education — internal Python guild, code review standards, lunch-and-learn series. The goal: any engineer can onboard to any service in one day.",
+          "category": "leadership",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you get buy-in from teams that have already built their own tooling?",
+            "What's your approach to deprecating internal libraries that teams depend on?",
+            "How do you measure the success of a platform strategy?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Thinks at organizational scale",
+            "communication": "Articulates vision with concrete deliverables",
+            "key_signals": ["golden path", "developer experience", "governance", "standardization"]
+          }
+        },
+        {
+          "id": "py-staff-003",
+          "question": "Picture migrating a large Django monolith to a service-oriented architecture. How would you approach that transformation, and what are the critical decision points?",
+          "expected_answer": "First principle: don't decompose everything — extract only when there's a clear scaling, deployment, or ownership boundary need. Decision framework: identify bounded contexts via domain-driven design, map team ownership boundaries, find services with independent scaling requirements. Approach: strangler fig pattern — new features as services, gradually extract bounded contexts. Key decisions: 1) API contract design (gRPC vs REST, schema registry), 2) Data ownership (each service owns its data, no shared databases), 3) Eventual consistency strategy (event-driven with Kafka/SQS), 4) Shared auth/identity, 5) Observability from day one (distributed tracing before extraction). Anti-patterns to avoid: distributed monolith (services too coupled), premature decomposition, big-bang migration. Timeline: typically 18-24 months for a meaningful extraction, with incremental value delivery.",
+          "category": "architecture",
+          "difficulty": 5.0,
+          "follow_ups": [
+            "How do you handle data that needs to be consistent across service boundaries?",
+            "What's your approach when a team wants to extract a service but the domain boundaries aren't clean?",
+            "How do you prevent the 'distributed monolith' anti-pattern?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Deep experience with architectural migrations",
+            "communication": "Balances ideal architecture with pragmatic execution",
+            "key_signals": ["strangler fig", "bounded context", "data ownership", "anti-patterns"]
+          }
+        },
+        {
+          "id": "py-staff-004",
+          "question": "Tell me about your testing philosophy at scale. How would you design a testing strategy for a platform supporting hundreds of Python services?",
+          "expected_answer": "Testing pyramid adapted for microservices: unit tests (fast, isolated, per-service), integration tests (service + its dependencies via testcontainers), contract tests (pact or schema validation between services), and a small set of end-to-end smoke tests. Key principles: 1) Test the contract, not the implementation — contract tests catch integration issues without the brittleness of e2e, 2) Shift left — most bugs caught in unit/integration, 3) Test in production — feature flags, canary deployments, and observability replace comprehensive staging environments. Infrastructure: shared test fixtures library, CI that runs only affected tests (build graph analysis), parallel test execution, flaky test quarantine system. Property-based testing (Hypothesis) for data processing code. Chaos engineering for resilience validation. Metrics: test coverage is a floor not a ceiling — measure escaped defect rate and mean time to detect.",
+          "category": "quality",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you handle flaky tests at scale without just ignoring them?",
+            "What's your approach to testing data pipelines?",
+            "How do you balance test coverage mandates with developer velocity?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Testing philosophy beyond coverage numbers",
+            "communication": "Systemic thinking about quality at scale",
+            "key_signals": ["testing pyramid", "contract tests", "test in production", "escaped defect rate"]
+          }
+        },
+        {
+          "id": "py-staff-005",
+          "question": "Walk me through how you evaluate new Python tools and frameworks for your organization. Can you share a technology decision you drove recently?",
+          "expected_answer": "Framework for evaluation: 1) Problem clarity — what specific pain does this solve? Quantify the cost of the status quo. 2) Alternatives analysis — evaluate 3-4 options against criteria: performance, community health (commit frequency, issue response time, bus factor), migration cost, learning curve, operational complexity. 3) Proof of concept — build a representative service/module, measure against requirements, identify hidden costs. 4) Rollout plan — pilot with one team, document lessons, create migration guide, set adoption timeline. 5) Success metrics — define upfront what 'success' looks like (deployment frequency, incident rate, developer satisfaction). Example pattern: moving from Flask to FastAPI — motivated by async support needed for real-time features, type safety from Pydantic, automatic OpenAPI generation. Piloted with one service, measured 40% reduction in endpoint boilerplate, adopted org-wide over 6 months.",
+          "category": "leadership",
+          "difficulty": 5.0,
+          "follow_ups": [
+            "How do you handle the case where a team strongly disagrees with the platform recommendation?",
+            "What's the worst technology decision you've seen, and what made it bad?",
+            "How do you know when to sunset a technology choice that's not working?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Structured decision-making process",
+            "communication": "Balances technical evaluation with organizational dynamics",
+            "key_signals": ["evaluation framework", "proof of concept", "success metrics", "rollout plan"]
+          }
+        }
+      ]
+    }
+  }
+}

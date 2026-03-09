@@ -1,0 +1,370 @@
+{
+  "language": "java",
+  "display_name": "Java",
+  "levels": {
+    "junior": {
+      "theta_range": [1.0, 2.0],
+      "yoe": "0-2 years",
+      "questions": [
+        {
+          "id": "java-jr-001",
+          "question": "Walk me through the difference between interfaces and abstract classes in Java. When would you reach for one over the other?",
+          "expected_answer": "An interface defines a contract — it specifies what methods a class must implement but not how (since Java 8, interfaces can have default methods). An abstract class can have both abstract methods and concrete implementations, plus instance variables. A class can implement multiple interfaces but extend only one abstract class. Use an interface when you want to define a capability that multiple unrelated classes can share (like Serializable, Comparable). Use an abstract class when classes share common state and behavior but shouldn't be instantiated directly (like a base Shape class with area() method).",
+          "category": "oop",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What are default methods in interfaces and why were they added in Java 8?",
+            "Can an abstract class have a constructor?",
+            "What is the diamond problem and how does Java handle it with interfaces?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands the design implications, not just syntax",
+            "communication": "Uses practical examples",
+            "key_signals": ["contract", "multiple inheritance", "default methods", "state"]
+          }
+        },
+        {
+          "id": "java-jr-002",
+          "question": "How does garbage collection work in Java, and what should a developer know about it even though it's automatic?",
+          "expected_answer": "Java automatically manages memory through garbage collection. When objects have no more references pointing to them, they become eligible for GC. The JVM's garbage collector periodically identifies and reclaims memory from unreachable objects. The heap is divided into generations: Young (Eden + Survivor spaces) for short-lived objects and Old (Tenured) for long-lived ones. Most objects die young, so the Young generation is collected frequently (minor GC). You can suggest GC with System.gc() but can't force it. The finalize() method is called before an object is collected, but it's deprecated — use try-with-resources or Cleaner instead.",
+          "category": "jvm",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What's the difference between a minor GC and a major GC?",
+            "What causes an OutOfMemoryError?",
+            "What is a memory leak in Java if GC is automatic?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows generational model basics",
+            "communication": "Explains why GC exists, not just mechanics",
+            "key_signals": ["heap", "generations", "reachability", "Young/Old"]
+          }
+        },
+        {
+          "id": "java-jr-003",
+          "question": "Let's talk about the Collections framework in Java. What are the key interfaces, and how do you decide which implementation to use?",
+          "expected_answer": "The Collections framework provides data structures and algorithms. Key interfaces: List (ordered, allows duplicates), Set (no duplicates), Map (key-value pairs), Queue (FIFO ordering). Common implementations: ArrayList (fast random access, O(1) get), LinkedList (fast insertions/deletions, O(1) add/remove at ends), HashSet (O(1) add/contains, unordered), TreeSet (sorted, O(log n)), HashMap (O(1) get/put), TreeMap (sorted keys, O(log n)). Choose ArrayList for most list needs, HashSet when you need uniqueness, HashMap for key-value lookups. LinkedList is rarely the best choice in practice due to cache locality issues.",
+          "category": "data_structures",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What's the difference between HashMap and Hashtable?",
+            "How does HashMap handle collisions?",
+            "What is the difference between fail-fast and fail-safe iterators?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows interface hierarchy and complexity",
+            "communication": "Gives practical guidance on when to use what",
+            "key_signals": ["List vs Set vs Map", "ArrayList vs LinkedList", "time complexity"]
+          }
+        },
+        {
+          "id": "java-jr-004",
+          "question": "Tell me about the difference between checked and unchecked exceptions in Java. How do you think about which one to use?",
+          "expected_answer": "Checked exceptions (subclasses of Exception but not RuntimeException) must be either caught with try-catch or declared with 'throws' in the method signature. They represent recoverable conditions like IOException or SQLException. Unchecked exceptions (subclasses of RuntimeException) don't need to be caught or declared — they represent programming errors like NullPointerException, ArrayIndexOutOfBoundsException. The compiler enforces handling of checked exceptions but not unchecked ones. Errors (like OutOfMemoryError) are a separate hierarchy and shouldn't be caught. Best practice: use unchecked exceptions for programming bugs, checked for conditions the caller can reasonably recover from.",
+          "category": "error_handling",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "When would you create a custom exception class?",
+            "What is try-with-resources and when should you use it?",
+            "Why do some developers prefer unchecked exceptions over checked ones?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands exception hierarchy and design philosophy",
+            "communication": "Explains rationale, not just rules",
+            "key_signals": ["checked vs unchecked", "recoverable", "RuntimeException", "try-with-resources"]
+          }
+        },
+        {
+          "id": "java-jr-005",
+          "question": "Can you explain generics in Java and why they matter? What problems do they solve?",
+          "expected_answer": "Generics allow you to write type-safe code that works with different types. Instead of using raw types like List, you use List<String> so the compiler can check that you only add strings. Benefits: compile-time type safety (catch ClassCastException at compile time instead of runtime), eliminate casting, enable reusable algorithms. You can create generic classes (class Box<T>), methods (<T> T getFirst(List<T> list)), and interfaces. Wildcards: ? extends T for upper bounds (read), ? super T for lower bounds (write). Type erasure means generic type info is removed at runtime — it's a compile-time feature.",
+          "category": "language_features",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What is type erasure and what limitations does it create?",
+            "What's the difference between List<?> and List<Object>?",
+            "What is the PECS principle?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands type safety benefits",
+            "communication": "Explains with concrete examples",
+            "key_signals": ["type safety", "compile-time", "type erasure", "wildcards"]
+          }
+        },
+        {
+          "id": "java-jr-006",
+          "question": "Let's talk about strings in Java. What is immutability and why is it such a big deal?",
+          "expected_answer": "Strings in Java are immutable — once created, they cannot be changed. Any operation that appears to modify a string actually creates a new string object. This is important for: thread safety (immutable objects are inherently thread-safe), security (string values can't be changed after validation), and the String Pool (JVM caches string literals for memory efficiency). For frequent string concatenation, use StringBuilder (single-threaded) or StringBuffer (thread-safe) to avoid creating many intermediate objects. String comparison: use .equals() for content comparison, == checks reference equality. Common methods: length(), charAt(), substring(), contains(), split(), trim().",
+          "category": "fundamentals",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What is the String Pool and how does it work?",
+            "When would you use StringBuilder over String concatenation?",
+            "What's the difference between == and .equals() for strings?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands immutability implications",
+            "communication": "Connects to practical performance",
+            "key_signals": ["immutable", "String Pool", "StringBuilder", ".equals()"]
+          }
+        }
+      ]
+    },
+    "mid": {
+      "theta_range": [2.0, 3.0],
+      "yoe": "2-5 years",
+      "questions": [
+        {
+          "id": "java-mid-001",
+          "question": "Tell me about the JVM memory model. How is memory actually organized, and why does it matter for writing multi-threaded code?",
+          "expected_answer": "The JVM memory model defines how threads interact through memory. Key areas: Heap (shared, stores objects), Stack (per-thread, stores local variables and method calls), Metaspace (class metadata, replaced PermGen in Java 8). For threading: each thread has a local cache of variables — without proper synchronization, one thread's writes may not be visible to another. The 'volatile' keyword ensures visibility (reads/writes go directly to main memory). 'synchronized' provides both visibility and atomicity. The happens-before relationship defines ordering guarantees. Modern Java prefers java.util.concurrent constructs (locks, atomics, concurrent collections) over raw synchronized. Key concern: data races occur when threads access shared mutable state without synchronization.",
+          "category": "jvm",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "What is the happens-before relationship and why is it important?",
+            "How does volatile differ from synchronized?",
+            "What is a memory barrier and how does it relate to the JMM?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands visibility and ordering guarantees",
+            "communication": "Connects model to practical threading concerns",
+            "key_signals": ["visibility", "happens-before", "volatile", "data race"]
+          }
+        },
+        {
+          "id": "java-mid-002",
+          "question": "Walk me through how you'd approach tuning garbage collection if you had strict latency requirements. What's your process?",
+          "expected_answer": "Start by understanding the workload: is it throughput-sensitive or latency-sensitive? For latency: G1 GC (default since Java 9) is a good starting point — it breaks the heap into regions and does incremental collection. Set -XX:MaxGCPauseMillis target. Monitor GC logs (-Xlog:gc*) to see pause times, collection frequency, and promotion rates. Key tuning: heap size (-Xms/-Xmx, same for predictability), young generation sizing (-XX:NewRatio), G1 region size. For ultra-low latency: ZGC or Shenandoah provide sub-millisecond pauses by doing most work concurrently. Common issues: frequent full GCs (heap too small or memory leak), long pauses (too much live data), premature tenuring (young gen too small). Tools: GC log analyzers (GCEasy), JFR (Java Flight Recorder), async-profiler.",
+          "category": "performance",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "When would you choose ZGC over G1?",
+            "How do you diagnose a memory leak in a Java application?",
+            "What is the humongous object allocation problem in G1?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows GC algorithms and tuning parameters",
+            "communication": "Systematic approach to diagnosis",
+            "key_signals": ["G1", "ZGC", "pause times", "GC logs", "JFR"]
+          }
+        },
+        {
+          "id": "java-mid-003",
+          "question": "Tell me about CompletableFuture. How does it work and what makes it a better choice than traditional threading in certain situations?",
+          "expected_answer": "CompletableFuture provides composable asynchronous programming. Unlike Future.get() which blocks, CompletableFuture lets you chain async operations: thenApply (transform result), thenCompose (chain another async operation), thenCombine (combine two futures). Error handling with exceptionally() or handle(). You can run operations on a custom executor or the common ForkJoinPool. Use cases: making multiple API calls concurrently and combining results, building async pipelines, non-blocking I/O chains. Compared to raw threads: more declarative, composable, better error handling. Compared to reactive streams (Project Reactor): simpler for one-shot async operations, reactive better for backpressure and streaming data.",
+          "category": "concurrency",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "What's the difference between thenApply and thenCompose?",
+            "How do you handle timeouts with CompletableFuture?",
+            "What are the pitfalls of using the common ForkJoinPool?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands composition and async patterns",
+            "communication": "Explains practical use cases clearly",
+            "key_signals": ["composition", "thenApply", "thenCompose", "executor", "non-blocking"]
+          }
+        },
+        {
+          "id": "java-mid-004",
+          "question": "Let's talk about Spring's dependency injection. How does the IoC container actually work, and what are the different ways you can inject dependencies?",
+          "expected_answer": "Spring's IoC (Inversion of Control) container manages object creation and wiring. Instead of objects creating their dependencies, the container injects them. Injection methods: constructor injection (preferred — immutable, clear dependencies), setter injection (optional dependencies), and field injection (via @Autowired, discouraged — hard to test). Bean scopes: singleton (default, one per container), prototype (new instance each time), request/session (web-specific). The container creates beans based on @Component/@Service/@Repository annotations or @Bean methods in @Configuration classes. Component scanning discovers beans, and autowiring resolves dependencies by type. Qualifiers (@Qualifier) resolve ambiguity when multiple beans match. Benefits: loose coupling, easy testing with mocks, configuration flexibility.",
+          "category": "frameworks",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "Why is constructor injection preferred over field injection?",
+            "How does Spring handle circular dependencies?",
+            "What's the difference between @Component, @Service, and @Repository?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands IoC principles, not just annotations",
+            "communication": "Explains the 'why' of DI",
+            "key_signals": ["IoC", "constructor injection", "scopes", "testability"]
+          }
+        },
+        {
+          "id": "java-mid-005",
+          "question": "If you were building a RESTful API with Spring Boot from scratch, what would you prioritize? Walk me through your design approach.",
+          "expected_answer": "Start with @RestController and @RequestMapping for endpoint definitions. Use proper HTTP methods: GET (read), POST (create), PUT (update), DELETE (remove). Return appropriate status codes (200, 201, 204, 400, 404, 500). DTO pattern: separate API models from domain entities, use MapStruct or manual mapping. Validation with @Valid and Bean Validation annotations. Exception handling with @ExceptionHandler or @ControllerAdvice for global error handling, returning structured error responses. Documentation with SpringDoc/OpenAPI. Testing with @WebMvcTest for controller tests, MockMvc for integration tests. Additional: pagination with Pageable, HATEOAS for discoverability, versioning strategy (URL path or header).",
+          "category": "api_design",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "How do you handle API versioning?",
+            "What's your approach to error response formatting?",
+            "How do you implement pagination and sorting?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows Spring Boot conventions and REST best practices",
+            "communication": "Covers the full API development lifecycle",
+            "key_signals": ["DTO pattern", "validation", "exception handling", "testing"]
+          }
+        },
+        {
+          "id": "java-mid-006",
+          "question": "Tell me about Java Streams and how they let you write in a more functional style. How do you decide between streams and traditional loops?",
+          "expected_answer": "Streams (java.util.stream) provide a declarative way to process collections. Key operations: filter (selection), map (transformation), flatMap (one-to-many), reduce/collect (aggregation), sorted, distinct, limit. Streams are lazy — intermediate operations build a pipeline that's only executed when a terminal operation is called. They support parallel processing with .parallelStream() backed by ForkJoinPool. Use streams for: data transformation pipelines, filtering and mapping collections, aggregation (sum, count, grouping). Prefer traditional loops for: simple iterations, operations with side effects, performance-critical code where stream overhead matters, early termination with complex conditions. Collectors: toList(), toMap(), groupingBy(), joining().",
+          "category": "language_features",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "When is parallelStream() actually faster and when is it slower?",
+            "What's the difference between map() and flatMap()?",
+            "How do you handle checked exceptions inside a stream pipeline?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands laziness, parallelism, and trade-offs",
+            "communication": "Gives clear guidance on when to use and avoid",
+            "key_signals": ["lazy evaluation", "terminal operations", "collectors", "parallel"]
+          }
+        }
+      ]
+    },
+    "senior": {
+      "theta_range": [3.0, 4.0],
+      "yoe": "5-10 years",
+      "questions": [
+        {
+          "id": "java-sr-001",
+          "question": "Imagine you need to design a Java service that handles high-throughput with sub-5ms p99 latency. How would you architect it and what optimization work would you do?",
+          "expected_answer": "Architecture: use Netty or async framework for non-blocking I/O, minimize object allocation on hot paths (object pooling, pre-allocated buffers). JVM tuning: ZGC or Shenandoah for low-pause GC, properly sized heap, JIT compilation warmup. Data path: off-heap memory for large datasets (DirectByteBuffer), avoid autoboxing, use primitive collections (Eclipse Collections, HPPC). Serialization: Protocol Buffers or FlatBuffers over JSON. Database: connection pooling (HikariCP), prepared statements, read replicas. Caching: Caffeine for local cache, Redis for distributed. Profiling: JFR + async-profiler to find hotspots, JMH for benchmarking changes. Monitor: p50/p95/p99 latency histograms, GC pause distribution, thread pool utilization.",
+          "category": "performance",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you handle tail latency in a distributed system?",
+            "What's your approach to warmup and avoiding cold-start latency?",
+            "How do you benchmark Java code correctly with JMH?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Covers JVM, application, and infrastructure layers",
+            "communication": "Systematic optimization approach",
+            "key_signals": ["ZGC", "object pooling", "off-heap", "JFR", "p99"]
+          }
+        },
+        {
+          "id": "java-sr-002",
+          "question": "Let's talk about distributed transactions. How do you handle transaction management when you've got multiple microservices that need to work together?",
+          "expected_answer": "Avoid distributed transactions when possible — design for eventual consistency. Patterns: 1) Saga pattern — orchestration (central coordinator) or choreography (event-driven). For Java: use Spring State Machine or custom orchestrator for orchestration sagas, Kafka/RabbitMQ for choreography. 2) Transactional outbox — write business data and event to same database atomically, then publish events asynchronously (Debezium for CDC). 3) Idempotency — design all operations with idempotency keys so retries are safe. Compensation logic for rollback scenarios (compensating transactions). 4) For critical flows: two-phase commit via tools like Seata, but this has availability trade-offs. Testing: use contract tests to verify saga steps, chaos engineering to test failure scenarios. Monitor: track saga completion rates, compensation frequencies, and in-flight transaction counts.",
+          "category": "distributed_systems",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "What are the trade-offs between orchestration and choreography sagas?",
+            "How do you handle saga failure compensation when a compensating action also fails?",
+            "How does the transactional outbox pattern work with Debezium?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Deep understanding of distributed consistency",
+            "communication": "Articulates trade-offs clearly",
+            "key_signals": ["saga", "eventual consistency", "outbox", "idempotency", "compensation"]
+          }
+        },
+        {
+          "id": "java-sr-003",
+          "question": "Tell me about designing a microservices architecture with Java and Spring. How do you make independent deployment work while keeping your data consistent?",
+          "expected_answer": "Start with domain-driven design to identify bounded contexts that map to services. Each service owns its database (database per service pattern). Communication: synchronous (REST/gRPC) for queries, asynchronous (Kafka/RabbitMQ) for commands and events. API contracts: OpenAPI specs with contract testing (Spring Cloud Contract or Pact). Service mesh (Istio) or Spring Cloud for service discovery, circuit breaking (Resilience4j), and distributed tracing (Micrometer + Zipkin/Jaeger). Deployment: containerized with Kubernetes, each service has its own CI/CD pipeline, feature flags for gradual rollouts. Data consistency via event sourcing or CDC. API gateway (Spring Cloud Gateway) for routing, rate limiting, auth. Testing: consumer-driven contract tests prevent breaking changes during independent deployment.",
+          "category": "architecture",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you handle shared data that multiple services need?",
+            "What's your strategy for API versioning across services?",
+            "How do you debug a request that spans 5+ services?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Production experience with microservices at scale",
+            "communication": "Addresses operational and organizational aspects",
+            "key_signals": ["bounded context", "database per service", "contract testing", "event-driven"]
+          }
+        },
+        {
+          "id": "java-sr-004",
+          "question": "Walk me through a complex production incident you debugged in a Java system. What was the issue and how did you track it down?",
+          "expected_answer": "This is an open-ended question expecting a real experience. Strong answers include: systematic approach to diagnosis (timeline, scope, impact assessment), use of observability tools (logs, traces, metrics, thread dumps, heap dumps), identifying root cause vs symptoms, communication during the incident, remediation and prevention. Example pattern: noticed p99 latency spike → checked metrics dashboards → found GC pause times increasing → took heap dump with jmap → found memory leak from unbounded cache → hotfix to add eviction policy → post-mortem with timeline, root cause, and action items (monitoring alert for heap growth, code review checklist for caching patterns).",
+          "category": "production",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you set up alerting to catch this kind of issue earlier?",
+            "What does your post-mortem process look like?",
+            "How do you balance incident response speed with thoroughness?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Demonstrates real debugging experience",
+            "communication": "Structured incident response",
+            "key_signals": ["systematic approach", "observability", "root cause", "post-mortem"]
+          }
+        },
+        {
+          "id": "java-sr-005",
+          "question": "Let's talk about security in Java applications. How do you think about building defense in depth? What are the critical areas you focus on?",
+          "expected_answer": "Defense in depth: 1) Authentication/Authorization — Spring Security with OAuth 2.0/OIDC, JWT validation, role-based and attribute-based access control. 2) Input validation — Bean Validation, parameterized queries (never concatenate SQL), input sanitization. 3) Dependencies — automated vulnerability scanning (OWASP Dependency Check, Snyk), regular updates. 4) Secrets management — HashiCorp Vault or cloud KMS, never in code/config. 5) Transport — TLS everywhere, certificate management. 6) Application — CORS policies, CSRF protection, security headers, rate limiting. 7) Logging — audit trail for sensitive operations, avoid logging PII. 8) Container security — minimal base images, non-root processes, security scanning. Review: OWASP Top 10 as baseline, threat modeling for new features, security-focused code reviews.",
+          "category": "security",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you implement fine-grained authorization in a microservices architecture?",
+            "What's your approach to handling secrets rotation without downtime?",
+            "How do you handle SQL injection prevention at scale?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Comprehensive security awareness",
+            "communication": "Layered defense approach",
+            "key_signals": ["defense in depth", "OWASP", "secrets management", "dependency scanning"]
+          }
+        }
+      ]
+    },
+    "staff": {
+      "theta_range": [4.0, 5.0],
+      "yoe": "10+ years",
+      "questions": [
+        {
+          "id": "java-staff-001",
+          "question": "Imagine your organization is thinking about adopting Kotlin for some Java services. How would you evaluate whether this makes sense and what would the migration actually look like?",
+          "expected_answer": "Evaluation framework: 1) Problem identification — what pain points does Kotlin address? (null safety, verbosity, coroutines for async). 2) Costs: learning curve for team, tooling compatibility, build time changes, library interop risks. 3) Benefits: quantify — reduced NullPointerExceptions, less boilerplate (30-40% fewer lines), null safety at type system level, coroutines vs CompletableFuture for async. Strategy: start with new code — Kotlin and Java coexist in the same project. Identify a willing pilot team, start with a non-critical service. Establish coding standards and training (Kotlin is NOT 'Java with less syntax'). Migration: use IntelliJ auto-conversion as starting point then refactor to idiomatic Kotlin. Don't convert everything — legacy stable services in Java are fine. Success metrics: defect rate, developer satisfaction, code review velocity. Timeline: 12-18 months for meaningful adoption.",
+          "category": "leadership",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "What are the hidden costs of running a polyglot JVM organization?",
+            "How do you handle developers who resist the change?",
+            "At what point would you declare the migration a failure?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Nuanced Kotlin/Java comparison",
+            "communication": "Balances technical merit with organizational execution",
+            "key_signals": ["evaluation framework", "pilot approach", "coexistence", "metrics"]
+          }
+        },
+        {
+          "id": "java-staff-002",
+          "question": "Picture this: you're building an internal platform for hundreds of Java microservices. How do you design it so that quality, observability, and developer experience are all consistent and great?",
+          "expected_answer": "Internal platform with: 1) Service chassis — Spring Boot starter with embedded observability (Micrometer metrics, structured logging, distributed tracing), health checks, graceful shutdown. Teams add one dependency to get platform capabilities. 2) CI/CD platform — standardized pipelines with quality gates (compilation, tests, security scan, contract tests), automated canary deployments. 3) Service mesh — Istio for mTLS, traffic management, circuit breaking at infrastructure level. 4) Observability — Prometheus/Grafana for metrics, ELK/Loki for logs, Jaeger for traces, standardized dashboards per service. 5) Developer portal — Backstage for service catalog, API documentation, onboarding guides. 6) Platform team operates as a product team — measure adoption, gather feedback, iterate. Golden path: happy path should be effortless, escape hatches available for edge cases.",
+          "category": "platform",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you prevent the platform from becoming a bottleneck?",
+            "What's your approach to platform versioning and backward compatibility?",
+            "How do you measure platform team success?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Experience building internal platforms",
+            "communication": "Product thinking for internal tools",
+            "key_signals": ["service chassis", "golden path", "platform as product", "developer experience"]
+          }
+        },
+        {
+          "id": "java-staff-003",
+          "question": "Tell me about your approach to evolving a system architecture over multiple years. How do you make major changes without disrupting the business?",
+          "expected_answer": "Long-term architecture evolution requires: 1) Architecture vision — 3-year north star with quarterly milestones, documented as ADRs (Architecture Decision Records). 2) Incremental migration — strangler fig pattern, each increment delivers business value. 3) Risk management — identify highest-risk components first, build confidence with canary migrations, maintain rollback capability. 4) Organizational alignment — architecture roadmap tied to business OKRs, engineering leadership buy-in, cross-team working groups for shared concerns. 5) Technical enabling — feature flags for gradual traffic shifting, comprehensive monitoring during migration, parallel-run new and old systems for validation. 6) Knowledge management — documentation, migration playbooks, training. Anti-patterns: big-bang rewrites, architecture astronauts who design without building, ignoring organizational constraints. The best architecture is one that teams can evolve incrementally.",
+          "category": "leadership",
+          "difficulty": 5.0,
+          "follow_ups": [
+            "How do you handle the tension between shipping features and paying down tech debt?",
+            "How do you gain engineering buy-in for a multi-year architectural migration?",
+            "What do you do when the architecture vision needs to change mid-migration?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Multi-year architecture thinking",
+            "communication": "Connects technical decisions to business outcomes",
+            "key_signals": ["ADRs", "incremental", "business alignment", "risk management"]
+          }
+        }
+      ]
+    }
+  }
+}

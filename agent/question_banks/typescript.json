@@ -1,0 +1,285 @@
+{
+  "language": "typescript",
+  "display_name": "TypeScript",
+  "levels": {
+    "junior": {
+      "theta_range": [1.0, 2.0],
+      "yoe": "0-2 years",
+      "questions": [
+        {
+          "id": "ts-jr-001",
+          "question": "Why TypeScript over plain JavaScript? What do you see as the real advantages in practice?",
+          "expected_answer": "TypeScript is a superset of JavaScript that adds static type annotations. All valid JavaScript is valid TypeScript. Advantages: catch type errors at compile time instead of runtime (e.g., passing a string where a number is expected), better IDE support (autocomplete, refactoring, go-to-definition), self-documenting code (types serve as documentation), easier refactoring (the compiler catches broken references). TypeScript compiles down to plain JavaScript so it runs anywhere JS runs. It doesn't add runtime overhead — types are erased during compilation. Trade-offs: learning curve, compilation step, sometimes verbose for simple scripts.",
+          "category": "fundamentals",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What is the difference between 'any' and 'unknown' types?",
+            "How does TypeScript compilation work?",
+            "When might you NOT want to use TypeScript?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands compile-time vs runtime type checking",
+            "communication": "Articulates practical benefits",
+            "key_signals": ["static typing", "compile-time", "type erasure", "IDE support"]
+          }
+        },
+        {
+          "id": "ts-jr-002",
+          "question": "Walk me through the TypeScript type system — interfaces, type aliases, the basic types. When would you use one over the other?",
+          "expected_answer": "Basic types: string, number, boolean, null, undefined, void, never, any, unknown. Arrays: number[] or Array<number>. Tuples: [string, number]. Interfaces define object shapes: interface User { name: string; age: number; }. Type aliases can define any type: type ID = string | number. Both can describe object shapes, but interfaces support declaration merging (extending in multiple places) and are better for object-oriented patterns. Type aliases are more flexible — they can represent unions, tuples, primitives, and mapped types. General rule: use interfaces for public API contracts and object shapes, type aliases for unions, intersections, and complex derived types.",
+          "category": "type_system",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What is a union type and how do you narrow it?",
+            "Can you extend an interface? How about a type alias?",
+            "What's the difference between type and interface for describing an object?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows basic type annotations and when to use them",
+            "communication": "Clear distinction between interface and type",
+            "key_signals": ["interface vs type", "union", "basic types", "declaration merging"]
+          }
+        },
+        {
+          "id": "ts-jr-003",
+          "question": "Tell me about generics in TypeScript. When would you actually reach for them? Give me an example.",
+          "expected_answer": "Generics allow you to write reusable code that works with multiple types while maintaining type safety. Instead of using 'any', generics let you capture and use the actual type. Example: function identity<T>(arg: T): T { return arg; } — this preserves the input type in the output. Generic interfaces: interface Box<T> { value: T; }. You can add constraints: function getLength<T extends { length: number }>(arg: T): number. Common uses: array utility functions, API response wrappers (ApiResponse<T>), container types, React component props. TypeScript's built-in utilities are generics: Partial<T>, Required<T>, Pick<T, K>, Record<K, V>.",
+          "category": "type_system",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What are type constraints with 'extends'?",
+            "What are some built-in utility types you use regularly?",
+            "How do generics work with React components?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands parameterized types",
+            "communication": "Gives practical examples",
+            "key_signals": ["reusable", "type safety", "constraints", "utility types"]
+          }
+        },
+        {
+          "id": "ts-jr-004",
+          "question": "Let's talk about null and undefined in TypeScript. What's strict null checking, and how does it actually help you in your code?",
+          "expected_answer": "With strictNullChecks enabled (recommended), null and undefined are not assignable to other types. This forces you to explicitly handle nullable values. You declare nullable types with union: string | null. Handling patterns: if checks (type narrowing), optional chaining (?.), nullish coalescing (??), non-null assertion (! — use sparingly). Optional properties: { name?: string } is equivalent to { name: string | undefined }. This catches common bugs: accessing properties on null, forgetting to handle missing data, uninitialized variables. Without strict null checks, any variable can be null/undefined, making TypeScript's safety much weaker.",
+          "category": "type_system",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What's the difference between optional chaining (?.) and non-null assertion (!)?",
+            "Why should you avoid the non-null assertion operator?",
+            "How does the nullish coalescing operator (??) differ from logical OR (||)?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands strict mode benefits",
+            "communication": "Explains null safety practically",
+            "key_signals": ["strictNullChecks", "optional chaining", "nullish coalescing", "type narrowing"]
+          }
+        },
+        {
+          "id": "ts-jr-005",
+          "question": "What should you prioritize when setting up TypeScript for a new project? Walk me through the critical tsconfig.json settings.",
+          "expected_answer": "tsconfig.json configures the TypeScript compiler. Key options: 'strict': true (enables all strict checks — always use this), 'target': 'ES2020' (output JS version), 'module': 'ESNext' (module system), 'outDir' and 'rootDir' (output and source directories), 'include'/'exclude' (which files to compile). Important strict options: strictNullChecks, noImplicitAny, strictFunctionTypes. For modern projects: 'moduleResolution': 'bundler' (if using a bundler), 'esModuleInterop': true (for CommonJS compatibility), 'skipLibCheck': true (faster compilation, skip checking node_modules types). For monorepos: 'references' and 'composite' for project references. Path aliases with 'paths' for cleaner imports.",
+          "category": "tooling",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What does 'strict: true' actually enable?",
+            "How do project references work in a monorepo?",
+            "What is the difference between target and module?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows practical compiler options",
+            "communication": "Explains reasoning behind choices",
+            "key_signals": ["strict: true", "target", "moduleResolution", "project references"]
+          }
+        }
+      ]
+    },
+    "mid": {
+      "theta_range": [2.0, 3.0],
+      "yoe": "2-5 years",
+      "questions": [
+        {
+          "id": "ts-mid-001",
+          "question": "Let's dig into advanced TypeScript — conditional types, mapped types, template literal types. What problems do they solve and when have you actually used them?",
+          "expected_answer": "Conditional types: T extends U ? X : Y — types that depend on a condition. Used for type-level branching: type IsString<T> = T extends string ? true : false. With 'infer' keyword: type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never — extracts the return type. Mapped types: transform properties of an existing type. Example: type Readonly<T> = { readonly [K in keyof T]: T[K] }. Can add/remove modifiers (+/- for optional and readonly). Template literal types: string pattern types. type EventName = `on${Capitalize<string>}` matches 'onClick', 'onHover', etc. Combination: these compose together for powerful type utilities. Use cases: API response type transformation, form validation types, strongly-typed event systems, builder pattern types.",
+          "category": "type_system",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How does the 'infer' keyword work in conditional types?",
+            "Can you give an example of a mapped type with key remapping?",
+            "How would you type a deep partial utility type?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Comfortable with type-level programming",
+            "communication": "Connects to practical applications",
+            "key_signals": ["conditional types", "infer", "mapped types", "template literal"]
+          }
+        },
+        {
+          "id": "ts-mid-002",
+          "question": "You're getting data from an API or form input — how do you ensure that's actually safe to work with? Walk me through your approach to type safety with external data.",
+          "expected_answer": "External data is untyped at runtime — TypeScript types are erased. You need runtime validation. Approaches: 1) Zod — define schemas that validate at runtime and infer TypeScript types: const UserSchema = z.object({ name: z.string() }); type User = z.infer<typeof UserSchema>. Single source of truth for runtime and compile-time types. 2) io-ts — similar approach with functional programming style. 3) Custom type guards: function isUser(data: unknown): data is User — validate and narrow type. Best practices: validate at system boundaries (API handlers, form submissions), use 'unknown' instead of 'any' for untyped data, create branded/opaque types for validated data (type ValidEmail = string & { __brand: 'ValidEmail' }). Never trust external data — always validate before using typed references.",
+          "category": "type_safety",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "What are branded/opaque types and how do they help?",
+            "How do you keep Zod schemas in sync with your TypeScript interfaces?",
+            "What's the difference between a type guard and a type assertion?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands runtime vs compile-time gap",
+            "communication": "Pragmatic approach to type safety",
+            "key_signals": ["Zod", "runtime validation", "type guards", "system boundaries"]
+          }
+        },
+        {
+          "id": "ts-mid-003",
+          "question": "In your React projects with TypeScript, how do you structure your components? What patterns have worked well for you?",
+          "expected_answer": "Component typing: function components with typed props interface. Use React.FC sparingly (it used to implicitly include children). Prefer explicit: function Button({ label }: ButtonProps): JSX.Element. Props patterns: extend HTML attributes with React.ComponentPropsWithoutRef<'button'>, use discriminated unions for variant props. Hooks: useState<Type>, useRef<HTMLDivElement>(null), custom hooks return typed tuples as const. Event handlers: React.ChangeEvent<HTMLInputElement>, React.MouseEvent<HTMLButtonElement>. Generic components: function Select<T>({ items }: { items: T[] }). Context: createContext with proper typing and non-null assertion or custom hook. Forwarded refs: React.forwardRef<RefType, Props>. Children: React.ReactNode for general, React.ReactElement for elements only.",
+          "category": "frameworks",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "How do you type a polymorphic component (component that accepts 'as' prop)?",
+            "What's the difference between React.ReactNode and React.ReactElement?",
+            "How do you type a custom hook that returns multiple values?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows React-specific TypeScript patterns",
+            "communication": "Practical and pattern-oriented",
+            "key_signals": ["ComponentProps", "discriminated unions", "generic components", "forwardRef"]
+          }
+        },
+        {
+          "id": "ts-mid-004",
+          "question": "Tell me about declaration merging. I know it sounds abstract, but where have you actually used this in a real project?",
+          "expected_answer": "Declaration merging combines multiple declarations with the same name into a single definition. Interfaces merge: two interface declarations with the same name combine their members. This is powerful for: 1) Augmenting third-party types — extend Window interface to add custom global properties, extend Express Request to add middleware properties. 2) Module augmentation — declare module 'express' { interface Request { user: User } }. 3) Namespace merging — add static properties to functions. Interfaces merge, type aliases don't (this is a key difference). Order matters for overloads: later declarations get higher priority. Practical use: extending library types without modifying node_modules, adding global type declarations in .d.ts files.",
+          "category": "type_system",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How do you augment types from a third-party library?",
+            "What is the 'declare global' syntax used for?",
+            "What's the difference between .ts and .d.ts files?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands declaration files and augmentation",
+            "communication": "Connects to real-world library usage",
+            "key_signals": ["module augmentation", "declare module", ".d.ts", "interface merging"]
+          }
+        },
+        {
+          "id": "ts-mid-005",
+          "question": "You're working in a large TypeScript codebase and compilation is getting slow. What's your strategy to speed things up?",
+          "expected_answer": "Key strategies: 1) Project references (composite projects) — split into sub-projects that compile independently, incremental compilation only rebuilds changed projects. 2) skipLibCheck: true — skip type-checking node_modules declarations. 3) Use --incremental flag — caches type information in .tsbuildinfo file. 4) Isolate modules with isolatedModules: true — enables per-file transpilation (required for esbuild/SWC). 5) Avoid complex conditional/mapped types in hot paths — they can exponentially slow the type checker. 6) Use 'interface' over 'type' for object shapes (interfaces are cached better). 7) For builds: use esbuild or SWC for transpilation (100x faster), run tsc only for type checking. 8) IDE: configure excludes properly, use workspace version of TypeScript. Diagnosis: use --generateTrace to create a trace for Chrome DevTools analysis.",
+          "category": "tooling",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How do project references work with a monorepo build tool like Turborepo?",
+            "What is isolatedModules and why do bundlers require it?",
+            "How do you diagnose which types are slow to check?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Practical experience with large TypeScript projects",
+            "communication": "Prioritizes high-impact optimizations",
+            "key_signals": ["project references", "incremental", "esbuild/SWC", "generateTrace"]
+          }
+        }
+      ]
+    },
+    "senior": {
+      "theta_range": [3.0, 4.0],
+      "yoe": "5-10 years",
+      "questions": [
+        {
+          "id": "ts-sr-001",
+          "question": "You're building a system where frontend and backend are both TypeScript. How would you guarantee end-to-end type safety so breaking changes get caught automatically?",
+          "expected_answer": "Approaches: 1) tRPC — end-to-end typesafe APIs without code generation. Server defines procedures, client infers types automatically. Best for TypeScript-to-TypeScript fullstack. 2) OpenAPI + code generation — define API spec, generate client types with openapi-typescript or zodios. Works with any backend language. 3) GraphQL + codegen — define schema, generate TypeScript types and hooks with graphql-codegen. Strongly typed queries. Design principles: single source of truth for types (either server defines them or shared schema does), never manually duplicate types between client and server. Validation: use Zod on both ends — define once, validate on server, infer types on client. Shared packages in monorepo for common types. Contract testing: ensure generated types match runtime behavior. Consider versioning strategy for API changes.",
+          "category": "architecture",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "What are the trade-offs between tRPC and OpenAPI approaches?",
+            "How do you handle API versioning with end-to-end type safety?",
+            "How do you ensure that runtime validation matches TypeScript types?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows multiple approaches and their trade-offs",
+            "communication": "Focuses on eliminating type duplication",
+            "key_signals": ["tRPC", "code generation", "single source of truth", "contract testing"]
+          }
+        },
+        {
+          "id": "ts-sr-002",
+          "question": "Design a type-safe event system or plugin architecture for me. I want compile-time safety — if I emit the wrong payload or subscribe to a non-existent event, it should fail at build time.",
+          "expected_answer": "Use mapped and conditional types for compile-time safety. Define an event map: interface Events { 'user:login': { userId: string }; 'order:created': { orderId: string; total: number }; }. Typed emit/subscribe: class EventBus { emit<K extends keyof Events>(event: K, payload: Events[K]): void; on<K extends keyof Events>(event: K, handler: (payload: Events[K]) => void): void; }. For plugins: define a plugin interface with typed hooks. Use generics for extensibility: interface Plugin<TConfig> { name: string; setup(app: App, config: TConfig): void; }. Registry pattern: type-safe middleware chains. Advanced: use template literal types for namespaced events, discriminated unions for event types, branded types for IDs. This gives compile-time error if you emit wrong payload or subscribe to non-existent event.",
+          "category": "type_system",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How would you handle wildcard event subscriptions type-safely?",
+            "How do you type async plugin hooks with proper error handling?",
+            "How would you add runtime validation to ensure events match their types?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Advanced type-level programming",
+            "communication": "Practical API design with types",
+            "key_signals": ["event map", "keyof", "generic constraints", "branded types"]
+          }
+        },
+        {
+          "id": "ts-sr-003",
+          "question": "You're leading TypeScript adoption across a large organization. How do you enforce standards without it becoming a bureaucratic nightmare?",
+          "expected_answer": "Standards framework: 1) Strict tsconfig base — shared config package with strictest settings, teams extend it. No escape hatches without team lead approval. 2) ESLint with typescript-eslint — enforce patterns: no-explicit-any, consistent-type-imports, naming conventions, prefer-nullish-coalescing. Custom rules for org-specific patterns. 3) Code review guidelines — typed document with examples of good/bad patterns. 4) Banned patterns list — no 'as any', no non-null assertion in business logic, no type assertions for external data. 5) Architecture patterns — typed by example: reference implementations for common patterns (API client, form handling, state management). 6) Gradual adoption — for existing JS codebases: allowJs + checkJs + incremental migration. Track migration progress with a dashboard (% of files converted, any-usage count). 7) Education — TypeScript guild, lunch-and-learns, pair programming on complex types.",
+          "category": "leadership",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you handle teams that push back against strict TypeScript settings?",
+            "What custom ESLint rules have you found most valuable?",
+            "How do you measure TypeScript adoption success?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Organizational-scale TypeScript strategy",
+            "communication": "Balances strictness with pragmatism",
+            "key_signals": ["shared config", "custom rules", "gradual adoption", "metrics"]
+          }
+        }
+      ]
+    },
+    "staff": {
+      "theta_range": [4.0, 5.0],
+      "yoe": "10+ years",
+      "questions": [
+        {
+          "id": "ts-staff-001",
+          "question": "You're designing governance for a monorepo shared by multiple teams. How do you keep things loosely coupled while enforcing consistency and preventing chaos?",
+          "expected_answer": "Governance pillars: 1) Shared type contracts — internal package for shared types (API contracts, domain models), versioned with semantic versioning, breaking changes require RFC approval. 2) Build infrastructure — Turborepo or Nx with remote caching, CI that only tests affected packages, publish pipeline with changesets. 3) Dependency policy — approved list of external dependencies, automated vulnerability scanning, centralized upgrade automation (Renovate with grouped PRs). 4) Code ownership — CODEOWNERS per package, required review from package owners for cross-package changes. 5) Quality standards — shared TSConfig, ESLint, and Prettier configs as packages, pre-commit hooks, PR checks. 6) Escape velocity — teams can move fast within their packages, cross-package changes have more process. The key tension: shared code enables consistency but creates coupling. Manage by minimizing the surface area of shared packages and using dependency inversion.",
+          "category": "leadership",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you prevent shared packages from becoming bottlenecks?",
+            "What's your approach when two teams need conflicting versions of a shared dependency?",
+            "How do you handle the case where a team needs to break away from the monorepo?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Organizational-scale architecture",
+            "communication": "Addresses governance without bureaucracy",
+            "key_signals": ["type contracts", "remote caching", "CODEOWNERS", "dependency inversion"]
+          }
+        },
+        {
+          "id": "ts-staff-002",
+          "question": "How do you know if your team's TypeScript is actually helping or just getting in the way? What would make you step back and simplify?",
+          "expected_answer": "Signals of over-engineering: 1) Types are harder to read than the code they protect, 2) Developers spend more time fighting the type system than writing logic, 3) Heavy use of 'as any' or type assertions to bypass complex types, 4) New team members can't understand types without oral tradition. Signals of under-engineering: 1) Frequent 'any' usage, 2) Runtime type errors that TypeScript should catch, 3) No validation at system boundaries. Framework: measure 'any' usage rate, track runtime type errors, survey developer sentiment. Good type code: types serve as documentation, IDE experience is excellent, refactoring is confident, boundary validation catches real bugs. Course corrections: simplify over-complex types (extract and name intermediate types, add comments), add runtime validation where types give false confidence, create type utilities that hide complexity. Philosophy: types should make the easy things easy and the hard things possible — not the other way around.",
+          "category": "leadership",
+          "difficulty": 5.0,
+          "follow_ups": [
+            "How do you train senior engineers who are skilled in JS but struggle with advanced TypeScript?",
+            "What's the most over-engineered type pattern you've seen and how would you simplify it?",
+            "How do you decide the appropriate level of type strictness for different parts of the codebase?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Meta-level thinking about type system value",
+            "communication": "Balanced perspective with concrete metrics",
+            "key_signals": ["measurement", "developer experience", "diminishing returns", "pragmatism"]
+          }
+        }
+      ]
+    }
+  }
+}

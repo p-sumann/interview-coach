@@ -1,0 +1,325 @@
+{
+  "type": "behavioral",
+  "display_name": "Behavioral Interview",
+  "persona": {
+    "name": "Sarah Chen",
+    "role": "Senior Engineering Manager",
+    "voice": "Kore",
+    "focus": "STAR-format responses, leadership, conflict resolution, teamwork"
+  },
+  "levels": {
+    "junior": {
+      "theta_range": [1.0, 2.0],
+      "yoe": "0-2 years",
+      "questions": [
+        {
+          "id": "beh-jr-001",
+          "question": "Tell me about a time you were stuck on a really hard technical problem. What did you do to work through it?",
+          "expected_answer": "Strong answer uses STAR format: Situation (the specific problem and context), Task (what they needed to solve and why it mattered), Action (concrete debugging steps — researching, isolating the issue, asking for help, trying different approaches), Result (how they solved it and what they learned). For juniors: expect problems like a confusing bug that took days, learning a new technology under pressure, or fixing something in an unfamiliar codebase. Key signals: systematic approach, willingness to ask for help, resourcefulness, learning from the experience.",
+          "category": "problem_solving",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What resources or people did you turn to when you got stuck?",
+            "Knowing what you know now, would you approach it differently?",
+            "How long did it take, and what was the biggest takeaway?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Uses Situation, Task, Action, Result structure",
+            "self_awareness": "Acknowledges limitations and learning",
+            "key_signals": ["specific example", "actions taken", "outcome", "learning"]
+          }
+        },
+        {
+          "id": "beh-jr-002",
+          "question": "Tell me about a time you worked closely with someone else on a piece of work. How did you collaborate, and how did it turn out?",
+          "expected_answer": "Look for: real communication skills, willingness to share ideas and accept feedback, basic conflict navigation. Example: pair programming, collaborative code review, a class project with real stakes. Strong signals: actively listening, compromising on approaches, dividing work fairly, giving and receiving constructive feedback. Red flags: takes all credit, blames the other person, can't describe what they specifically contributed versus the partner.",
+          "category": "teamwork",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "Did you disagree on anything? How did you handle it?",
+            "What was your specific contribution versus theirs?",
+            "What would you do differently next time you collaborate like that?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Clear situation and specific actions",
+            "collaboration": "Demonstrates genuine teamwork",
+            "key_signals": ["communication", "feedback", "compromise", "shared success"]
+          }
+        },
+        {
+          "id": "beh-jr-003",
+          "question": "Tell me about a time someone gave you tough feedback. How did you react, and what did you do with it?",
+          "expected_answer": "Strong answer: received feedback gracefully (even if it stung at first), took time to process it honestly, identified actionable takeaways, and made visible changes. Example: a code review with significant pushback, a performance review with a surprise area for improvement, a mentor calling out a bad habit. Key signals: emotional maturity, genuine growth mindset, follow-through. Red flags: defensiveness, dismissing the reviewer, claiming they've never received critical feedback.",
+          "category": "self_awareness",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What specifically did you change after hearing that feedback?",
+            "Did the feedback feel fair at the time, or did it take a while to sink in?",
+            "How do you actively seek out feedback now?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Specific feedback and concrete response",
+            "growth_mindset": "Shows ability to learn and improve",
+            "key_signals": ["receptive", "actionable changes", "growth", "follow-through"]
+          }
+        },
+        {
+          "id": "beh-jr-004",
+          "question": "Describe a time you had to pick up something completely new — a language, framework, tool — on a tight timeline. How did you approach learning it?",
+          "expected_answer": "Strong answer: explains the situation and stakes, then walks through their actual learning strategy — whether that's reading docs, building a small prototype, finding tutorials, leaning on a teammate, or some combination. Shows they can distinguish between 'I need to know everything' and 'I need to know enough to be effective.' For juniors: learning a new framework for a project, picking up a language for a class, or onboarding to a new codebase under time pressure. Key signals: resourcefulness, structured learning, applying knowledge quickly, asking smart questions.",
+          "category": "adaptability",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What was your strategy for learning efficiently under that pressure?",
+            "Did you make mistakes along the way? How did you handle them?",
+            "How has that experience shaped how you learn new things now?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Clear context, learning strategy, and outcome",
+            "learning_ability": "Demonstrates systematic approach to learning",
+            "key_signals": ["resourceful", "structured", "applied learning", "time management"]
+          }
+        },
+        {
+          "id": "beh-jr-005",
+          "question": "Tell me about a time you messed something up at work or in a project. What happened, and how did you handle it?",
+          "expected_answer": "Strong answer: honest about the mistake, takes clear ownership, describes both the immediate fix and what they did to prevent a repeat. For juniors: pushed a bug to production, accidentally broke something, missed an important deadline, or miscommunicated with a teammate. Key signals: ownership without deflecting, transparency about what happened, proactive communication, genuine learning. Red flags: blaming others, minimizing it, claiming they've never made a mistake.",
+          "category": "accountability",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "How did you communicate the mistake to your team or manager?",
+            "What did you put in place to make sure it didn't happen again?",
+            "Did this experience change how you work day-to-day?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Honest, specific example with clear actions",
+            "accountability": "Takes ownership without deflecting",
+            "key_signals": ["ownership", "corrective action", "prevention", "communication"]
+          }
+        }
+      ]
+    },
+    "mid": {
+      "theta_range": [2.0, 3.0],
+      "yoe": "2-5 years",
+      "questions": [
+        {
+          "id": "beh-mid-001",
+          "question": "Tell me about a time you disagreed with a technical decision on your team. How did you handle it?",
+          "expected_answer": "Strong answer: describes a real technical disagreement with substance — what the issue was, why they disagreed, how they gathered evidence to make their case, and how they communicated it respectfully. Crucially: whether they won or lost the argument, they describe supporting the final decision either way. Key signals: data-driven argumentation, professional disagreement without being combative, knowing when to commit and move on, learning from the outcome.",
+          "category": "conflict_resolution",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "How did you make your case? What evidence or data did you bring?",
+            "If the team went with the other approach, how did you support that decision?",
+            "Looking back, was the final decision the right one?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Specific technical disagreement with clear resolution",
+            "influence": "Data-driven persuasion skills",
+            "key_signals": ["data-driven", "respectful", "outcome-focused", "adaptable"]
+          }
+        },
+        {
+          "id": "beh-mid-002",
+          "question": "Tell me about a project where you had to make real trade-offs — you couldn't have everything. How did you decide what to prioritize?",
+          "expected_answer": "Strong answer: identifies the specific competing priorities (speed vs quality, features vs tech debt, scope vs deadline, one customer vs another), explains their decision framework, and justifies the choice with business context. Example: cutting scope to hit a launch, choosing a simpler architecture to ship faster, deprioritizing a feature the team loved but users didn't need. Shows thinking beyond code — understanding business impact, communicating trade-offs to stakeholders, owning the consequences.",
+          "category": "decision_making",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How did you communicate those trade-offs to your stakeholders?",
+            "Were there consequences you didn't anticipate?",
+            "What would you weigh differently if you had to make that call again?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Clear trade-offs and decision process",
+            "business_awareness": "Connects technical decisions to business impact",
+            "key_signals": ["prioritization framework", "stakeholder communication", "business impact"]
+          }
+        },
+        {
+          "id": "beh-mid-003",
+          "question": "Tell me about a time you helped a more junior engineer grow. What did you do, and what was the result?",
+          "expected_answer": "Strong answer: describes specific, sustained mentoring — not just answering a one-off question. Could be focused code reviews with teaching intent, pair programming sessions, recommending resources, helping them debug their thinking process, or giving difficult but caring feedback. Should describe the junior's observable growth and the impact on the team. Key signals: patience, ability to teach without condescension, adapting their approach to the person, investing real time in someone else's development.",
+          "category": "leadership",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "How did you figure out what kind of support they needed?",
+            "What was the hardest part of being a mentor?",
+            "How has mentoring changed how you think about your own work?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Specific mentoring situation with outcomes",
+            "leadership": "Invests in others' growth",
+            "key_signals": ["patience", "teaching", "adjusting approach", "measurable growth"]
+          }
+        },
+        {
+          "id": "beh-mid-004",
+          "question": "Tell me about a time the requirements shifted significantly in the middle of a project. How did you adapt?",
+          "expected_answer": "Strong answer: describes the change clearly, how they assessed the impact quickly, communicated it to stakeholders, and adapted their plan — whether by re-scoping, renegotiating the timeline, pivoting the architecture, or some combination. Key signals: staying calm, communicating impact clearly, being pragmatic about what's achievable, managing expectations effectively. Should include how quickly they reacted and whether they preserved the most important outcomes.",
+          "category": "adaptability",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "How did you communicate the impact of the change to your team and stakeholders?",
+            "What did you have to cut or deprioritize?",
+            "How do you build flexibility into projects now based on experiences like this?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Specific change scenario with adaptation",
+            "adaptability": "Responds constructively to change",
+            "key_signals": ["impact assessment", "re-planning", "stakeholder communication", "flexibility"]
+          }
+        },
+        {
+          "id": "beh-mid-005",
+          "question": "What's the most impactful project you've been part of? What made it succeed, and what was your role?",
+          "expected_answer": "Strong answer: quantifies impact (users affected, revenue impact, performance improvement, time saved), clearly articulates their specific contribution versus the team's, and identifies the success factors — both technical and human. Key signals: measuring impact, understanding what drives success beyond just code, giving credit to the team while clearly owning their contribution, learning from the process.",
+          "category": "impact",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "What was uniquely your contribution versus the team's?",
+            "If you could rewind and do it again, what would you change?",
+            "How did you know the project was actually successful?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Quantified impact with personal contribution",
+            "impact": "Demonstrates meaningful results",
+            "key_signals": ["metrics", "personal contribution", "team credit", "success factors"]
+          }
+        }
+      ]
+    },
+    "senior": {
+      "theta_range": [3.0, 4.0],
+      "yoe": "5-10 years",
+      "questions": [
+        {
+          "id": "beh-sr-001",
+          "question": "Tell me about a time you spotted a significant problem — a risk, a design flaw, a looming failure — that nobody else had noticed. What did you do about it?",
+          "expected_answer": "Strong answer: explains the insight (architectural flaw, scalability cliff, security vulnerability, process gap), how they validated the concern with data, how they built the case and convinced people to act, and the outcome. Key signals: proactive risk identification, looking beyond their immediate scope, building a business case for technical work, driving action without being told to. Should demonstrate strategic thinking and influence.",
+          "category": "leadership",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How did you convince leadership to allocate resources to fix this?",
+            "What would have happened if no one had caught it?",
+            "Do you have a systematic approach to spotting risks like this?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Proactive identification with organizational impact",
+            "strategic_thinking": "Sees beyond immediate scope",
+            "key_signals": ["proactive", "influence", "business case", "systemic thinking"]
+          }
+        },
+        {
+          "id": "beh-sr-002",
+          "question": "Describe a time you walked into a situation with a lot of ambiguity — unclear requirements, conflicting stakeholders, no obvious path forward. How did you create clarity?",
+          "expected_answer": "Strong answer: describes the ambiguous situation honestly, walks through how they created structure — stakeholder conversations, prototyping, scope definition, writing a proposal or RFC, running workshops. Explains how they aligned people who disagreed and drove toward a decision. Key signals: comfort with ambiguity, ability to create structure where there was none, stakeholder management, iterative approach. Seniors should be able to take vague problems and decompose them without waiting for someone else to define things.",
+          "category": "leadership",
+          "difficulty": 3.0,
+          "follow_ups": [
+            "How did you know when you had enough information to start building?",
+            "How did you handle stakeholders who had conflicting visions?",
+            "What's your go-to framework for breaking down an ambiguous problem?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Ambiguous situation with concrete clarity-creation steps",
+            "leadership": "Creates structure from ambiguity",
+            "key_signals": ["decomposition", "stakeholder alignment", "iterative", "comfort with ambiguity"]
+          }
+        },
+        {
+          "id": "beh-sr-003",
+          "question": "Tell me about a time you had to make a high-stakes decision without all the information you wanted. Walk me through your thought process.",
+          "expected_answer": "Strong answer: explains the decision context and what information was missing, how they assessed risks of different options, how they made the call and communicated the rationale, and how they set up monitoring to detect if they were wrong. Key signals: distinguishing reversible from irreversible decisions, not waiting for perfection, committing once decided, post-decision evaluation. Should show they didn't freeze up but also didn't recklessly charge ahead.",
+          "category": "decision_making",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How did you assess the risk of each option with incomplete data?",
+            "Was it ultimately the right call? How did you know?",
+            "How do you decide which decisions need more data versus which ones you should just make?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Clear decision with reasoning process",
+            "judgment": "Sound decision-making under uncertainty",
+            "key_signals": ["risk assessment", "reversibility", "commit", "monitoring"]
+          }
+        },
+        {
+          "id": "beh-sr-004",
+          "question": "Tell me about a cross-functional initiative you led — something that involved coordinating across multiple teams. How did you pull it together?",
+          "expected_answer": "Strong answer: describes the cross-functional challenge, the stakeholders involved, how they built alignment (shared goals, clear ownership, regular syncs), how they handled disagreements between teams, and the outcome. Key signals: influencing without formal authority, empathy for different team priorities, communication across technical and non-technical boundaries, conflict resolution when teams have competing goals. Should include specific tactics that worked.",
+          "category": "leadership",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How did you handle a team that had different priorities than your initiative?",
+            "What was the single biggest challenge in cross-team coordination?",
+            "How did you hold people accountable across team boundaries?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Cross-functional situation with alignment strategy",
+            "influence": "Leads across organizational boundaries",
+            "key_signals": ["influence without authority", "shared goals", "conflict resolution", "accountability"]
+          }
+        }
+      ]
+    },
+    "staff": {
+      "theta_range": [4.0, 5.0],
+      "yoe": "10+ years",
+      "questions": [
+        {
+          "id": "beh-staff-001",
+          "question": "Tell me about a time you made a decision you knew would be unpopular, but you believed it was the right call. How did you navigate the fallout?",
+          "expected_answer": "Strong answer: describes the unpopular decision (sunsetting a beloved technology, reorganizing team structure, killing a pet project, enforcing a painful standard), explains the rationale transparently, describes how they communicated and handled pushback, and how they maintained relationships afterward. Key signals: courage of conviction, empathy for people affected, transparent communication, willingness to absorb criticism for the right outcome. Staff engineers regularly need to make decisions that affect many people.",
+          "category": "leadership",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How did you maintain trust with the people who disagreed?",
+            "With hindsight, was it the right call? Would you do anything differently?",
+            "How do you balance being convicted about something with being open to being wrong?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Unpopular decision with navigation strategy",
+            "courage": "Willingness to make hard calls",
+            "key_signals": ["conviction", "transparency", "empathy", "long-term thinking"]
+          }
+        },
+        {
+          "id": "beh-staff-002",
+          "question": "How have you shaped your organization's engineering culture? What specific changes did you drive, and how did you make them stick?",
+          "expected_answer": "Strong answer: identifies specific cultural shifts they drove (testing culture, code review rigor, incident response maturity, documentation standards, mentorship programs, inclusive practices), explains how they achieved adoption (leading by example, building champions, creating tooling, measuring outcomes), and describes lasting impact. Key signals: systemic thinking about culture, influence at organizational scale, patience for long-term change, not just talking about values but embedding them in processes and tooling.",
+          "category": "organizational_impact",
+          "difficulty": 5.0,
+          "follow_ups": [
+            "How do you make cultural changes survive after you leave?",
+            "How did you handle people who actively resisted the change?",
+            "How do you measure whether engineering culture is actually improving?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Cultural change with systemic approach",
+            "organizational_impact": "Lasting influence on engineering practices",
+            "key_signals": ["systemic change", "leading by example", "champions", "measurement"]
+          }
+        },
+        {
+          "id": "beh-staff-003",
+          "question": "Tell me about a time you took something that was overly complex — a system, a process, an architecture — and simplified it. How did you identify the unnecessary complexity?",
+          "expected_answer": "Strong answer: identifies the complex system/process and its real cost (operational burden, team confusion, incident frequency, slow onboarding), explains how they recognized the unnecessary parts (data analysis, team interviews, incident patterns), describes the simplification strategy and resistance they faced, and quantifies the improvement. Key signals: simplification as a deliberate skill, willingness to remove rather than add, understanding that complexity has compounding ongoing costs, distinguishing between essential and accidental complexity.",
+          "category": "technical_leadership",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How did you tell the difference between complexity that was essential versus complexity that was just debt?",
+            "Who pushed back on simplification, and why?",
+            "How do you prevent complexity from creeping back over time?"
+          ],
+          "evaluation_criteria": {
+            "star_format": "Complexity identification and simplification",
+            "simplification": "Removes rather than adds",
+            "key_signals": ["essential vs accidental complexity", "removal", "quantified improvement", "ongoing prevention"]
+          }
+        }
+      ]
+    }
+  }
+}

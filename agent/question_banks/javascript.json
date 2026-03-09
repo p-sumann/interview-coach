@@ -1,0 +1,336 @@
+{
+  "language": "javascript",
+  "display_name": "JavaScript",
+  "levels": {
+    "junior": {
+      "theta_range": [1.0, 2.0],
+      "yoe": "0-2 years",
+      "questions": [
+        {
+          "id": "js-jr-001",
+          "question": "Walk me through how the JavaScript event loop actually works. And what happens when you call an async function — where does that callback go?",
+          "expected_answer": "JavaScript is single-threaded — it has one call stack. The event loop manages async operations. When you call an async function (setTimeout, fetch), it's handed off to the browser/Node.js API. When the async work completes, the callback is pushed to the task queue (macrotask queue). The event loop checks: if the call stack is empty, take the next task from the queue and push it onto the stack. There's also a microtask queue (Promises, queueMicrotask) which has higher priority — all microtasks are processed before the next macrotask. This is why Promise.then callbacks run before setTimeout callbacks even if both are ready.",
+          "category": "fundamentals",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What's the difference between microtasks and macrotasks?",
+            "Why does setTimeout(fn, 0) not run immediately?",
+            "How does async/await relate to the event loop?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands single-threaded model and async handling",
+            "communication": "Can explain execution order",
+            "key_signals": ["call stack", "task queue", "microtask", "single-threaded"]
+          }
+        },
+        {
+          "id": "js-jr-002",
+          "question": "How would you explain closures in JavaScript? Walk me through a practical example of where you've actually used one.",
+          "expected_answer": "A closure is a function that remembers the variables from its outer scope even after that outer function has returned. When a function is created, it captures a reference to its surrounding lexical environment. Practical example: a counter factory — function makeCounter() { let count = 0; return () => ++count; }. Each call to makeCounter() creates a new closure with its own count. Closures are used everywhere: callbacks, event handlers, module pattern (encapsulating private variables), partial application, and in React hooks. Common gotcha: closures in loops with var (all callbacks share the same variable) — fixed with let or IIFE.",
+          "category": "fundamentals",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What's the classic 'closure in a loop' problem?",
+            "How do closures relate to memory management?",
+            "Can closures cause memory leaks?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands lexical scoping and variable capture",
+            "communication": "Gives practical examples",
+            "key_signals": ["lexical scope", "captured variables", "module pattern", "var vs let"]
+          }
+        },
+        {
+          "id": "js-jr-003",
+          "question": "Tell me about Promises — what problem do they actually solve compared to callbacks? How would you work with them?",
+          "expected_answer": "A Promise represents a future value — it can be pending, fulfilled, or rejected. You create one with new Promise((resolve, reject) => {...}) and handle results with .then() for success and .catch() for errors. Promises solve callback hell — deeply nested callbacks become flat chains. Key methods: Promise.all (wait for all), Promise.race (first to resolve), Promise.allSettled (all results regardless of rejection). async/await is syntactic sugar over Promises: 'await' pauses the function until the Promise resolves, and try/catch handles rejections. This makes async code look synchronous and easier to read.",
+          "category": "async",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "What happens if you forget to catch a rejected Promise?",
+            "How does Promise.all differ from Promise.allSettled?",
+            "Can you convert a callback-based function to return a Promise?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands Promise states and chaining",
+            "communication": "Explains callback hell problem clearly",
+            "key_signals": ["pending/fulfilled/rejected", "chaining", "async/await", "Promise.all"]
+          }
+        },
+        {
+          "id": "js-jr-004",
+          "question": "What's the difference between let, const, and var? And why would you pretty much never use var in modern JavaScript?",
+          "expected_answer": "var is function-scoped and hoisted (declarations move to top of function, initialized as undefined). This causes surprising behavior: variables are accessible before their declaration, and var in a for loop doesn't create a new variable per iteration. let and const (ES6) are block-scoped — they exist only within their {} block. let allows reassignment, const doesn't (but const objects/arrays can still be mutated). let and const have a 'temporal dead zone' — accessing them before declaration throws a ReferenceError instead of returning undefined. Best practice: use const by default, let when you need to reassign, avoid var entirely.",
+          "category": "fundamentals",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What is hoisting and how does it work differently for var, let, and const?",
+            "Can you change properties of a const object?",
+            "What is the temporal dead zone?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands scoping rules and hoisting",
+            "communication": "Explains practical implications",
+            "key_signals": ["block scope", "function scope", "hoisting", "temporal dead zone"]
+          }
+        },
+        {
+          "id": "js-jr-005",
+          "question": "How would you go about manipulating the DOM in JavaScript? Walk me through some practical examples and any pitfalls you should watch out for.",
+          "expected_answer": "DOM (Document Object Model) is the tree representation of an HTML page. Key methods: document.querySelector/querySelectorAll for selection (CSS selectors), document.getElementById, element.addEventListener for events, element.textContent/innerHTML for content, element.classList for CSS classes, element.style for inline styles, document.createElement + appendChild for creating elements. Best practices: batch DOM changes (use DocumentFragment or modify off-screen), avoid layout thrashing (reading then writing DOM properties in loops), delegate events on parent elements instead of adding listeners to many children, use textContent over innerHTML to prevent XSS. Modern frameworks (React, Vue) abstract DOM manipulation with virtual DOM.",
+          "category": "browser",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What is event delegation and why is it useful?",
+            "What causes layout thrashing and how do you avoid it?",
+            "What's the difference between textContent and innerHTML?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows key DOM APIs",
+            "communication": "Connects to performance and security",
+            "key_signals": ["querySelector", "addEventListener", "event delegation", "layout thrashing"]
+          }
+        },
+        {
+          "id": "js-jr-006",
+          "question": "Tell me about destructuring — how do you use it in practice? And while we're at it, what's the spread operator and how's it different?",
+          "expected_answer": "Destructuring extracts values from arrays or properties from objects into distinct variables. Array: const [a, b] = [1, 2]. Object: const {name, age} = person. You can rename: const {name: userName} = person, set defaults: const {name = 'Anonymous'} = person, and nest: const {address: {city}} = person. The spread operator (...) expands iterables. For arrays: [...arr1, ...arr2] merges arrays. For objects: {...obj1, ...obj2} merges objects (shallow copy). Rest parameters: function sum(...nums) collects remaining arguments. These make code more readable and reduce the need for temporary variables.",
+          "category": "language_features",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "What's the difference between spread and rest syntax?",
+            "Does the spread operator create a deep or shallow copy?",
+            "How would you destructure function parameters?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows ES6 syntax and use cases",
+            "communication": "Provides clear examples",
+            "key_signals": ["array destructuring", "object destructuring", "spread", "rest", "shallow copy"]
+          }
+        }
+      ]
+    },
+    "mid": {
+      "theta_range": [2.0, 3.0],
+      "yoe": "2-5 years",
+      "questions": [
+        {
+          "id": "js-mid-001",
+          "question": "How does V8 actually optimize JavaScript under the hood? I'm curious about hidden classes and inline caching — how does that affect the code you write?",
+          "expected_answer": "V8 compiles JavaScript through multiple tiers: first to bytecode (Ignition interpreter), then hot functions are compiled to optimized machine code (TurboFan compiler). Hidden classes: V8 assigns internal 'shapes' to objects with the same structure. When you create objects with properties in the same order, they share a hidden class, enabling fast property lookups. Changing an object's shape (adding/deleting properties) creates new hidden classes and can de-optimize code. Inline caching: when a function accesses a property, V8 caches the lookup result at that call site. If subsequent calls have the same hidden class, access is nearly instantaneous. Monomorphic calls (one shape) are fastest, polymorphic (few shapes) are okay, megamorphic (many shapes) force slow generic lookups.",
+          "category": "performance",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How does this knowledge affect how you write performant JavaScript?",
+            "What causes V8 to 'deoptimize' a function?",
+            "What is the difference between monomorphic and polymorphic inline caches?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands JIT compilation and optimization",
+            "communication": "Connects engine internals to coding practices",
+            "key_signals": ["hidden classes", "inline caching", "TurboFan", "monomorphic"]
+          }
+        },
+        {
+          "id": "js-mid-002",
+          "question": "Let's talk about JavaScript modules — CommonJS versus ES Modules. How do they work differently, and where do you actually use each one?",
+          "expected_answer": "CommonJS (require/module.exports): synchronous, dynamic (can require conditionally), used in Node.js traditionally. Evaluated at runtime, returns a reference to the exports object. ES Modules (import/export): static (imports must be top-level), supports tree-shaking because the dependency graph is known at compile time, supports named exports and default exports. In Node.js: .mjs extension or 'type: module' in package.json for ESM. ESM in Node is async, CJS is sync. Browser: <script type='module'> enables ESM natively with deferred loading. Key differences: ESM exports are live bindings (reflect changes), CJS exports are copied values. ESM enables circular dependency handling more predictably. Modern trend: moving to ESM as the standard, with bundlers (webpack, Rollup, esbuild) handling the complexity.",
+          "category": "modules",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "What is tree-shaking and why does it only work with ES Modules?",
+            "How do circular dependencies work differently in CJS vs ESM?",
+            "What role do bundlers play in the module ecosystem?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands both module systems and their trade-offs",
+            "communication": "Explains the evolution and practical implications",
+            "key_signals": ["static vs dynamic", "tree-shaking", "live bindings", "bundlers"]
+          }
+        },
+        {
+          "id": "js-mid-003",
+          "question": "Let's dig into complex async patterns — error handling, cancellation, concurrency control. How would you actually handle these in production code?",
+          "expected_answer": "Error handling: async/await with try/catch for sequential operations, Promise.allSettled when you want all results regardless of failures. For unhandled rejections: window.onunhandledrejection or process.on('unhandledRejection'). Cancellation: AbortController with AbortSignal — pass signal to fetch, event listeners, or custom async operations. Check signal.aborted to short-circuit. Concurrency control: use a semaphore/pool pattern to limit parallel operations (e.g., process 10 URLs at most 3 at a time). Libraries like p-limit or p-queue help. Race conditions: use Promise.race with a timeout promise. For complex flows: consider state machines or async iterators (for-await-of with async generators). Avoid: nesting async functions, swallowing errors, forgetting to propagate rejections.",
+          "category": "async",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How would you implement a retry with exponential backoff?",
+            "What are async iterators and when would you use them?",
+            "How do you prevent memory leaks with event listeners in async code?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Goes beyond basic Promise usage",
+            "communication": "Addresses real-world async challenges",
+            "key_signals": ["AbortController", "concurrency control", "error propagation", "async iterators"]
+          }
+        },
+        {
+          "id": "js-mid-004",
+          "question": "Tell me about Web Workers — when would you actually reach for them in a real project? And how do they communicate with the main thread?",
+          "expected_answer": "Web Workers run JavaScript in a separate thread, enabling true parallelism without blocking the main thread (which handles UI and user interactions). Workers communicate with the main thread via postMessage/onmessage (structured clone of data). Use cases: CPU-intensive computation (image processing, parsing large files, data crunching), keeping the UI responsive during heavy work. Limitations: no DOM access, no shared memory (unless using SharedArrayBuffer with Atomics), serialization overhead for large data transfer. Types: Dedicated Workers (one-to-one), Shared Workers (shared between tabs), Service Workers (proxy for network requests, enable offline). Modern patterns: Comlink library simplifies worker communication, OffscreenCanvas for worker-based rendering.",
+          "category": "browser",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How does SharedArrayBuffer enable shared memory between workers?",
+            "What is the serialization overhead and how can you minimize it with Transferable objects?",
+            "How do Service Workers differ from Web Workers?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands threading model and communication",
+            "communication": "Practical use case driven",
+            "key_signals": ["separate thread", "postMessage", "SharedArrayBuffer", "Service Worker"]
+          }
+        },
+        {
+          "id": "js-mid-005",
+          "question": "Walk me through your approach to finding and fixing performance bottlenecks in JavaScript. What tools would you actually use, and what metrics matter most?",
+          "expected_answer": "Chrome DevTools Performance panel: record a trace to see flame chart of function calls, identify long tasks (>50ms blocking main thread). Key metrics: First Contentful Paint (FCP), Largest Contentful Paint (LCP), Time to Interactive (TTI), Cumulative Layout Shift (CLS), Interaction to Next Paint (INP). For memory: DevTools Memory panel — take heap snapshots, track allocation timeline, find detached DOM nodes. Lighthouse for automated audits. Common optimizations: code splitting (dynamic import()), lazy loading images/components, debouncing/throttling event handlers, virtualizing long lists, memoization of expensive computations, avoiding layout thrashing (batch DOM reads then writes), optimizing Critical Rendering Path. Network: minimize bundle size, use compression, CDN, proper caching headers.",
+          "category": "performance",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "What is the Critical Rendering Path and how do you optimize it?",
+            "How would you debug a memory leak in a single-page application?",
+            "What's the difference between debouncing and throttling?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows DevTools and Core Web Vitals",
+            "communication": "Connects metrics to user experience",
+            "key_signals": ["Core Web Vitals", "flame chart", "code splitting", "layout thrashing"]
+          }
+        }
+      ]
+    },
+    "senior": {
+      "theta_range": [3.0, 4.0],
+      "yoe": "5-10 years",
+      "questions": [
+        {
+          "id": "js-sr-001",
+          "question": "Imagine you're building a real-time collaborative editing system like Google Docs. How would you approach the architecture? What are the biggest technical challenges you'd need to solve?",
+          "expected_answer": "Core challenge: conflict resolution when multiple users edit simultaneously. Two main approaches: OT (Operational Transformation) — transform operations against concurrent edits, used by Google Docs. CRDTs (Conflict-free Replicated Data Types) — data structures that merge automatically without conflicts, used by Figma. I'd lean toward CRDTs (Yjs or Automerge library) for new projects — simpler server requirements, works offline. Architecture: WebSocket connection for real-time updates (Socket.io or native WS), CRDT library handles merge logic client-side, server acts as relay and persistence layer. Presence awareness: cursor positions and selections via ephemeral state channel. Offline support: store operations in IndexedDB, sync on reconnect. Performance: batch updates, compress operations, use binary encoding for network messages. History/undo: operation log with ability to replay.",
+          "category": "architecture",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do CRDTs compare to Operational Transformation in terms of complexity and performance?",
+            "How would you handle large document sizes in a CRDT-based system?",
+            "What's your strategy for conflict resolution in concurrent image/file edits?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows OT and CRDT trade-offs",
+            "communication": "Covers architecture end-to-end",
+            "key_signals": ["CRDT", "OT", "WebSocket", "offline", "conflict resolution"]
+          }
+        },
+        {
+          "id": "js-sr-002",
+          "question": "Let's say you're designing a Node.js service that needs to handle massive scale with high availability. How would you approach it? What are the Node-specific gotchas you'd watch out for?",
+          "expected_answer": "Node-specific: single-threaded event loop means one CPU-bound operation blocks everything. Architecture: cluster module to fork workers per CPU core, or PM2/Kubernetes for process management. For CPU-bound work: Worker Threads or offload to separate services. Streaming for large payloads (transform streams, pipeline). Connection management: keep-alive for HTTP, connection pooling for databases (pg-pool, redis pool). Memory: V8 has ~1.5GB heap limit per process, monitor with process.memoryUsage(), use streams for large data processing. Performance: avoid sync operations, profile with 0x or clinic.js, use native modules (undici for HTTP). Reliability: graceful shutdown (handle SIGTERM, drain connections), health checks, circuit breakers. Observability: structured logging (pino for performance), OpenTelemetry for tracing, Prometheus metrics. Deployment: stateless processes, horizontal scaling, load balancing with sticky sessions for WebSocket.",
+          "category": "architecture",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you handle backpressure in Node.js streams?",
+            "What's your approach to graceful shutdown in a Kubernetes environment?",
+            "How do you prevent event loop blocking and detect when it happens?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Deep Node.js production experience",
+            "communication": "Covers architecture and operational concerns",
+            "key_signals": ["event loop blocking", "cluster", "streams", "graceful shutdown"]
+          }
+        },
+        {
+          "id": "js-sr-003",
+          "question": "Talk me through how you'd organize and maintain a JavaScript monorepo with 20+ packages. What tools would you use, and how do you keep developers productive?",
+          "expected_answer": "Monorepo tools: pnpm workspaces (fast, disk-efficient) or npm workspaces, with Turborepo or Nx for build orchestration. Key practices: 1) Build caching — Turborepo caches build outputs, only rebuilds affected packages based on dependency graph. Remote cache for CI sharing. 2) Dependency management — shared versions via catalog (pnpm) or constraints, automated updates with Renovate. 3) Package boundaries — clear API contracts between packages, TypeScript project references for type-safe cross-package imports. 4) CI optimization — affected-only testing, parallel execution, shared build cache between CI runs. 5) Developer experience — consistent scripts (build, test, lint), shared ESLint/Prettier configs, consistent TypeScript configs. 6) Versioning — changesets for semantic versioning and changelogs, automated publishing. 7) Code ownership — CODEOWNERS file per package.",
+          "category": "tooling",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you handle breaking changes across packages in a monorepo?",
+            "What's the trade-off between monorepo and polyrepo for your use case?",
+            "How do you handle shared types/schemas across frontend and backend packages?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Production monorepo experience",
+            "communication": "Balances tooling with team productivity",
+            "key_signals": ["build caching", "affected-only", "changesets", "dependency graph"]
+          }
+        },
+        {
+          "id": "js-sr-004",
+          "question": "Tell me about your philosophy on state management in a complex React app. How do you think about what goes where, and how do you make those tradeoffs?",
+          "expected_answer": "State taxonomy: 1) Server state — data from API, best managed with React Query/TanStack Query or SWR (caching, revalidation, optimistic updates). 2) Client UI state — form state, modals, selections — local component state (useState) or form libraries (React Hook Form). 3) Global application state — auth, theme, feature flags — Context API for simple cases, Zustand or Jotai for complex reactivity. 4) URL state — current view, filters, pagination — router params and search params. Decision framework: keep state as local as possible, lift only when needed, prefer derived/computed state over stored duplicates. Avoid: single global store for everything (Redux anti-pattern), prop drilling more than 2-3 levels, sync state between client and server (let the server be the source of truth). Testing: mock server state with MSW, test state transitions in isolation.",
+          "category": "architecture",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you handle optimistic updates and rollback on failure?",
+            "When does Context API become insufficient and you need a state library?",
+            "How do you prevent unnecessary re-renders in a React application?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Nuanced state management philosophy",
+            "communication": "Clear taxonomy and decision framework",
+            "key_signals": ["state taxonomy", "server state", "colocation", "derived state"]
+          }
+        }
+      ]
+    },
+    "staff": {
+      "theta_range": [4.0, 5.0],
+      "yoe": "10+ years",
+      "questions": [
+        {
+          "id": "js-staff-001",
+          "question": "Imagine you're at a company with 50+ frontend engineers across multiple teams. How would you establish and maintain a cohesive architecture strategy? What would you prioritize?",
+          "expected_answer": "Strategy pillars: 1) Shared component library — design system with Storybook, versioned and published as NPM packages, visual regression testing. 2) Architecture standards — rendering strategy (SSR/SSG/CSR/ISR) decision framework based on page characteristics, shared routing conventions, API layer patterns. 3) Performance budgets — automated LCP/INP/CLS thresholds in CI, bundle size limits per route. 4) Micro-frontends — if needed for team autonomy, use Module Federation or import maps, shared shell for auth/routing. 5) Governance — RFC process for architectural changes, Tech Radar for technology choices, shared ESLint config (custom rules for org patterns). 6) Education — frontend guild with weekly tech talks, pair programming sessions, architecture office hours. Implementation: start with documentation (ADRs), build golden path tools (CLI scaffolding), measure adoption metrics. Let teams opt-in with compelling developer experience, not mandates.",
+          "category": "leadership",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you handle teams that want to use different frameworks?",
+            "What's your approach to micro-frontend architecture and when is it worth the complexity?",
+            "How do you measure the success of a frontend platform strategy?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Organizational-scale frontend thinking",
+            "communication": "Balances standardization with team autonomy",
+            "key_signals": ["design system", "performance budgets", "RFC process", "golden path"]
+          }
+        },
+        {
+          "id": "js-staff-002",
+          "question": "Walk me through how you'd choose between SSR, SSG, CSR, ISR, and streaming SSR for different pages in an application. What's your decision framework?",
+          "expected_answer": "Decision framework based on content characteristics: 1) Static content that changes rarely (marketing, docs) → SSG for best performance and CDN cacheability. 2) Dynamic content that's the same for all users (product pages, news) → ISR (Incremental Static Regeneration) for CDN performance with periodic updates. 3) Personalized content above the fold (dashboards, feeds) → Streaming SSR for fast TTFB with progressive loading. 4) Highly interactive content behind auth → CSR with React Query for data, code-split aggressively. 5) SEO-critical dynamic content → Full SSR with caching. Modern approach: server components (React Server Components) blur these lines — compute on server, stream HTML, hydrate selectively. Key metrics per strategy: TTFB, FCP, LCP, TTI, total JS payload. Infrastructure consideration: SSR requires compute servers, SSG/ISR can be fully edge/CDN. Cost model differs significantly. The answer is usually a hybrid — different pages use different strategies within the same app.",
+          "category": "architecture",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do React Server Components change the rendering strategy calculus?",
+            "What's the infrastructure cost model difference between SSR and SSG at scale?",
+            "How do you handle authentication and personalization with edge-cached SSG pages?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Nuanced understanding of rendering trade-offs",
+            "communication": "Decision framework, not dogmatic preferences",
+            "key_signals": ["framework", "metrics-driven", "hybrid approach", "infrastructure cost"]
+          }
+        },
+        {
+          "id": "js-staff-003",
+          "question": "Looking ahead 3-5 years, where do you think JavaScript and the broader web platform are heading? How does that influence the technical decisions you're making today?",
+          "expected_answer": "Key trends: 1) Server-first renaissance — React Server Components, Astro, server actions. The pendulum swings from full-client SPA toward server-rendered with selective hydration. 2) Edge computing — running JS at the edge (Cloudflare Workers, Vercel Edge) blurs client/server boundary. 3) TypeScript as standard — TC39 type annotations proposal may bring types to JavaScript natively. 4) Build tooling convergence — Rust/Go-based tools (SWC, esbuild, Turbopack, Biome) replacing JS-based tools for 10-100x speed. 5) Web platform APIs catching up — Container Queries, View Transitions, Web Components maturing. Influence on today's decisions: invest in server component patterns, choose Rust-based tooling, avoid heavy client-side frameworks for content sites, design APIs for edge-first deployment. Caution: don't over-index on trends — pick boring technology for critical paths, experiment with new approaches in non-critical areas.",
+          "category": "leadership",
+          "difficulty": 5.0,
+          "follow_ups": [
+            "How do you balance adopting new technologies with maintaining stability?",
+            "What's the biggest risk in the current JavaScript ecosystem?",
+            "How would the elimination of build steps (with native ESM and type annotations) change frontend development?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Forward-looking technical vision",
+            "communication": "Connects trends to actionable decisions",
+            "key_signals": ["server components", "edge computing", "build tools", "pragmatic adoption"]
+          }
+        }
+      ]
+    }
+  }
+}

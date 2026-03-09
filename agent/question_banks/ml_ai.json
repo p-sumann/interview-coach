@@ -1,0 +1,472 @@
+{
+  "language": "ml_ai",
+  "display_name": "Machine Learning / AI",
+  "levels": {
+    "junior": {
+      "theta_range": [1.0, 2.0],
+      "yoe": "0-2 years",
+      "questions": [
+        {
+          "id": "ml-jr-001",
+          "question": "Can you explain the bias-variance tradeoff? How does it affect your choice of model complexity?",
+          "expected_answer": "Bias is error from overly simplistic assumptions — a linear model on non-linear data (underfitting). Variance is error from sensitivity to training data fluctuations — a deep tree that memorizes noise (overfitting). The tradeoff: increasing model complexity reduces bias but increases variance, and vice versa. The sweet spot minimizes total error (bias² + variance + irreducible error). Practical approach: start simple, increase complexity while monitoring validation performance, use regularization (L1/L2, dropout) to control variance. Cross-validation helps estimate where you are on the curve. Ensemble methods (bagging reduces variance, boosting reduces bias) address different sides.",
+          "category": "ml_fundamentals",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "How would you diagnose whether your model is suffering from high bias or high variance?",
+            "What's the relationship between model complexity and the amount of training data you need?",
+            "How does regularization help with this tradeoff?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands the fundamental tradeoff",
+            "communication": "Can explain with concrete examples",
+            "key_signals": ["underfitting", "overfitting", "regularization", "cross-validation"]
+          }
+        },
+        {
+          "id": "ml-jr-002",
+          "question": "Walk me through how gradient descent works. What are the different variants and when would you use each?",
+          "expected_answer": "Gradient descent is an iterative optimization algorithm that minimizes a loss function by moving in the direction of steepest descent. Compute the gradient (partial derivatives) of the loss with respect to model parameters, then update parameters: θ = θ - α·∇L(θ), where α is the learning rate. Variants: Batch GD (uses all data per step — stable but slow), Stochastic GD (one sample per step — noisy but fast, can escape local minima), Mini-batch GD (compromise — batch of 32-256 samples, most common in practice). Advanced optimizers: Adam (adaptive learning rates per parameter, momentum), SGD with momentum (smooths updates), AdaGrad (adapts learning rates based on gradient history). Learning rate is crucial — too high causes divergence, too low is slow. Learning rate scheduling helps.",
+          "category": "ml_fundamentals",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "Why is Adam so popular in practice, and when might you prefer plain SGD?",
+            "What is the vanishing gradient problem and how does it relate to deep networks?",
+            "How do you choose a good learning rate?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands optimization mechanics",
+            "communication": "Can explain intuitively and mathematically",
+            "key_signals": ["learning rate", "mini-batch", "Adam", "convergence"]
+          }
+        },
+        {
+          "id": "ml-jr-003",
+          "question": "How do you evaluate a classification model? Walk me through the key metrics and when each one matters.",
+          "expected_answer": "Accuracy is the obvious metric but misleading for imbalanced classes (99% accuracy on 99/1 split is useless). Precision: of all positive predictions, how many were correct? (important when false positives are costly — spam detection). Recall: of all actual positives, how many did we catch? (important when false negatives are costly — cancer detection). F1: harmonic mean of precision and recall — useful when you need balance. ROC-AUC: plots true positive rate vs false positive rate at all thresholds — measures overall discriminative ability. PR-AUC: better than ROC-AUC for imbalanced datasets. Confusion matrix shows the full picture. Log loss measures confidence calibration. Choice depends on business context — always ask 'what's the cost of each type of error?'",
+          "category": "evaluation",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "When would you care more about precision than recall, and vice versa?",
+            "What's the difference between ROC-AUC and PR-AUC, and when does it matter?",
+            "How do you pick the right classification threshold?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows metrics beyond accuracy",
+            "communication": "Connects metrics to business decisions",
+            "key_signals": ["precision/recall", "F1", "AUC", "class imbalance"]
+          }
+        },
+        {
+          "id": "ml-jr-004",
+          "question": "Explain the difference between supervised, unsupervised, and self-supervised learning. Give real-world examples of each.",
+          "expected_answer": "Supervised: learn from labeled examples (input → output pairs). Classification (email → spam/not spam), regression (house features → price). Most common in industry. Unsupervised: find patterns in unlabeled data. Clustering (customer segmentation with K-means), dimensionality reduction (PCA, t-SNE for visualization), anomaly detection (fraud). Self-supervised: generate labels from the data itself — a key technique in modern AI. Examples: masked language modeling (BERT masks words, predicts them), contrastive learning (SimCLR augments images, learns similar representations), next-token prediction (GPT). Self-supervised pretraining + supervised fine-tuning is the foundation of modern LLMs and vision models. Semi-supervised learning uses a mix of labeled and unlabeled data.",
+          "category": "ml_fundamentals",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "Why has self-supervised learning become so important in the last few years?",
+            "What's transfer learning and how does it connect to these paradigms?",
+            "When would you use unsupervised learning in a production system?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands learning paradigms including modern ones",
+            "communication": "Uses clear real-world examples",
+            "key_signals": ["labeled vs unlabeled", "self-supervised", "transfer learning", "practical examples"]
+          }
+        },
+        {
+          "id": "ml-jr-005",
+          "question": "What is overfitting and what techniques do you use to prevent it?",
+          "expected_answer": "Overfitting is when a model learns the training data too well — including its noise and peculiarities — and fails to generalize to unseen data. Signs: training loss keeps decreasing but validation loss starts increasing, big gap between train and test performance. Prevention techniques: regularization (L1 for sparsity, L2 for smaller weights, dropout for neural nets), early stopping (stop training when validation loss plateaus), data augmentation (create more varied training examples), cross-validation (use all data for both training and validation), ensemble methods (average predictions to smooth out individual model overfitting), reducing model complexity, getting more training data. For deep learning specifically: batch normalization, weight decay, data augmentation are critical.",
+          "category": "ml_fundamentals",
+          "difficulty": 1.0,
+          "follow_ups": [
+            "How does dropout work, and why is it effective?",
+            "What's the difference between L1 and L2 regularization in terms of what they do to the model?",
+            "How would you set up cross-validation for a time-series problem?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows multiple prevention techniques",
+            "communication": "Can diagnose and explain solutions",
+            "key_signals": ["regularization", "early stopping", "cross-validation", "data augmentation"]
+          }
+        },
+        {
+          "id": "ml-jr-006",
+          "question": "Explain how a decision tree works, and then how Random Forests and Gradient Boosted Trees improve on it.",
+          "expected_answer": "Decision tree: recursively splits data based on feature thresholds to maximize information gain (or Gini impurity reduction). Easy to interpret but prone to overfitting. Random Forest: ensemble of many decision trees, each trained on a random subset of data (bagging) and random subset of features. Final prediction is majority vote (classification) or average (regression). Reduces variance while keeping bias similar. Gradient Boosted Trees (XGBoost, LightGBM): builds trees sequentially, each one correcting errors of the previous ensemble. Uses gradient descent on the loss function. More prone to overfitting than RF but often achieves better accuracy with proper tuning. XGBoost/LightGBM are the workhorses of tabular ML — they consistently win competitions and perform well in production on structured data.",
+          "category": "algorithms",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "When would you choose a gradient boosted model over a neural network?",
+            "What are the key hyperparameters to tune in XGBoost?",
+            "How does feature importance work in tree-based models?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands ensemble methods",
+            "communication": "Can explain the intuition behind each",
+            "key_signals": ["bagging vs boosting", "information gain", "XGBoost/LightGBM", "tabular data"]
+          }
+        },
+        {
+          "id": "ml-jr-007",
+          "question": "What is feature engineering? Walk me through how you'd approach it for a real problem — say predicting customer churn.",
+          "expected_answer": "Feature engineering is creating informative input features from raw data — often the biggest lever for model performance. For churn prediction: temporal features (days since last login, frequency of usage over time windows — 7d, 30d, 90d, trend direction), behavioral features (number of support tickets, feature adoption percentage, session duration trend), engagement features (email open rate, notification interaction), financial features (plan type, payment failures, discount history), social features (team size, number of active collaborators). Techniques: aggregation over time windows, ratio features, lag features, interaction features, encoding categorical variables (one-hot, target encoding). The process: understand the business problem → explore data (EDA) → hypothesize useful signals → create features → validate with model performance. Domain knowledge is crucial — a good feature is one that captures a real causal signal.",
+          "category": "feature_engineering",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "How do you handle high-cardinality categorical features?",
+            "What's the risk of target leakage in feature engineering?",
+            "How do you decide which features to keep vs drop?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Practical feature engineering skills",
+            "communication": "Connects features to domain understanding",
+            "key_signals": ["temporal features", "domain knowledge", "target leakage", "feature selection"]
+          }
+        },
+        {
+          "id": "ml-jr-008",
+          "question": "What is a neural network, and can you explain backpropagation at a high level?",
+          "expected_answer": "A neural network is layers of interconnected nodes (neurons) that transform inputs through weighted sums and nonlinear activation functions. Input layer → hidden layers → output layer. Each neuron computes: output = activation(weights · inputs + bias). Activation functions (ReLU, sigmoid, softmax) introduce nonlinearity, allowing the network to learn complex patterns. Backpropagation is how the network learns: forward pass computes predictions and loss, then the chain rule propagates gradients backward through the network layer by layer. Each weight gets a gradient indicating how to adjust it to reduce the loss. Gradient descent uses these gradients to update weights. Deep networks (many layers) can learn hierarchical representations — edges → shapes → objects in vision, characters → words → meaning in NLP.",
+          "category": "deep_learning",
+          "difficulty": 1.5,
+          "follow_ups": [
+            "Why do we need nonlinear activation functions?",
+            "What's the vanishing gradient problem and how do architectures like ResNet address it?",
+            "When would a simple neural network be overkill?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands forward/backward pass mechanics",
+            "communication": "Can explain intuitively without losing rigor",
+            "key_signals": ["activation functions", "backpropagation", "chain rule", "hierarchical representations"]
+          }
+        }
+      ]
+    },
+    "mid": {
+      "theta_range": [2.0, 3.0],
+      "yoe": "2-5 years",
+      "questions": [
+        {
+          "id": "ml-mid-001",
+          "question": "How does the Transformer architecture work? Walk me through self-attention and why it was such a breakthrough.",
+          "expected_answer": "Transformers process all positions in parallel (unlike RNNs which are sequential). Core mechanism: self-attention. For each token, compute Query, Key, Value vectors from learned weight matrices. Attention score = softmax(QK^T / √d_k) · V — this lets each token attend to every other token and determine what's relevant. Multi-head attention runs multiple attention computations in parallel, capturing different relationship types. The architecture: token + positional embeddings → N layers of (multi-head self-attention → add & norm → feed-forward → add & norm) → output. Breakthrough: O(1) sequential operations (vs O(n) for RNNs), captures long-range dependencies, highly parallelizable on GPUs. Led to BERT (bidirectional, encoder-only), GPT (autoregressive, decoder-only), and T5/BART (encoder-decoder). Enabled scaling laws that drove the LLM revolution.",
+          "category": "deep_learning",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "What's the computational complexity of self-attention and why is it a problem for long sequences?",
+            "How does positional encoding work, and what are the alternatives?",
+            "What's the difference between encoder-only, decoder-only, and encoder-decoder architectures?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands attention mechanics and architectural choices",
+            "communication": "Can explain QKV intuition clearly",
+            "key_signals": ["self-attention", "multi-head", "positional encoding", "parallelization"]
+          }
+        },
+        {
+          "id": "ml-mid-002",
+          "question": "You've trained a model that performs well on your test set but poorly in production. What could be going wrong, and how do you debug it?",
+          "expected_answer": "Common causes: 1) Data distribution shift — production data differs from training data (different user demographics, seasonal patterns, edge cases). 2) Feature engineering bugs — training/serving skew where features are computed differently at inference time. 3) Label leakage — training data accidentally contains information about the target that won't be available at prediction time. 4) Temporal leakage — test set isn't properly split by time. 5) Selection bias — training data isn't representative of production traffic. Debugging: compare feature distributions between training and production, check for null/missing values in production, verify feature pipelines produce identical outputs, monitor prediction distributions over time, use shadow mode to compare. Prevention: always split by time for temporal data, build data validation into the pipeline, monitor feature and prediction drift continuously.",
+          "category": "production_ml",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "What's training-serving skew and how do you prevent it architecturally?",
+            "How do you set up monitoring to catch these issues early?",
+            "What's a good strategy for A/B testing a new model in production?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows real-world ML failure modes",
+            "communication": "Systematic debugging approach",
+            "key_signals": ["distribution shift", "train-serve skew", "label leakage", "monitoring"]
+          }
+        },
+        {
+          "id": "ml-mid-003",
+          "question": "Explain how you'd approach building a text classification system from scratch. What are your model choices and why?",
+          "expected_answer": "Start with the problem: how much labeled data? What's the latency requirement? How complex are the classes? Approach ladder: 1) Baseline — TF-IDF + logistic regression or SVM. Fast, interpretable, surprisingly effective. Always start here. 2) Pre-trained embeddings — use sentence-transformers to embed text, train a lightweight classifier on top. Good when you have moderate data (1K-10K examples). 3) Fine-tuned transformer — fine-tune BERT/RoBERTa/DeBERTa on your labeled data. Best accuracy when you have enough examples (5K+), but higher latency and compute. 4) Few-shot with LLMs — for <100 labeled examples, use GPT-4/Claude with carefully crafted prompts and few-shot examples. Can be combined with fine-tuning. Also consider: distillation (train a smaller model to match a larger one), multi-label vs multi-class setup, handling class imbalance (oversampling, focal loss). Evaluation: precision/recall per class, confusion matrix, error analysis on failure cases.",
+          "category": "nlp",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "When would you use an LLM-based approach versus fine-tuning a smaller model?",
+            "How do you handle classes that the model consistently confuses?",
+            "What's your approach to handling multilingual text?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows the full spectrum from simple to complex",
+            "communication": "Pragmatic model selection",
+            "key_signals": ["baseline first", "fine-tuning", "few-shot", "latency tradeoffs"]
+          }
+        },
+        {
+          "id": "ml-mid-004",
+          "question": "How do you handle imbalanced datasets? Walk me through the techniques and when you'd use each one.",
+          "expected_answer": "Data-level: oversampling minority class (SMOTE creates synthetic examples by interpolating between neighbors), undersampling majority class (random or informed like Tomek links), or combination. Algorithm-level: class weights (cost-sensitive learning — penalize misclassifying minority class more), focal loss (down-weights easy examples, focuses on hard ones), threshold tuning (shift decision boundary based on precision-recall needs). Ensemble: balanced bagging (each base learner sees balanced subsets), EasyEnsemble. Metric selection: never use accuracy — use precision, recall, F1, PR-AUC, or custom cost-based metrics aligned with business impact. Advanced: anomaly detection framing if extreme imbalance (1:10000+), data augmentation (text: paraphrase minority examples, images: transforms), collect more minority class data if possible. Key: understand WHY it's imbalanced — is the minority class just rare, or is there a data collection issue?",
+          "category": "practical_ml",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "When does SMOTE help and when can it hurt?",
+            "How do you set class weights in practice?",
+            "What's the relationship between the classification threshold and the precision-recall tradeoff?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows multiple approaches and their tradeoffs",
+            "communication": "Matches technique to situation",
+            "key_signals": ["SMOTE", "class weights", "focal loss", "metric selection"]
+          }
+        },
+        {
+          "id": "ml-mid-005",
+          "question": "Explain how you'd build a recommendation system. What are the main approaches and their tradeoffs?",
+          "expected_answer": "Main approaches: 1) Collaborative filtering — user-item interactions. Memory-based (cosine similarity between users/items) or model-based (matrix factorization like ALS, SVD). Cold-start problem for new users/items. 2) Content-based — use item features (genre, description, embeddings) to recommend similar items. No cold-start for items but limited diversity. 3) Hybrid — combine both signals. Two-stage system: candidate generation (retrieve 100s of candidates quickly using approximate nearest neighbors) → ranking (score and re-rank using a richer model). Deep learning approaches: two-tower models (encode user and item separately, dot product for score), sequential models (model user behavior over time), transformer-based (treat recommendation as sequence prediction). Metrics: precision@k, recall@k, NDCG (considers ranking order), diversity, coverage, novelty. Offline metrics don't always correlate with online — A/B testing is essential.",
+          "category": "recommendation_systems",
+          "difficulty": 2.5,
+          "follow_ups": [
+            "How do you handle the cold-start problem?",
+            "What's the two-tower architecture and why is it popular?",
+            "How do you balance relevance with diversity and exploration?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows CF, content-based, and modern deep approaches",
+            "communication": "Understands production considerations",
+            "key_signals": ["collaborative filtering", "two-tower", "candidate generation + ranking", "A/B testing"]
+          }
+        },
+        {
+          "id": "ml-mid-006",
+          "question": "How do you approach hyperparameter tuning? What methods have you used and what's your practical workflow?",
+          "expected_answer": "Methods: Grid search (exhaustive, exponentially expensive), random search (surprisingly effective — Bergstra & Bengio showed it outperforms grid search because not all hyperparameters are equally important), Bayesian optimization (Optuna, Hyperopt — models the objective function, suggests promising points, much more sample-efficient), successive halving/Hyperband (allocate more resources to promising configs, early-stop bad ones). Practical workflow: 1) Start with reasonable defaults from literature/experience. 2) Identify the 2-3 most impactful hyperparameters (learning rate, regularization strength, architecture choices). 3) Do a coarse random search to find the right ballpark. 4) Narrow with Bayesian optimization. 5) Always use a held-out validation set (not test). Key considerations: computation budget, use early stopping, log everything (MLflow/W&B), be aware of overfitting to the validation set with too many trials.",
+          "category": "practical_ml",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "Why is random search often better than grid search?",
+            "How does Bayesian optimization decide where to search next?",
+            "How do you prevent overfitting to your validation set during hyperparameter tuning?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows methods and practical considerations",
+            "communication": "Has a pragmatic workflow",
+            "key_signals": ["Bayesian optimization", "Optuna", "learning rate", "early stopping"]
+          }
+        },
+        {
+          "id": "ml-mid-007",
+          "question": "What are embeddings and why are they so important in modern ML? How would you use them in practice?",
+          "expected_answer": "Embeddings are dense vector representations that capture semantic meaning in a continuous space — similar items have similar vectors. Word embeddings (Word2Vec, GloVe) map words to vectors where king - man + woman ≈ queen. Sentence/document embeddings (sentence-transformers, OpenAI embeddings) capture meaning of longer text. Image embeddings (CLIP, ResNet features) represent visual content. Practical uses: semantic search (embed queries and documents, find nearest neighbors), recommendation (embed users and items), classification (embed inputs, train lightweight classifier), clustering (embed then K-means), RAG (embed documents for retrieval). Storage: vector databases (Pinecone, Weaviate, pgvector) for efficient similarity search using ANN algorithms (HNSW, IVF). Dimensionality: higher dimensions capture more nuance but cost more compute. Fine-tuning embeddings for your domain usually improves downstream performance significantly.",
+          "category": "representation_learning",
+          "difficulty": 2.0,
+          "follow_ups": [
+            "How do vector databases enable fast similarity search?",
+            "When would you fine-tune embeddings versus using off-the-shelf ones?",
+            "How would you evaluate embedding quality for your specific use case?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands embeddings beyond surface level",
+            "communication": "Connects theory to practical applications",
+            "key_signals": ["semantic similarity", "vector databases", "fine-tuning", "ANN search"]
+          }
+        }
+      ]
+    },
+    "senior": {
+      "theta_range": [3.0, 4.0],
+      "yoe": "5-10 years",
+      "questions": [
+        {
+          "id": "ml-sr-001",
+          "question": "You're building an ML system that needs to serve predictions at 10ms p99 latency with 99.9% uptime. Walk me through the architecture and optimization decisions.",
+          "expected_answer": "Architecture: feature store (Redis/DynamoDB for pre-computed features, streaming pipeline for real-time features), model serving (TensorFlow Serving, Triton, or ONNX Runtime behind a gRPC service), autoscaling GPU/CPU pods in K8s. Latency optimization: model optimization (quantization to INT8/FP16, knowledge distillation to smaller model, pruning, ONNX conversion for runtime optimization), batching (dynamic batching to maximize GPU utilization), caching (cache predictions for frequent inputs, feature caching), pre-computation (materialize predictions for known entity combinations). Reliability: canary deployments, automatic rollback on metric degradation, graceful fallback (rule-based system or cached stale predictions), health checks, circuit breakers for downstream dependencies. Monitoring: prediction latency histograms, feature drift detection, prediction distribution monitoring, model accuracy tracking with delayed ground truth. The hardest part is usually the feature pipeline — ensuring features are computed identically in training and serving.",
+          "category": "ml_systems",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you decide between GPU and CPU serving for a given model?",
+            "What's your approach to model versioning and rollback?",
+            "How do you handle feature computation that takes longer than your latency budget?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "End-to-end ML serving expertise",
+            "communication": "Covers latency, reliability, and monitoring",
+            "key_signals": ["quantization", "feature store", "canary deployment", "train-serve consistency"]
+          }
+        },
+        {
+          "id": "ml-sr-002",
+          "question": "How would you design a system to detect and handle model drift in production? What are the different types and how do you respond to each?",
+          "expected_answer": "Types of drift: 1) Data drift (covariate shift) — input feature distributions change (e.g., user demographics shift, seasonal effects). Detect with statistical tests (KS test, PSI, KL divergence) comparing production features to training distribution. 2) Concept drift — the relationship between inputs and outputs changes (e.g., what constitutes fraud evolves). Harder to detect without labels — monitor prediction confidence, prediction distribution shifts. 3) Label drift — the output distribution changes (more/fewer positives). When labels are available, track accuracy over time. Architecture: production inference → event stream (Kafka) → drift detection service (batch: hourly/daily statistics, streaming: real-time alerts for sudden shifts) → metrics store → dashboards + alerting. Response playbook: data drift → retrain on recent data with time-weighted sampling; concept drift → trigger full retraining pipeline, possibly new features; sudden shift → investigate if it's a data pipeline bug first, then retrain; gradual drift → scheduled retraining cadence. Always: shadow deployment of retrained model before promoting.",
+          "category": "ml_monitoring",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you detect concept drift when ground truth labels are delayed by weeks?",
+            "What's the difference between sudden and gradual drift, and how does your response differ?",
+            "How do you set alert thresholds that aren't too noisy?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows drift types and detection methods",
+            "communication": "Has a practical response playbook",
+            "key_signals": ["data drift vs concept drift", "statistical tests", "retraining triggers", "shadow deployment"]
+          }
+        },
+        {
+          "id": "ml-sr-003",
+          "question": "How do LLMs work under the hood, and what are the key techniques for using them effectively in production — RAG, fine-tuning, prompt engineering?",
+          "expected_answer": "LLMs are autoregressive transformer models trained on massive text corpora to predict next tokens. Key internals: tokenization (BPE/SentencePiece), positional embeddings, multi-head self-attention with causal masking, residual connections, layer normalization. Production techniques: 1) Prompt engineering — structured prompts with system instructions, few-shot examples, chain-of-thought reasoning. Cheapest and fastest to iterate. 2) RAG (Retrieval-Augmented Generation) — embed documents into vector store, retrieve relevant chunks at query time, inject into prompt context. Reduces hallucination, keeps knowledge current without retraining. Key: chunking strategy, retrieval quality, reranking. 3) Fine-tuning — LoRA/QLoRA for parameter-efficient fine-tuning on domain-specific data. When: specific output format needed, domain terminology, or consistent behavior. RLHF/DPO for alignment. Trade-offs: prompt engineering (fast iteration, no training cost, limited by context window) vs RAG (handles large knowledge bases, needs vector infra) vs fine-tuning (best quality for specific tasks, requires training data and compute, slower iteration).",
+          "category": "llm_engineering",
+          "difficulty": 3.0,
+          "follow_ups": [
+            "How do you evaluate LLM output quality systematically?",
+            "When would you fine-tune vs just use RAG?",
+            "What are the key failure modes of RAG systems and how do you address them?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Understands LLM internals and production techniques",
+            "communication": "Can articulate tradeoffs between approaches",
+            "key_signals": ["RAG", "fine-tuning", "prompt engineering", "evaluation"]
+          }
+        },
+        {
+          "id": "ml-sr-004",
+          "question": "Design an end-to-end experiment platform for ML models. How do you A/B test models with statistical rigor?",
+          "expected_answer": "Components: experiment assignment (deterministic hash-based user bucketing for consistency), metrics collection pipeline (event stream → aggregation → statistical analysis), experiment management UI. Statistical rigor: power analysis upfront (determine required sample size for detectable effect), sequential testing or fixed-horizon with multiple comparison correction. Key metrics: primary (what you're optimizing — CTR, conversion, revenue), guardrails (must not degrade — latency, error rate, user complaints), secondary (observational). Architecture: user request → assignment service (user_id + experiment_id → variant) → model serving with variant routing → metrics logging → daily/hourly aggregation → statistical tests → dashboard. Pitfalls: sample ratio mismatch (detect it — indicates instrumentation bug), novelty effects, interference between experiments, Simpson's paradox in segment analysis. Best practices: always run interleaved experiments for ranking models, use CUPED/CUPAC for variance reduction, separate evaluation of model quality metrics from business metrics.",
+          "category": "experimentation",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you handle experiments that interact with each other?",
+            "What's CUPED and why does it matter for ML experiments?",
+            "How do you decide when an experiment has run long enough?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Strong experimentation and statistics knowledge",
+            "communication": "Covers both infrastructure and statistical rigor",
+            "key_signals": ["power analysis", "sequential testing", "sample ratio mismatch", "guardrail metrics"]
+          }
+        },
+        {
+          "id": "ml-sr-005",
+          "question": "How would you approach building a production search or ranking system? Walk me through the architecture.",
+          "expected_answer": "Two-stage architecture: retrieval (recall-optimized, fast) → ranking (precision-optimized, slower). Retrieval: inverted index (BM25/Elasticsearch) for lexical matching, vector search (HNSW/FAISS) for semantic matching, combine both. Ranking: learn-to-rank model (LambdaMART is a strong baseline, then neural rankers). Features: query features (length, intent, entity mentions), document features (quality signals, freshness, popularity), query-document features (BM25 score, semantic similarity, click history). Training data: click-through logs with position bias correction (inverse propensity weighting), human relevance judgments. Advanced: multi-stage ranking (L0: retrieval → L1: lightweight ranking → L2: heavy model → L3: business rules/diversity), personalization (user history as features), query understanding (spell correction, query expansion, intent classification). Evaluation: NDCG@k, MRR, online metrics (CTR, session success rate). Feedback loops: clicks improve ranking → better ranking gets more clicks. Be careful of popularity bias and filter bubbles.",
+          "category": "information_retrieval",
+          "difficulty": 3.5,
+          "follow_ups": [
+            "How do you handle position bias in click-through data?",
+            "What's the difference between pointwise, pairwise, and listwise learning to rank?",
+            "How do you balance relevance with diversity and freshness?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows retrieval + ranking architecture deeply",
+            "communication": "Covers practical production concerns",
+            "key_signals": ["two-stage", "BM25 + vector", "learn-to-rank", "position bias"]
+          }
+        },
+        {
+          "id": "ml-sr-006",
+          "question": "How do you think about responsible AI and fairness in ML systems? What concrete steps do you take?",
+          "expected_answer": "Fairness definitions (and their tensions): demographic parity (equal positive prediction rates across groups), equalized odds (equal TPR and FPR across groups), individual fairness (similar individuals get similar predictions). These can conflict — you can't satisfy all simultaneously. Concrete steps: 1) Data audit — check for representation bias, labeling bias, historical bias in training data. 2) Model audit — measure disparate impact across protected groups, test on intersectional subgroups, generate model cards documenting performance per group. 3) Mitigation — pre-processing (rebalancing, reweighting), in-processing (fairness constraints during training, adversarial debiasing), post-processing (threshold adjustment per group). 4) Monitoring — track fairness metrics in production continuously, alert on drift. 5) Process — diverse teams reviewing model decisions, red-teaming for failure modes, user feedback loops, clear escalation paths. For LLMs: safety testing, content filtering, evaluation on bias benchmarks, prompt injection defense.",
+          "category": "responsible_ai",
+          "difficulty": 3.0,
+          "follow_ups": [
+            "Can you give an example where optimizing for one fairness metric conflicts with another?",
+            "How do you handle fairness when protected attributes aren't in your data?",
+            "What's your approach to bias evaluation for generative AI?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Knows fairness definitions and practical interventions",
+            "communication": "Treats it as a real engineering challenge, not just a checkbox",
+            "key_signals": ["fairness definitions", "model cards", "pre/in/post processing", "continuous monitoring"]
+          }
+        }
+      ]
+    },
+    "staff": {
+      "theta_range": [4.0, 5.0],
+      "yoe": "10+ years",
+      "questions": [
+        {
+          "id": "ml-staff-001",
+          "question": "How would you design the ML platform strategy for a company with 15+ ML teams? What do you centralize, what do you leave to teams, and how do you drive adoption?",
+          "expected_answer": "Platform layers: 1) Data & feature layer — centralized feature store with self-service registration, data catalog for discoverability, data quality framework with automated checks. 2) Training layer — managed compute (K8s with GPU scheduling), experiment tracking (MLflow/W&B), automated hyperparameter tuning, notebook environments. 3) Serving layer — unified model serving (Seldon/KServe/Triton) with autoscaling, A/B testing framework, shadow deployment. 4) Monitoring layer — standardized drift detection, performance tracking, alerting, cost attribution. Centralize: infrastructure, experiment tracking, model registry, monitoring. Leave to teams: model architecture, feature engineering, training data curation, model-specific evaluation. Adoption: golden paths (opinionated templates for common patterns), self-service with guard rails, treat platform as a product (measure adoption, gather feedback, iterate). Don't mandate — make the happy path so good that teams choose it. Track: time from experiment to production, platform adoption rate, incident rate, compute efficiency.",
+          "category": "ml_platform",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you handle teams that want to build their own infrastructure?",
+            "What's your approach to cost management across GPU-heavy ML workloads?",
+            "How do you design the platform to support both traditional ML and LLM workloads?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Organizational-scale ML platform thinking",
+            "communication": "Balances standardization with team autonomy",
+            "key_signals": ["golden path", "platform as product", "centralize vs delegate", "adoption metrics"]
+          }
+        },
+        {
+          "id": "ml-staff-002",
+          "question": "When is ML the wrong solution? What's your framework for deciding whether to invest in an ML approach versus simpler alternatives?",
+          "expected_answer": "ML is wrong when: 1) Rules can solve it — if you can write explicit rules that work well, do that. ML adds complexity, latency, and maintenance cost. 2) Not enough data — ML needs data, and if you don't have enough labeled examples (or can't get them), the model won't learn. 3) Can't tolerate errors — if even rare wrong predictions are catastrophic and unexplainable, ML may not be appropriate without human-in-the-loop. 4) Can't maintain it — ML models degrade over time, need monitoring, retraining, and ongoing investment. Framework: 1) Define the business metric you're trying to move. 2) Estimate the baseline (how well do rules/heuristics work?). 3) Estimate the ML ceiling (with perfect model, how much better?). 4) Estimate the cost (data, compute, team, maintenance). 5) Is the gap between baseline and ceiling worth the investment? Start with the simplest solution that could work. Graduate to ML only when simpler approaches plateau. Many production systems use ML for the hard 20% and rules for the easy 80%.",
+          "category": "strategy",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "What's an example where you recommended NOT using ML?",
+            "How do you estimate the potential uplift of ML before building anything?",
+            "How do you communicate to leadership that a simpler solution is better?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Strategic thinking about ML value",
+            "communication": "Pragmatic, business-oriented",
+            "key_signals": ["rules first", "cost-benefit", "baseline comparison", "maintenance burden"]
+          }
+        },
+        {
+          "id": "ml-staff-003",
+          "question": "How do you think about the future of ML engineering with the rise of LLMs and foundation models? How does that change how teams should invest?",
+          "expected_answer": "Key shifts: 1) Build vs buy — many tasks that required custom models (classification, NER, sentiment) can now be solved with prompted LLMs or light fine-tuning. Invest in evaluation and prompt engineering rather than model training for these. 2) RAG as the new feature engineering — combining retrieval with generation is becoming the dominant pattern. Invest in embedding infrastructure and knowledge management. 3) Evaluation is the new bottleneck — evaluating generative outputs is harder than classification metrics. Invest in eval frameworks (automated + human), benchmarks, and red-teaming. 4) Agents and tool use — models that take actions, not just predict. Invest in orchestration and safety. Still important: traditional ML dominates for tabular data, recommendations, ranking, fraud detection. LLMs aren't replacing XGBoost for structured data problems. Investment guidance: build strong data infrastructure (it serves both paradigms), invest in evaluation capabilities, maintain traditional ML expertise for structured data, build RAG and prompt engineering capabilities for unstructured data, monitor cost carefully as LLM inference is expensive.",
+          "category": "strategy",
+          "difficulty": 5.0,
+          "follow_ups": [
+            "Where do you see the biggest risk of over-investing in LLMs?",
+            "How do you build an ML team that can work across both traditional ML and LLM paradigms?",
+            "What's the cost model for LLM-heavy architectures and when does it break?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Forward-looking strategic thinking",
+            "communication": "Balanced perspective on new vs proven approaches",
+            "key_signals": ["build vs buy", "evaluation", "RAG", "traditional ML still matters"]
+          }
+        },
+        {
+          "id": "ml-staff-004",
+          "question": "Describe your approach to building a culture of ML experimentation and data-driven decision making across an engineering organization.",
+          "expected_answer": "Culture building: 1) Infrastructure — make experimentation easy with self-service A/B testing platform, automated metric computation, experiment dashboards accessible to all (not just data scientists). 2) Literacy — train product managers and engineers on basic statistics, help them formulate hypotheses, read experiment results, understand significance. 3) Process — every major feature launch goes through experiment review (hypothesis, metrics, sample size), results are documented and shared broadly, negative results are celebrated (we learned something). 4) Democratization — empower product teams to run experiments without data science bottleneck, data scientists focus on complex analysis and model building. 5) Standards — statistical rigor (proper power analysis, multiple testing correction), guard rails (metric degradation kills the experiment), reproducibility (all experiment configs versioned). Anti-patterns: HiPPO (highest paid person's opinion overrides data), p-hacking, premature stopping, cherry-picking segments. Success metrics: number of experiments per quarter, percentage of launches with experiment data, decision quality improvement.",
+          "category": "leadership",
+          "difficulty": 5.0,
+          "follow_ups": [
+            "How do you handle situations where leadership wants to launch despite negative experiment results?",
+            "What's the minimum viable experimentation infrastructure?",
+            "How do you balance the speed of iteration with statistical rigor?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Organizational-scale culture change",
+            "communication": "Covers infrastructure, literacy, and process",
+            "key_signals": ["self-service", "statistical rigor", "democratization", "anti-patterns"]
+          }
+        },
+        {
+          "id": "ml-staff-005",
+          "question": "How do you evaluate and decide on adopting new ML technologies or frameworks for your organization? Walk me through a recent decision.",
+          "expected_answer": "Framework: 1) Problem clarity — what specific pain does this solve? Quantify the cost of status quo. 2) Alternatives analysis — evaluate 3-4 options on: performance, community health (commit frequency, issue responsiveness, corporate backing), migration cost, operational complexity, team learning curve. 3) Proof of concept — build a representative use case, measure against actual requirements (not toy benchmarks), identify hidden costs (operational overhead, debugging difficulty, vendor lock-in). 4) Rollout plan — pilot with one team, document everything, create migration guides, set timeline. 5) Success metrics defined upfront. Example: evaluating vector databases — compared Pinecone (managed, easy), Weaviate (open-source, flexible), pgvector (familiar Postgres, simpler ops). Piloted with semantic search use case, measured query latency, indexing speed, operational cost. Chose pgvector for simpler cases, Weaviate for high-scale vector workloads. Key lesson: boring technology for critical paths, experiment with new in non-critical areas.",
+          "category": "leadership",
+          "difficulty": 4.5,
+          "follow_ups": [
+            "How do you handle strong disagreement about technology choices within the team?",
+            "What's the worst technology decision you've seen, and what made it bad?",
+            "How do you know when to sunset a technology choice that isn't working?"
+          ],
+          "evaluation_criteria": {
+            "technical_depth": "Structured evaluation process",
+            "communication": "Balances technical merit with organizational reality",
+            "key_signals": ["evaluation framework", "proof of concept", "success metrics", "boring technology"]
+          }
+        }
+      ]
+    }
+  }
+}
