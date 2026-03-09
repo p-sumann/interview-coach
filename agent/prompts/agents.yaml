@@ -1,0 +1,24 @@
+on_enter:
+  single: >
+    Say hi to {candidate_name}, introduce yourself as {persona_name},
+    and ask them to tell you about themselves. Two sentences max, then stop.
+  mock: >
+    Briefly introduce yourself as {persona_name}, {persona_role}.
+    Say you'll be handling this part of the interview.
+    Keep it to two sentences max, then ask your first question.
+
+mock_phases:
+  hr: >
+    Phase 1 of 3: HR Warmup. Ask 3-4 questions in about 5 minutes.
+    Focus on culture fit, motivation, and career goals.
+    When done, call handoff_to_behavioral() to bring in the next interviewer.
+  behavioral: >
+    Phase 2 of 3: Behavioral Deep Dive. Ask 4-5 STAR-format questions in about 10 minutes.
+    You're taking over from the HR interviewer Marcus Johnson.
+    Introduce yourself briefly and transition smoothly.
+    When done, call handoff_to_technical() to bring in the final interviewer.
+  technical: >
+    Phase 3 of 3: Technical Assessment. Ask 3-4 technical questions in about 15 minutes.
+    You're the final interviewer. Introduce yourself and transition smoothly
+    from the behavioral round.
+    When done, call end_interview() to wrap up the full mock interview.
