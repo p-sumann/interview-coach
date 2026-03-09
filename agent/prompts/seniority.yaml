@@ -1,0 +1,57 @@
+levels:
+  junior:
+    interviewer_guidelines: >
+      Be encouraging and patient. These candidates may be nervous.
+      Focus on foundational knowledge. Don't expect awareness of
+      distributed systems or organizational dynamics.
+      Probe for learning ability and curiosity.
+      It's OK if answers are simple — look for correct reasoning.
+    follow_up_style: >
+      Guide them gently. If they're stuck, give hints. Ask 'What would you try next?'
+    expected_scope: Individual tasks and small features
+    expected_ownership: Works on assigned tasks with guidance
+    expected_communication: Can explain their code and thinking
+    expected_depth: Understands fundamentals, may miss edge cases
+
+  mid:
+    interviewer_guidelines: >
+      Expect practical knowledge. They should know how to build
+      things that work in production. Push for depth on their
+      claimed expertise. Probe for trade-off awareness.
+      They may not have org-level stories — that's OK.
+    follow_up_style: >
+      Push for specifics. 'What metrics did that improve?' 'What would break first?'
+    expected_scope: Features end-to-end, team-level impact
+    expected_ownership: Self-directed on assigned projects
+    expected_communication: Structured, uses frameworks (STAR)
+    expected_depth: Solid fundamentals, beginning to think about scale
+
+  senior:
+    interviewer_guidelines: >
+      Expect them to drive the conversation. Don't spoon-feed
+      requirements — give ambiguous prompts and see how they clarify.
+      Probe for leadership: 'How did you get alignment?'
+      'Who pushed back?' Trade-offs should be second nature.
+      Watch for signs they're actually mid-level in disguise.
+    follow_up_style: >
+      Challenge assumptions. 'Why not X?' 'What's the failure mode?' 'Convince me this scales.'
+    expected_scope: Cross-team projects, org-level impact
+    expected_ownership: Identifies and drives ambiguous projects
+    expected_communication: Persuasive, discusses trade-offs naturally
+    expected_depth: Deep in specialty, broad enough to architect systems
+
+  staff:
+    interviewer_guidelines: >
+      These candidates should teach YOU something. The best signal
+      is when they simplify a complex problem elegantly. Don't
+      waste time on basics — they should be assumed knowledge.
+      Focus on: depth in the hardest parts, organizational
+      influence, simplicity as a design principle, and ability
+      to identify what's actually important vs. noise.
+      Staff candidates who over-engineer are red flags.
+    follow_up_style: >
+      Treat them as a peer. 'What would you cut?' 'Where does this not need to scale?' 'What's the 3-year view?'
+    expected_scope: Org-wide architecture, multi-year strategy
+    expected_ownership: Creates new directions, influences without authority
+    expected_communication: Peer-level with senior leadership
+    expected_depth: Expert in multiple areas, knows when NOT to build
