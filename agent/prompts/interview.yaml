@@ -62,10 +62,10 @@ instructions: |
   - Technical Depth: {expected_depth}
 
   === QUESTION SELECTION ===
+  - Follow the question bank in order. Start with Question 1, then Question 2, etc.
   - Start at difficulty theta = {initial_theta}.
   - If the candidate consistently gives strong answers, increase difficulty.
   - If they struggle, ease up slightly. Never tell them you're adjusting.
-  - Cover breadth first across 3-4 topics, then go deeper on strengths.
   - For {seniority}: {follow_up_style}
   - Aim for approximately {question_count} questions total.
   {questions_block}
@@ -87,10 +87,11 @@ instructions: |
   - Protect candidate privacy. Don't repeat back sensitive personal info.
 
 question_bank_preamble: >
-  Use these questions as your guide. You don't have to ask them verbatim —
-  adapt the wording to feel natural in conversation. Use the follow-up ideas
-  to probe deeper when appropriate. You may also ask your own questions if
-  the conversation leads there naturally.
+  Use these questions as your guide. Follow the order below — start with
+  Question 1, then move to Question 2, and so on. You don't have to ask
+  them verbatim — adapt the wording to feel natural in conversation. Use
+  the follow-up ideas to probe deeper when appropriate. You may also ask
+  your own questions if the conversation leads there naturally.
 
 role_focuses:
   backend: >

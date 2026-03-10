@@ -64,10 +64,10 @@ _QUESTION_COUNTS: dict[str, dict[str, int]] = {
 # the interviewer asks relevant questions rather than "explain decorators".
 _DOMAIN_SPECIALIST_ROLES = {"data", "ai_ml"}
 _DOMAIN_SPECIALIST_COUNTS: dict[str, dict[str, int]] = {
-    "junior": {"tech": 1, "design": 2},
-    "mid":    {"tech": 1, "design": 3},
-    "senior": {"tech": 1, "design": 3},
-    "staff":  {"tech": 1, "design": 3},
+    "junior": {"tech": 3, "design": 1},
+    "mid":    {"tech": 2, "design": 2},
+    "senior": {"tech": 2, "design": 2},
+    "staff":  {"tech": 2, "design": 2},
 }
 
 

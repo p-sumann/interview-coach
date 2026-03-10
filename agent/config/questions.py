@@ -45,7 +45,9 @@ def get_technical_questions(
     Returns a random sample of `count` questions with their follow_ups and evaluation criteria.
     """
     # Route ML/AI roles to the dedicated ML question bank
-    ml_role_types = {"ml_ai", "ml", "ai", "data_science", "machine_learning"}
+    # Uses ordered selection (first N) instead of random so question order
+    # in the JSON file controls the interview flow.
+    ml_role_types = {"ml_ai", "ai_ml", "ml", "ai", "data_science", "machine_learning"}
     if role_type.lower().replace(" ", "_") in ml_role_types:
         bank = _load_bank("ml_ai.json")
         if bank:
@@ -53,7 +55,7 @@ def get_technical_questions(
             level_data = levels.get(seniority, levels.get("mid", {}))
             questions = level_data.get("questions", [])
             if questions:
-                return random.sample(questions, min(count, len(questions)))
+                return questions[:count]
 
     bank = _load_bank(f"{language.lower()}.json")
     if not bank:
