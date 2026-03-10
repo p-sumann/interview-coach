@@ -2,8 +2,6 @@
 
 > **Live Agent** built for the [Gemini Live Agent Challenge](https://devpost.com/software/interviewpilot) — a real-time voice AI interview coach powered by Gemini 2.5 Flash Native Audio over LiveKit WebRTC, deployed on Google Cloud.
 
-**Live Demo:** [https://liveapi-hackathon.sumanpaudel.me](https://liveapi-hackathon.sumanpaudel.me)
-
 ---
 
 ## The Problem
