@@ -15,7 +15,7 @@ const phaseIcons: Record<string, typeof Handshake> = {
   technical: Code,
 };
 
-const phaseLabels: Record<InterviewType, string> = {
+const phaseLabels: Record<string, string> = {
   hr: "HR",
   behavioral: "Behavioral",
   technical: "Technical",

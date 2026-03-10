@@ -1,7 +1,7 @@
 
 // ---- Setup / Config Types ----
 
-export type InterviewType = "hr" | "behavioral" | "technical";
+export type InterviewType = "hr" | "behavioral" | "technical" | "mock";
 export type ExperienceLevel = "junior" | "mid" | "senior" | "staff";
 export type RoleType =
   | "backend"

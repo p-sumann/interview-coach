@@ -162,7 +162,7 @@ export default function HistoryPage() {
               {sessions.map((session, i) => {
                 const Icon = typeIcons[session.interviewType] ?? Code;
                 const hasScorecard =
-                  session.status === "completed" &&
+                  (session.status as string) === "completed" &&
                   session.overallScore !== null;
 
                 return (
