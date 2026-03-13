@@ -8,6 +8,7 @@ voice + text, and routes to the appropriate agent(s) based on interview type.
 import asyncio
 import json
 import logging
+import os
 import time
 import uuid
 
@@ -249,39 +250,71 @@ async def entrypoint(ctx: JobContext) -> None:
     # More resilient connection options for Gemini Realtime (transient 1011 errors)
     gemini_conn_options = APIConnectOptions(max_retry=5, retry_interval=2.0, timeout=15.0)
 
+    # Model selection: configurable via GEMINI_REALTIME_MODEL env var.
+    # The 12-2025 model has stricter tool validation and doesn't support some
+    # features (proactivity, affective dialog) that the 09-2025 model does.
+    gemini_model = os.getenv(
+        "GEMINI_REALTIME_MODEL",
+        "gemini-2.5-flash-native-audio-preview-09-2025",
+    )
+    is_12_model = "12-2025" in gemini_model or "12_2025" in gemini_model
+
+    logger.info(
+        "Using Gemini model: %s (12-2025 compat mode: %s)",
+        gemini_model,
+        is_12_model,
+    )
+
+    # Build model kwargs — the 12-2025 model does not support proactivity or
+    # affective dialog and may reject the session with 1008 if they are sent.
+    realtime_kwargs: dict = dict(
+        model=gemini_model,
+        voice=voice,
+        language="en-US",
+        input_audio_transcription=gemini_types.AudioTranscriptionConfig(),
+        context_window_compression=gemini_types.ContextWindowCompressionConfig(
+            sliding_window=gemini_types.SlidingWindow(
+                # Cap conversation context to prevent latency growth.
+                # System instructions are excluded from this limit.
+                # ~4k tokens ≈ last 2-3 Q&A exchanges for Gemini audio.
+                # Combined with periodic context resets every 3 turns.
+                target_tokens=4096,
+            ),
+        ),
+        # Gemini VAD tuning for interviews:
+        # - LOW start sensitivity: prevent agent self-interruption from
+        #   background noise, breathing, or "mm-hmm" sounds during agent speech
+        # - LOW end sensitivity + 3s silence: let candidates pause to think
+        #   without the agent jumping in prematurely
+        realtime_input_config=gemini_types.RealtimeInputConfig(
+            automatic_activity_detection=gemini_types.AutomaticActivityDetection(
+                start_of_speech_sensitivity=gemini_types.StartSensitivity.START_SENSITIVITY_LOW,
+                end_of_speech_sensitivity=gemini_types.EndSensitivity.END_SENSITIVITY_LOW,
+                silence_duration_ms=3000,
+            ),
+        ),
+        session_resumption=gemini_types.SessionResumptionConfig(transparent=True),
+        conn_options=gemini_conn_options,
+    )
+
+    # PROACTIVITY DISABLED — it causes a race condition with LiveKit's
+    # generate_reply() flow. When proactivity=True, Gemini sends an unprompted
+    # response ~1s after connection. This response arrives before the framework
+    # sets up a generation context (via generate_reply), so it gets discarded
+    # with "received server content but no active generation". Then the actual
+    # generate_reply call times out because Gemini already "spent" its turn.
+    #
+    # With proactivity disabled, the agent speaks ONLY via generate_reply()
+    # calls, which is reliable and predictable.
+    #
+    # enable_affective_dialog is fine on 09 — it makes Gemini sound more
+    # natural without triggering proactive speech.
+    if not is_12_model:
+        realtime_kwargs["enable_affective_dialog"] = True
+
     session = AgentSession[InterviewUserData](
         userdata=userdata,
-        llm=google.beta.realtime.RealtimeModel(
-            model="gemini-2.5-flash-native-audio-preview-09-2025",
-            voice=voice,
-            language="en-US",
-            input_audio_transcription=gemini_types.AudioTranscriptionConfig(),
-            proactivity=True,
-            enable_affective_dialog=True,
-            context_window_compression=gemini_types.ContextWindowCompressionConfig(
-                sliding_window=gemini_types.SlidingWindow(
-                    # Cap conversation context to prevent latency growth.
-                    # System instructions are excluded from this limit.
-                    # ~4k tokens ≈ last 2-3 Q&A exchanges for Gemini audio.
-                    # Combined with periodic context resets every 3 turns.
-                    target_tokens=4096,
-                ),
-            ),
-            # Gemini VAD tuning for interviews:
-            # - LOW start sensitivity: prevent agent self-interruption from
-            #   background noise, breathing, or "mm-hmm" sounds during agent speech
-            # - LOW end sensitivity + 3s silence: let candidates pause to think
-            #   without the agent jumping in prematurely
-            realtime_input_config=gemini_types.RealtimeInputConfig(
-                automatic_activity_detection=gemini_types.AutomaticActivityDetection(
-                    start_of_speech_sensitivity=gemini_types.StartSensitivity.START_SENSITIVITY_LOW,
-                    end_of_speech_sensitivity=gemini_types.EndSensitivity.END_SENSITIVITY_LOW,
-                    silence_duration_ms=3000,
-                ),
-            ),
-            session_resumption=gemini_types.SessionResumptionConfig(transparent=True),
-            conn_options=gemini_conn_options,
-        ),
+        llm=google.beta.realtime.RealtimeModel(**realtime_kwargs),
         vad=ctx.proc.userdata["vad"],
         # Send transcripts immediately instead of syncing to audio playback timing.
         # This removes the delay between speech and text appearing in the UI.
@@ -440,6 +473,7 @@ async def entrypoint(ctx: JobContext) -> None:
             logger.warning("Failed to publish timeout event", extra={"session_id": session_id})
 
     # Start the session (video stays in UI but is not sent to Gemini)
+    logger.info("Starting agent session (connecting to Gemini)...", extra={"session_id": session_id})
     await session.start(
         room=ctx.room,
         agent=initial_agent,
@@ -449,6 +483,7 @@ async def entrypoint(ctx: JobContext) -> None:
             delete_room_on_close=True,
         ),
     )
+    logger.info("Agent session started, Gemini connection established", extra={"session_id": session_id})
 
     # Apply Gemini tool call audio gating workaround (prevents 1008/1011 errors)
     # See: https://discuss.ai.google.dev/t/114644/56
@@ -463,11 +498,15 @@ async def entrypoint(ctx: JobContext) -> None:
     except Exception as e:
         logger.warning("Failed to update session to active: %s", e)
 
-    # Initial greeting — called HERE (not in on_enter) so the Gemini
-    # realtime connection is fully established after session.start().
-    # Small delay to let the WebSocket fully stabilize.
-    await asyncio.sleep(1.0)
-
+    # Initial greeting — call generate_reply IMMEDIATELY after session.start()
+    # with NO sleep. The old 1s delay caused a race condition: Gemini with
+    # proactivity=True would send a proactive response during the sleep, which
+    # got discarded ("received server content but no active generation"), and
+    # then generate_reply had nothing to receive → 5s timeout.
+    #
+    # By calling generate_reply immediately, we send the greeting instruction
+    # before Gemini's proactive response arrives, so the generation context is
+    # set up to receive the response properly.
     candidate_name = config.get("candidate_name", "there")
     agent_prompts = load_prompt("agents")["on_enter"]
     greeting_instructions = agent_prompts["single"].format(
@@ -475,10 +514,20 @@ async def entrypoint(ctx: JobContext) -> None:
         persona_name=_get_persona_name(config),
     )
 
+    logger.info("Sending initial greeting via generate_reply", extra={"session_id": session_id})
     try:
         await session.generate_reply(instructions=greeting_instructions)
+        logger.info("Initial greeting delivered successfully", extra={"session_id": session_id})
     except Exception as e:
-        logger.warning("Initial greeting generate_reply failed: %s — agent will respond when candidate speaks", e)
+        # If generate_reply times out, Gemini may have already responded
+        # proactively (which is fine — the candidate heard the greeting).
+        # Log and continue — agent will respond normally when candidate speaks.
+        logger.warning(
+            "Initial greeting generate_reply failed: %s — "
+            "Gemini may have responded proactively, or will respond on first user input",
+            e,
+            extra={"session_id": session_id},
+        )
 
     # Mark initial greeting done so future handoffs use on_enter() greeting
     userdata._initial_greeting_done = True  # type: ignore[attr-defined]

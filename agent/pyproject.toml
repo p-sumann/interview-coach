@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "InterviewPilot - LiveKit AI Agent with Gemini Live"
 requires-python = ">=3.13"
 dependencies = [
-    "livekit-agents[silero,google,images]~=1.4",
+    "livekit-agents[silero,google,images]>=1.4.5,<2.0",
     "python-dotenv",
     "httpx>=0.28.0",
     "google-genai>=1.0.0",
