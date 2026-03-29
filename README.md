@@ -297,6 +297,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ## Author
 
-**Suman Paudel** — [GitHub](https://github.com/sumansaurabh) · [LinkedIn](https://linkedin.com/in/sumanpaudel)
+**Suman Paudel** — [GitHub](https://github.com/p-sumann) · [LinkedIn](https://linkedin.com/in/sumanpaudel)
 
 Built with Gemini Live API, LiveKit, and Google Cloud for the Gemini Live Agent Challenge.
